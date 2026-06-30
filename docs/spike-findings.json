@@ -1,0 +1,46 @@
+{
+  "attempts": 4,
+  "strictHistoricBarMet": 0,
+  "toolingBlockers": [
+    "web.archive.org (Wayback) is unreachable from the WebFetch tool and only partially reachable via raw curl/CDX, so archival primary snapshots of historic labels are largely unobtainable.",
+    "Major GB retailers (Tesco, Ocado, ASDA, Sainsbury's) block automated fetches with HTTP 403/402, so current labels fall back to Open Food Facts (tertiary) and smaller retailers.",
+    "Some manufacturer pages inject the ingredient list via a runtime personalisation token, so even archived snapshots carry no literal ingredient text."
+  ],
+  "phase2GateRequirements": [
+    "A working archival/primary fetch path (Wayback CDX via curl, manufacturer pack-image capture), without which no historic fact can reach the corroborable standard.",
+    "Automated distinct-lineage detection, so two reports co-derived from a single press release do not count as two independent sources.",
+    "An automated citation-existence check that every cited URL resolves.",
+    "A measure-mismatch detector that auto-raises a disagreement when two passes report different units or different values (for example per-100g versus per-100ml, or 13g versus 17g).",
+    "Routing of any unresolved disagreement to human adjudication, never AI adjudication."
+  ],
+  "products": [
+    {
+      "id": "lucozade-energy",
+      "outcome": "Sourced to a publishable record. Current label and the 2017 reformulation event are well-sourced; the exact pre-reformulation sugar figure is contested (13g versus 17g versus 12.4g) and is carried as an approximation pending adjudication.",
+      "sourced": true,
+      "effort": "About 16 research fetches; limited by the absence of a pre-2017 primary nutrition panel and by retailer blocks.",
+      "historicBarMet": false
+    },
+    {
+      "id": "cadbury-dairy-milk",
+      "outcome": "Sourced to a publishable record. Current label and the attributed 2019 lower-sugar variant story are recorded; the variant reports are likely co-derived from one press release and no archival primary was obtained, so the historic claim sits at authoritative-attribution level.",
+      "sourced": true,
+      "effort": "About 13 research fetches; limited by the blocked archival route and co-derived press coverage.",
+      "historicBarMet": false
+    },
+    {
+      "id": "walls-soft-scoop-vanilla",
+      "outcome": "Sourced to a publishable record on current facts (coconut fat not cream; marketed as a Soft Scoop Ice Cream Dessert; an archival primary nutrition figure was obtained). The then-versus-now reformulation arc is a dead-end: no source establishes an earlier cream-based formulation, and soft scoop appears to have been vegetable-fat by design.",
+      "sourced": true,
+      "effort": "About 13 research fetches; the Wayback curl route worked for nutrition but the manufacturer ingredient list was a runtime token, so no historic ingredient list exists in the archive.",
+      "historicBarMet": false
+    }
+  ],
+  "deadEndRate": 0.25,
+  "rederived": {
+    "corpusTarget": 35,
+    "tierAEntryGate": 10,
+    "provisional": true,
+    "basis": "Provisional n=3 estimates (effectively n=4 including the abandoned Wall's Vienetta candidate), placeholders Phase 4 refines, not commitments. Of four candidates attempted, three reached a publishable record and one (Vienetta) was abandoned as un-sourceable, giving a 0.25 dead-end rate at the publishable-record bar. The stricter corroborable historic bar (two distinct lineages, at least one primary/archival) was met for zero of the three encoded products, almost entirely because the archival fetch route is blocked. The corpus target is revised down from the ~100 placeholder to a provisional 35 launch records, of which a provisional 10 are expected to reach full then-versus-now Tier A under current tooling (down from the >=15 placeholder). Both figures rise if and only if an archival/primary fetch path is built in Phase 2; the limiter is the tooling, not the availability of reformulation stories."
+  }
+}

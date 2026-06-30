@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/spike-findings.schema.json",
+  "title": "SPIKE-01 findings",
+  "description": "The machine-verifiable record of the SPIKE-01 sourcing spike (SPIKE-01). attempts is the dead-end denominator (candidate products tried, including any abandoned). Each products entry records the per-product outcome, effort and whether it reached a publishable schema-valid record. deadEndRate must be consistent with attempts and the sourced count. rederived carries the PROVISIONAL n=3 re-derived corpus target and Tier A entry gate, which Phase 4 refines.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["attempts", "products", "deadEndRate", "rederived"],
+  "properties": {
+    "attempts": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of candidate products attempted to land the trio (the dead-end denominator), including any abandoned as un-sourceable."
+    },
+    "strictHistoricBarMet": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many products had at least one HISTORIC fact verified to the full corroborable standard (two distinct-lineage sources, at least one primary/archival). Recorded separately from sourced because reaching a publishable record is a weaker bar than the corroborable historic standard."
+    },
+    "toolingBlockers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "The tooling constraints that bounded the spike (for example the archival fetch route and retailer blocks), named so Phase 2 ingestion can solve them."
+    },
+    "phase2GateRequirements": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "The requirements the Phase 2 automated verification gate must enforce, named by this manual dry-run."
+    },
+    "products": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One entry per product taken to a record. A dead-end candidate that was abandoned before encoding is counted in attempts and narrated in the findings, not listed here.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "outcome", "sourced", "effort"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The product record id."
+          },
+          "outcome": {
+            "type": "string",
+            "description": "Plain-English outcome class for this product."
+          },
+          "sourced": {
+            "type": "boolean",
+            "description": "Whether the product reached a publishable schema-valid record."
+          },
+          "effort": {
+            "type": "string",
+            "description": "Recorded per-product effort (for example the rough number of research fetches and the limiting factor)."
+          },
+          "historicBarMet": {
+            "type": "boolean",
+            "description": "Whether at least one historic fact met the full corroborable standard for this product."
+          }
+        }
+      }
+    },
+    "deadEndRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "The fraction of attempted candidates that could not be taken to a publishable record. Consistent with attempts and the count of sourced products: (attempts - sourcedCount) / attempts."
+    },
+    "rederived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["corpusTarget", "tierAEntryGate", "provisional", "basis"],
+      "description": "The re-derived PROD-12 corpus target and Phase 4 Tier A entry gate, explicitly PROVISIONAL placeholders.",
+      "properties": {
+        "corpusTarget": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Provisional re-derived launch-corpus target (PROD-12), down from the ~100 placeholder."
+        },
+        "tierAEntryGate": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Provisional re-derived count of products achievable to full then-vs-now Tier A under current tooling, down from the >=15 placeholder."
+        },
+        "provisional": {
+          "type": "boolean",
+          "description": "Always true: these are n=3 estimates Phase 4 refines, not commitments."
+        },
+        "basis": {
+          "type": "string",
+          "description": "The reasoning and per-product basis behind the re-derived figures."
+        }
+      }
+    }
+  }
+}

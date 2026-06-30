@@ -1,0 +1,16 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 30000,
+    "wait": 1000,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+    }
+  },
+  "urls": [
+    "http://127.0.0.1:8081/",
+    "http://127.0.0.1:8081/methodology/",
+    "http://127.0.0.1:8081/404.html",
+    "http://127.0.0.1:8081/components-demo/"
+  ]
+}

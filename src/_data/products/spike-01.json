@@ -16,12 +16,12 @@
   "ingredientsText": {
     "value": "Carbonated Water, Glucose Syrup (13%), Acids (Citric Acid, Lactic Acid), Flavourings, Acidity Regulator (Sodium Citrate), Preservative (Potassium Sorbate), Caffeine, Sweeteners (Sucralose, Acesulfame K), Antioxidant (Ascorbic Acid), Colours (Sunset Yellow, Ponceau 4R), Niacin (B3)",
     "sources": ["off"],
-    "confidence": "moderate",
+    "confidence": "low",
     "evidence": "low",
     "updated": "2026-06-30",
     "claimType": "authoritative",
     "claimDomain": "ingredient-function",
-    "note": "Current label as transcribed by Open Food Facts (tertiary); the high-intensity sweeteners sucralose and acesulfame K are a reformulation addition to the glucose-syrup base. A direct manufacturer or retailer label page could not be retrieved (Tesco returned HTTP 403), so this rests on a single tertiary transcription pending an independent re-read."
+    "note": "Transcribed from a single Open Food Facts record (tertiary, a low-quality crowd transcription). Open Food Facts records the sweeteners as sucralose with acesulfame K, but a GB retailer label sheet lists aspartame with acesulfame K instead, and the wider list differs in other respects. The sweetener identity is an unresolved discrepancy pending a primary label; a direct manufacturer or retailer label page could not be retrieved (Tesco returned HTTP 403)."
   },
   "nutrition": {
     "sugars": {
@@ -32,7 +32,7 @@
       "updated": "2026-06-30",
       "claimType": "authoritative",
       "claimDomain": "nutrition",
-      "note": "Open Food Facts records 4.16g sugars per 100g; the marketed GB label figure is below 4.5g per 100ml (a small per-100g versus per-100ml unit difference, not a contradiction)."
+      "note": "Open Food Facts records 4.16g sugars per 100g; the marketed GB label figure is 4.5g per 100ml (a small per-100g versus per-100ml unit difference, not a contradiction)."
     }
   },
   "verificationStatus": null,

@@ -25,7 +25,7 @@
   "nutrition": {
     "sugars": {
       "value": 17,
-      "sources": ["walls-archive-2026"],
+      "sources": ["walls-archive-2026", "walls-onestop-2026"],
       "confidence": "moderate",
       "evidence": "moderate",
       "updated": "2026-06-30",
@@ -38,7 +38,7 @@
     "value": "Does not meet the compositional standard for 'dairy ice cream', which requires the fat to be milk-derived; its fat is coconut (vegetable) fat, so it is marketed as 'Soft Scoop Ice Cream Dessert'. In GB the 'ice cream' and 'dairy ice cream' compositional specifications now sit in a voluntary industry code (Ice Cream Alliance) rather than statute.",
     "sources": ["icecream-foodlaw-reading", "icecream-foodlabelling-services"],
     "confidence": "moderate",
-    "evidence": "moderate",
+    "evidence": "low",
     "updated": "2026-06-30",
     "checkedOn": "2026-06-30",
     "claimType": "authoritative",

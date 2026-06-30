@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/date-value.schema.json",
+  "title": "DateValue",
+  "description": "Precise-or-ranged date contract (DATA-03). Admits a precise ISO date, a from/to range (each bound a full ISO date or a bare 4-digit year) with an optional basis, or a circa form. JSON Schema cannot express \"to not earlier than from\": that order check is the imperative checkDateRanges() in the validation gate (plan 01-05), never Ajv.",
+  "oneOf": [
+    {
+      "type": "string",
+      "format": "date",
+      "description": "A precise calendar date, e.g. 2014-03-01."
+    },
+    {
+      "type": "object",
+      "required": ["from", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            { "type": "string", "format": "date" },
+            { "type": "string", "pattern": "^[0-9]{4}$" }
+          ]
+        },
+        "to": {
+          "anyOf": [
+            { "type": "string", "format": "date" },
+            { "type": "string", "pattern": "^[0-9]{4}$" }
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "description": "Optional plain-English basis for the range, e.g. \"between two archived snapshots\"."
+        }
+      },
+      "description": "A ranged date, e.g. between 2012 and 2014. Order (to >= from) is enforced imperatively by checkDateRanges() in plan 01-05, not by this schema."
+    },
+    {
+      "type": "object",
+      "required": ["circa"],
+      "additionalProperties": false,
+      "properties": {
+        "circa": {
+          "anyOf": [
+            { "type": "string", "format": "date" },
+            { "type": "string", "pattern": "^[0-9]{4}$" }
+          ],
+          "description": "An approximate point, a full ISO date or a 4-digit year, e.g. circa 2015."
+        },
+        "basis": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

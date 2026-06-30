@@ -57,8 +57,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-puppeteer-
 
+      # A restored cache can be partial (folder present, executable missing) if an
+      # earlier run was interrupted mid-download; install then errors instead of
+      # re-fetching. Wipe and retry once so a corrupt cache self-heals.
       - name: Install headless Chrome for pa11y
-        run: npx puppeteer browsers install chrome
+        run: npx puppeteer browsers install chrome || { rm -rf ~/.cache/puppeteer; npx puppeteer browsers install chrome; }
 
       # The four logical gates: Ajv structural validation plus referential
       # integrity, the editorial lint and the image-rights default-deny.

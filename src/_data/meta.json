@@ -1,0 +1,18 @@
+{
+  "confidenceLevels": {
+    "high": "Directly confirmed against a primary source; no material ambiguity that this record is correct and current.",
+    "moderate": "Confirmed, with a minor gap or a single secondary corroboration; the curator is reasonably certain.",
+    "low": "A single weak source or a hard-to-read artefact; the record is recorded but should be treated with caution.",
+    "very-low": "Fragmentary evidence only; the curator records the value honestly as uncertain."
+  },
+  "evidenceLevels": {
+    "high": "A strong regulatory position or systematic-review-grade evidence underpins the claim.",
+    "moderate": "A single authoritative opinion or consistent secondary evidence underpins the claim.",
+    "low": "Limited or indirect evidence underpins the claim.",
+    "very-low": "Only mechanistic or anecdotal evidence underpins the claim."
+  },
+  "datasetLicence": {
+    "id": "ODbL-1.0",
+    "url": "https://opendatacommons.org/licenses/odbl/1-0/"
+  }
+}

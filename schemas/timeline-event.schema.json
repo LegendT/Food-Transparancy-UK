@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/timeline-event.schema.json",
+  "title": "TimelineEvent",
+  "description": "A recipe-change event for a product (DATA-04, DATA-11). The event date $refs date-value.schema.json so it can be ranged or circa. Each change keeps three distinct fields: documentedChange and statedReason are SourcedValues; labelledInference is a DISTINCT non-SourcedValue shape with a required basis, so analyst inference can never masquerade as sourced fact (the defamation bright line). Verification and publication status are reserved for the Phase 2 gate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "productId", "date"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable identifier for the timeline event.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "productId": {
+      "type": "string",
+      "description": "Plain reference to the product this event belongs to."
+    },
+    "date": {
+      "$ref": "date-value.schema.json",
+      "description": "When the change is recorded as having occurred; precise, ranged or circa."
+    },
+    "changes": {
+      "type": "array",
+      "description": "One or more changes recorded at this event.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["documentedChange"],
+        "properties": {
+          "documentedChange": {
+            "$ref": "sourced-value.schema.json",
+            "description": "Fact-bearing: the observable, sourced change to the product."
+          },
+          "statedReason": {
+            "$ref": "sourced-value.schema.json",
+            "description": "Fact-bearing: the manufacturer's attributed stated reason for the change, sourced."
+          },
+          "labelledInference": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["basis", "text"],
+            "description": "Analyst inference, explicitly NOT a SourcedValue. It never carries value, confidence or evidence; additionalProperties false makes a SourcedValue-shaped inference rejectable (negative fixture, plan 01-05).",
+            "properties": {
+              "basis": {
+                "type": "string",
+                "description": "The stated basis for the inference."
+              },
+              "text": {
+                "type": "string",
+                "description": "The inference itself, labelled as analysis rather than sourced fact."
+              }
+            }
+          }
+        }
+      }
+    },
+    "verificationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 verification gate (DATA-11); present-and-empty (null) validates."
+    },
+    "publicationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 publication gate (DATA-11); present-and-empty (null) validates."
+    }
+  }
+}

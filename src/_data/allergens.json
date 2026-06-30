@@ -1,0 +1,19 @@
+{
+  "note": "The 14 GB-regulated major allergens (retained Food Information Regulations 2014 / assimilated Regulation (EU) 1169/2011). Verified against current FSA allergen guidance on 2026-06-30; wording must be re-verified against live FSA guidance before publish (research Assumption A2). British-English spellings (soya, sulphur). Stable ids are the enum source the product schema (plan 01-04) is kept in sync with; a 15th or mistyped allergen must fail the product schema enum.",
+  "allergens": [
+    { "id": "celery", "name": "Celery" },
+    { "id": "cereals-containing-gluten", "name": "Cereals containing gluten" },
+    { "id": "crustaceans", "name": "Crustaceans" },
+    { "id": "eggs", "name": "Eggs" },
+    { "id": "fish", "name": "Fish" },
+    { "id": "lupin", "name": "Lupin" },
+    { "id": "milk", "name": "Milk" },
+    { "id": "molluscs", "name": "Molluscs" },
+    { "id": "mustard", "name": "Mustard" },
+    { "id": "tree-nuts", "name": "Tree nuts" },
+    { "id": "peanuts", "name": "Peanuts" },
+    { "id": "sesame", "name": "Sesame" },
+    { "id": "soya", "name": "Soya" },
+    { "id": "sulphur-dioxide-and-sulphites", "name": "Sulphur dioxide and sulphites" }
+  ]
+}

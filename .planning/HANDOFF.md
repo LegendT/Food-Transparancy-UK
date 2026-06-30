@@ -22,6 +22,16 @@ push; Dependabot has opened PRs bumping the pinned actions (checkout v7,
 setup-node v6, cache v6) — review/merge at leisure. Optionally watch the first
 `CI` run to green (`gh run list --workflow=ci.yml`).
 
+## Phase 1 deep review (post-deploy) — done
+
+A four-dimension adversarial review (fact-check, trust-gate, security/a11y, editorial) ran after deploy. Fixed and committed (`fix(01): ...`, 5 commits; suite 55/55, build + a11y green):
+- **Live data:** corrected a false **soya allergen** on Cadbury (GB label uses E442/E476, not soya lecithin) and the non-GB ingredient list; updated Lucozade's manufacturer to **Suntory Beverage and Food GB and Ireland** (renamed 2020); restored the verbatim Cadbury quote; genericised an unregistered citation; fixed "soy"→"soya"; dropped an unsupported Euroglace reference; softened SDIL causal language.
+- **Trust gate:** the validation gate was a **non-recursive allowlist** while Eleventy loads all of `_data` recursively — a fact off-path would render unverified. Now recurses + fails on any fact-bearing file outside the validated corpus; the non-zero guard now counts **facts not files**; `eleventy.before` resolves gate paths absolutely and fails closed (a cwd-relative path silently skipped all gates from another dir).
+- **Editorial gate** now lints analyst-prose fields **inside data JSON** (it only scanned `.md/.njk/.html` before — how "soy" shipped); verbatim-quote/value fields excluded.
+- **Security/a11y:** dropped a `[tabindex]:focus` CSS rule that flooded `<main>` yellow on skip-link focus; tightened CSP `img-src` to `'self'`; CI now audits the **full** dep tree at `--audit-level=critical` (every dep is build-time on a static site). Added the AI-assisted verification disclosure to the methodology page.
+
+**Residual, deferred to Phase 2 (cannot be enforced by a structural-only gate):** `claimType` and `claimDomain` are author-self-classified and nothing cross-checks them against a claim's actual nature — so the corroborable-needs-2 rule can be dodged by labelling an empirical claim `authoritative`, and the TRUST-06 GB+`checkedOn` rule only fires on a field literally marked `claimDomain: regulatory`. A new bare-scalar fact field would also be invisible to `collectFacts`. These join the distinct-lineage detection the spike already named as the Phase 2 verification-gate's job.
+
 ## SPIKE-01 results that shape Phase 2 and corpus scope
 
 - **The archival-fetch path is the top Phase 2 requirement.** Wayback is unreachable from the agent fetch tool (partial via curl) and major retailers block fetches, so the strict corroborable historic bar (>=1 primary/archival) was met 0/3. The data model handles this honestly (contested/withheld facts), but Phase 2 ingestion must solve archival access.

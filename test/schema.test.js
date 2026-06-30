@@ -32,3 +32,44 @@ test("a valid timeline fixture validates with zero Ajv errors", () => {
   assert.equal(ok, true, JSON.stringify(errors, null, 2));
   assert.equal(errors.length, 0);
 });
+
+// Each negative fixture below is rejected by the Ajv-level gate that owns its
+// failure mode. The ranged-date ORDER fixture is deliberately absent here: Ajv
+// cannot express to-not-earlier-than-from, so it is asserted against
+// checkDateRanges in referential.test.js instead.
+
+test("a fact missing provenance is rejected by Ajv (TRUST-05)", () => {
+  const { ok, errors } = validate("sourced-value", load("fixtures/invalid/missing-provenance.json"));
+  assert.equal(ok, false);
+  assert.ok(errors.length > 0);
+});
+
+test("a corroborable fact with one source is rejected by Ajv (structural claim-type rule)", () => {
+  const { ok, errors } = validate("sourced-value", load("fixtures/invalid/corroborable-one-source.json"));
+  assert.equal(ok, false);
+  assert.ok(errors.length > 0);
+});
+
+test("a structurally malformed ranged date is rejected by Ajv (DATA-03)", () => {
+  const { ok, errors } = validate("date-value", load("fixtures/invalid/bad-ranged-date-structural.json"));
+  assert.equal(ok, false);
+  assert.ok(errors.length > 0);
+});
+
+test("an inference shaped like a SourcedValue is rejected by Ajv (DATA-04)", () => {
+  const { ok, errors } = validate("timeline-event", load("fixtures/invalid/inference-as-sourcedvalue.json"));
+  assert.equal(ok, false);
+  assert.ok(errors.length > 0);
+});
+
+test("an allergen outside the fourteen is rejected by Ajv (DATA-07)", () => {
+  const { ok, errors } = validate("product", load("fixtures/invalid/bad-allergen.json"));
+  assert.equal(ok, false);
+  assert.ok(errors.length > 0);
+});
+
+test("a malformed registry record is rejected by Ajv (DATA-01)", () => {
+  const { ok, errors } = validate("source", load("fixtures/invalid/bad-source.json"));
+  assert.equal(ok, false);
+  assert.ok(errors.length > 0);
+});

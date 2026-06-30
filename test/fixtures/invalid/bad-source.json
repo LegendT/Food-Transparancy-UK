@@ -1,0 +1,17 @@
+{
+  "id": "bad-source",
+  "name": "A Registry Record With An Invalid Source Type",
+  "publisher": "Nobody In Particular",
+  "url": "https://example.org/source",
+  "covers": "Testing that a malformed registry record fails source.schema.json.",
+  "updateFrequency": "Never",
+  "retrievedDate": "2026-06-30",
+  "sourceType": "blog",
+  "jurisdiction": "GB",
+  "licence": {
+    "id": "CC0-1.0",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "attributionRequired": false,
+    "shareAlike": false
+  }
+}

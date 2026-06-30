@@ -1,0 +1,8 @@
+{
+  "value": "A fact citing a source id that is absent from the registry.",
+  "sources": ["does-not-exist"],
+  "confidence": "high",
+  "evidence": "high",
+  "updated": "2026-06-30",
+  "claimType": "authoritative"
+}

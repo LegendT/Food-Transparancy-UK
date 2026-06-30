@@ -1,0 +1,27 @@
+{
+  "id": "bad-inference-event",
+  "productId": "demo-baked-beans",
+  "date": "2018-04-06",
+  "changes": [
+    {
+      "documentedChange": {
+        "value": "Total sugars fell from 5.0g to 4.7g per 100g.",
+        "sources": ["off", "sdil-2018"],
+        "confidence": "moderate",
+        "evidence": "moderate",
+        "updated": "2026-06-30",
+        "claimType": "corroborable"
+      },
+      "labelledInference": {
+        "basis": "The reduction coincides with the levy threshold date.",
+        "text": "A levy-driven reformulation.",
+        "value": "Levy-driven reformulation.",
+        "sources": ["sdil-2018"],
+        "confidence": "high",
+        "evidence": "high",
+        "updated": "2026-06-30",
+        "claimType": "authoritative"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "bad-allergen-product",
+  "slug": "bad-allergen-product",
+  "name": "Product With An Allergen Outside The Fourteen",
+  "allergens": [
+    {
+      "allergen": "kryptonite",
+      "presence": "present",
+      "provenance": {
+        "value": "Contains kryptonite.",
+        "sources": ["off"],
+        "confidence": "high",
+        "evidence": "high",
+        "updated": "2026-06-30",
+        "claimType": "authoritative"
+      }
+    }
+  ]
+}

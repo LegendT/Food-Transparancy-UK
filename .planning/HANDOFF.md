@@ -1,7 +1,7 @@
 # Handoff — Food Transparency UK
 
 **Date:** 2026-06-30
-**Status:** **Phase 1 executed** (10/10 plans built; all gates green locally). One deferred human action: the Netlify deploy (01-08 Task 3). Nothing pushed to origin.
+**Status:** **Phase 1 complete and deployed.** 10/10 plans built and pushed to origin/main; live at https://food-transparancy-uk.netlify.app with the tightened CSP + HSTS confirmed on the live response. All gates green; CI + Dependabot active.
 
 ## What this project is
 
@@ -13,14 +13,14 @@ An evidence-based, citation-first static archive of how UK packaged-food recipes
 - **Verification state:** `npm run build` (all three gates + render) green; `node --test` 51/51 green; `npm run a11y:all` 4/4 routes WCAG 2.2 AA. Validation gate proven to fail on all negative fixtures and on an empty corpus.
 - **Phases 2-9 are roadmapped but not planned.** Phase 2 is the automated verification gate (VRFY-01).
 
-## THE ONE OUTSTANDING ITEM — 01-08 Task 3 (deploy), deferred by the user
+## Deploy — DONE
 
-Local `main` is **ahead of origin by the entire Phase 1 build and NOT pushed.** To finish INFRA-01's live-deploy confirmation (see `.planning/phases/01-.../01-08-SUMMARY.md`):
-1. `git push` the Phase 1 commits to origin (github.com/LegendT/Food-Transparancy-UK). Both CI and Netlify read the remote.
-2. Netlify → Add new site → Import from Git → the repo; confirm `netlify.toml` (build `npm run build`, publish `_site`, NODE_VERSION 24).
-3. Deploy; confirm the build log shows the prebuild gates before Eleventy.
-4. `curl -sI https://<site>.netlify.app | grep -iE 'content-security-policy|strict-transport'` to confirm the live CSP + HSTS.
-5. GitHub → Settings → Actions: confirm Actions is enabled.
+Phase 1 is pushed to `origin/main` (`b802baa..21cd973`) and live at
+**https://food-transparancy-uk.netlify.app** (HTTP 200; tightened CSP + HSTS +
+nosniff + frame DENY confirmed on the live response). The `CI` workflow runs on
+push; Dependabot has opened PRs bumping the pinned actions (checkout v7,
+setup-node v6, cache v6) — review/merge at leisure. Optionally watch the first
+`CI` run to green (`gh run list --workflow=ci.yml`).
 
 ## SPIKE-01 results that shape Phase 2 and corpus scope
 
@@ -39,4 +39,4 @@ Local `main` is **ahead of origin by the entire Phase 1 build and NOT pushed.** 
 
 ## Next step
 
-Either finish 01-08 Task 3 (deploy, above), or run `/gsd:plan-phase 2` to plan the automated verification gate. A formal `gsd-verifier` pass on Phase 1 was not run (each plan was verified in-flight; full suite + build + a11y are green) and can be run if desired.
+Phase 1 is done and deployed. Next: run `/gsd:plan-phase 2` to plan the automated verification gate (VRFY-01) — whose top requirement, per SPIKE-01, is the archival/primary fetch path. A formal `gsd-verifier` pass on Phase 1 was not run (each plan was verified in-flight; full suite + build + a11y green; live deploy confirmed) and can be run if desired. Merge the open Dependabot action-bump PRs at leisure.

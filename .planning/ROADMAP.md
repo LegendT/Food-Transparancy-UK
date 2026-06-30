@@ -45,7 +45,7 @@ Two editorial tracks run in parallel underneath the phase sequence. They are lab
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike** - The two-axis trust layer, the entity/TimelineEvent schemas, the source/rights registry, the image-rights default-deny gate, the open-data licence, the corpus selection rubric, the British-English + neutral-editorial CI lint, and the Netlify/CI substrate that runs the gates — as build-failing invariants before any content exists — plus the SPIKE-01 spike that re-derives the corpus scope
+- [x] **Phase 1: Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike** - The two-axis trust layer, the entity/TimelineEvent schemas, the source/rights registry, the image-rights default-deny gate, the open-data licence, the corpus selection rubric, the British-English + neutral-editorial CI lint, and the Netlify/CI substrate that runs the gates — as build-failing invariants before any content exists — plus the SPIKE-01 spike that re-derives the corpus scope (completed 2026-06-30)
 - [ ] **Phase 2: Claim-Typed Verification, Per-Fact Publication Gate & Ingestion** - No fact publishes without the passes its claim type demands; unverified facts render as withheld placeholders; stale facts show a reader-facing review-due indicator; contested facts publish with a both-sides treatment; OFF data enters only as draft leads
 - [ ] **Phase 3a: Core Entity Pages & Trust Rendering** - Server-rendered current-state product and ingredient pages over a seed corpus, every claim through the trust component, every unverified fact as an explicit withheld placeholder, ingredient pages descriptive and authoritatively cited
 - [ ] **Phase 3b: Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface** - The site chrome, the pa11y-ci WCAG 2.2 AA floor across every route, crawlability (sitemap/robots/JSON-LD), plain-English UX with inline glossary and chart-to-table fallbacks, and the credibility surface (disclaimer, About/independence, citation+export, RSS, report-an-error)
@@ -81,7 +81,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 01-05-PLAN.md — Data validation gate (Ajv + referential) with negative fixtures (TRUST-05, TRUST-06, DATA-01/03/04/07/11)
 - [x] 01-06-PLAN.md — Image-rights and British-English/neutral-editorial gates with negative fixtures (DATA-10, UX-06)
 - [x] 01-07-PLAN.md — Trust rendering macro, Methodology stub and demo page (TRUST-03/04)
-- [ ] 01-08-PLAN.md — CI pipeline, pa11y floor and Netlify deploy (INFRA-01)
+- [x] 01-08-PLAN.md — CI pipeline, pa11y floor and Netlify deploy (INFRA-01)
 - [x] 01-09-PLAN.md — Corpus selection rubric and machine-verifiable sourcing backlog (PROD-14)
 - [x] 01-10-PLAN.md — SPIKE-01: three Tier A products end to end and re-derived corpus figures (SPIKE-01)
 
@@ -228,7 +228,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 9/10 | In Progress|  |
+| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 0/TBD | Not started | - |
 | 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |

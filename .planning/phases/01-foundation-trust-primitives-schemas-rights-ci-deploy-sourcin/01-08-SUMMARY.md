@@ -1,7 +1,7 @@
 # Plan 01-08 Summary — CI/deploy substrate
 
-**Status:** Tasks 1-2 complete; **Task 3 (Netlify deploy) deferred by the user** to a later session.
-**Requirements:** INFRA-01 (partially: CI + a11y floor enforced; live-deploy header confirmation pending)
+**Status:** Complete (3/3 tasks). Site live and live headers confirmed.
+**Requirements:** INFRA-01 (satisfied: CI + a11y floor enforced; live-deploy CSP + HSTS confirmed)
 
 ## What was built (Tasks 1-2, autonomous)
 
@@ -28,21 +28,21 @@
 - `03fc0c9` feat(01-08): add pa11y-ci config for the Phase 1 accessibility floor
 - `af6df8a` feat(01-08): add hardened GitHub Actions CI and Dependabot config
 
-## Outstanding — Task 3 (human action, deferred)
+## Task 3 (human action) — DONE
 
-The plan's Task 3 is a blocking human-action gate the user chose to defer:
+- Phase 1 commits pushed to `origin/main` (`b802baa..21cd973`, 48 commits).
+- The user created and connected the Netlify project `food-transparancy-uk`.
+- Live site: **https://food-transparancy-uk.netlify.app** returns HTTP 200; a
+  successful deploy means Netlify's `npm run build` ran the prebuild gates.
+- Live response headers confirmed (actual `curl -sI`):
+  - `content-security-policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; ...; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests` (tightened, no Cloudflare allowances)
+  - `strict-transport-security: max-age=31536000; includeSubDomains; preload`
+  - `x-content-type-options: nosniff`, `x-frame-options: DENY`
+- The `CI` workflow runs on push; Dependabot immediately opened PRs bumping the
+  pinned actions (checkout v7, setup-node v6, cache v6), confirming the pins are
+  maintained.
 
-1. Push the Phase 1 commits to `origin` (github.com/LegendT/Food-Transparancy-UK).
-   Local `main` is ahead of origin by the entire Phase 1 build; nothing is pushed.
-2. Netlify → Add new site → Import from Git → `LegendT/Food-Transparancy-UK`.
-3. Confirm `netlify.toml` (build `npm run build`, publish `_site`, NODE_VERSION 24).
-4. Trigger a deploy; confirm the build log shows the prebuild gates before Eleventy.
-5. Verify the LIVE response carries the tightened CSP + HSTS:
-   `curl -sI https://<site>.netlify.app | grep -iE 'content-security-policy|strict-transport'`
-6. GitHub → Settings → Actions: confirm Actions is enabled.
-
-Until this is done, INFRA-01's "every gate has a host from day one" is satisfied in
-CI config and at build time, but the LIVE-deploy header confirmation is pending.
+INFRA-01 is satisfied: every gate has a live host, enforced at deploy time and in CI.
 
 ## Deviations
 
@@ -52,8 +52,10 @@ CI config and at build time, but the LIVE-deploy header confirmation is pending.
    from `node_modules`, downloads nothing) rather than an unverified `wait-on`
    download, honouring the "no npx of unverified packages" threat-model rule.
 
-## Self-Check: PASSED (for Tasks 1-2)
+## Self-Check: PASSED
 
 - `npm run a11y:all`: 4/4 routes pass WCAG 2.2 AA.
 - Task 2 verify grep passes; all three pinned SHAs resolve to their tags.
+- Live deploy returns HTTP 200 with the tightened CSP + HSTS confirmed on an
+  actual response.
 - No em-dashes; YAML parses.

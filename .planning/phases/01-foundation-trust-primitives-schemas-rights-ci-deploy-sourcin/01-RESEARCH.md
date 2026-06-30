@@ -103,7 +103,7 @@ npm install --save-dev ajv@8.20.0 ajv-formats@3.0.1 pa11y-ci@4.1.1 start-server-
 
 ## Package Legitimacy Audit
 
-`slopcheck` could not be installed in this session (no network egress for `pip install`). Per the legitimacy protocol, packages would normally be tagged `[ASSUMED]` and gated. However, every package below is independently corroborated by an authoritative in-session source: it is either present and in active use in the DEBT reference codebase (`package.json`/`.pa11yci.json` read this session) or recommended by the project's own accepted STACK.md research (Context7/official-docs provenance). All versions and existence were confirmed against the npm registry, and no `postinstall` scripts are present on any of them.
+`slopcheck` could not be installed in this session (no network egress for `pip install`). Per the legitimacy protocol, packages would normally be tagged `[ASSUMED]` and gated. However, every package below is independently corroborated by an authoritative in-session source: it is either present and in active use in the DEBT reference codebase (`package.json`/`.pa11yci.json` read this session) or recommended by the project's own accepted STACK.md research (Context7/official-docs provenance). All versions and existence were confirmed against the npm registry. The "no `postinstall` scripts" claim holds for the six DIRECT dependencies only: the transitive chain `pa11y-ci -> pa11y -> puppeteer` runs an install-time Chromium download, which is expected and acknowledged (not slop). The planner must therefore review the full resolved tree (`npm ls --all` / the committed lockfile), not just these six names, and confirm the lockfile is committed before CI runs.
 
 | Package | Registry | Age | Source Repo | slopcheck | Disposition |
 |---------|----------|-----|-------------|-----------|-------------|
@@ -164,7 +164,7 @@ npm install --save-dev ajv@8.20.0 ajv-formats@3.0.1 pa11y-ci@4.1.1 start-server-
    → re-derive PROD-12 corpus target + Tier A entry gate
 ```
 
-The `prebuild` gates run before `eleventy`. Because Netlify's build command is `npm run build`, npm's `prebuild` lifecycle fires the four gates on every deploy: a violation exits non-zero and the deploy fails. The same four gates plus `npm test` (the negative-fixture suite) plus `npm run a11y:ci` run in GitHub Actions on every push/PR.
+The `prebuild` gates run before `eleventy`. Because Netlify's build command is `npm run build`, npm's `prebuild` lifecycle fires the four logical gates (across three prebuild scripts: validate-data runs Ajv + referential + the date-range check; check-editorial; check-images) on every deploy: a violation exits non-zero and the deploy fails. The same gates plus `npm test` (the negative-fixture suite) plus `npm run a11y:ci` run in GitHub Actions on every push/PR.
 
 ### Recommended Project Structure
 ```
@@ -246,13 +246,15 @@ food-transparency/
   "properties": {
     "value": {},                                  // any type; the asserted value
     "sources": {                                  // >=1 source ID; provenance is mandatory
-      "type": "array", "minItems": 1,
-      "items": { "type": "string" }               // resolved against sources.json by the referential gate
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "type": "string" }               // resolved against sources.json; uniqueItems so ["off","off"] cannot fake minItems:2 (lineage-level distinctness is a Phase 2 concern)
     },
     "confidence": { "$ref": "#/$defs/grade" },    // curator certainty (TRUST-02)
     "evidence":   { "$ref": "#/$defs/grade" },    // evidence strength (TRUST-02)
     "updated":    { "type": "string", "format": "date" },
+    "checkedOn":  { "type": "string", "format": "date" },   // optional; REQUIRED for regulatory facts (TRUST-06); the referential gate enforces it, the macro renders it
     "claimType":  { "enum": ["corroborable", "authoritative"] },
+    "claimDomain": { "enum": ["general", "regulatory", "nutrition", "allergen", "ingredient-function"] }, // optional discriminator; claimDomain:"regulatory" triggers the TRUST-06 GB-source + checkedOn rule in the referential gate
     "note":       { "type": "string" },
     // Reserved for Phase 2 (DATA-11): present-and-empty-allowed, validated as optional
     "verificationStatus": { "type": ["string", "null"] },
@@ -269,6 +271,12 @@ food-transparency/
 }
 ```
 Every fact-bearing field in the entity schemas is then just `{ "$ref": "sourced-value.schema.json" }`, so the trust contract is defined once and cannot drift per field.
+
+**Ranged date model (`date-value.schema.json`, DATA-03).** A range's `from`/`to` each accept a full ISO date OR a bare 4-digit year, and nothing else, so a precise date or a year validates but an arbitrary string does not:
+```jsonc
+"from": { "anyOf": [ { "type": "string", "format": "date" }, { "type": "string", "pattern": "^[0-9]{4}$" } ] }
+```
+JSON Schema cannot express `to >= from`. The structural shape (missing `from`, non-date/non-year) is asserted by Ajv; the **order** check (`to` earlier than `from`, normalising a 4-digit year to its 1 Jan / 31 Dec bound) is an imperative `checkDateRanges()` in the validation gate (Plan 01-05), never Ajv.
 
 ### Pattern 2: Two-axis trust in `meta.json`, source-type in the registry
 **What:** `confidence` and `evidence` are two separate GRADE 4-point enums defined in `meta.json` (mirroring DEBT's single `confidenceLevels` block). Source-type (`primary/secondary/tertiary/grey`) is NOT on the fact; it lives on the source record (TRUST-02, DATA-01).
@@ -294,17 +302,17 @@ Every fact-bearing field in the entity schemas is then just `{ "$ref": "sourced-
 
 ### Pattern 3: The trust rendering macro (extend DEBT's `sourceNote`/`dataFreshnessBadge`)
 **What:** A single `sourcedValue` macro renders a fact with its value, two inline text tokens (confidence, evidence), and source/date/rationale behind a `<details>` element (TRUST-03/04 progressive disclosure). It reuses DEBT's existing `findBy` filter to resolve source IDs and `readableDate` to format dates, both already in `.eleventy.js`.
-**Macro contract:** `sourcedValue(fact, sources, label, unit)` where `fact` is a SourcedValue object and `sources` is the global `sources` array.
+**Macro contract:** `sourcedValue(fact, sources, label, unit)` where `fact` is a SourcedValue object and `sources` is the **registry array**. `sources.json` is an object `{note, sources:[...]}`, so pass `sources.sources` — DEBT's `findBy` returns `undefined` for a non-array, so passing the wrapper object would render the source list silently empty and TRUST-03 would fail.
 ```njk
 {# src/_includes/components/macros.njk (extends DEBT's macros.njk) #}
 {% macro sourcedValue(fact, sources, label, unit) %}
-<span class="fact">
+<div class="fact">
   {% if label %}<span class="fact__label">{{ label }}:</span> {% endif %}
   <span class="fact__value">{{ fact.value }}{{ unit }}</span>
   {# Two separate text tokens, colour-independent (SITE-04). Link to the Methodology anchors. #}
   <span class="fact__trust">
-    (<a href="/methodology/#confidence">confidence {{ fact.confidence }}</a>,
-     <a href="/methodology/#evidence">evidence {{ fact.evidence }}</a>)
+    (<a href="/methodology/#confidence">confidence {{ fact.confidence }}<span class="visually-hidden"> (curator certainty)</span></a>,
+     <a href="/methodology/#evidence">evidence {{ fact.evidence }}<span class="visually-hidden"> (evidence strength)</span></a>)
   </span>
   <details class="fact__detail">
     <summary>Source and date</summary>
@@ -316,10 +324,10 @@ Every fact-bearing field in the entity schemas is then just `{ "$ref": "sourced-
     <p>Last updated {{ fact.updated | readableDate }}.{% if fact.checkedOn %} Checked on {{ fact.checkedOn | readableDate }}.{% endif %}</p>
     {% if fact.note %}<p class="fact__note">{{ fact.note }}</p>{% endif %}
   </details>
-</span>
+</div>
 {% endmacro %}
 ```
-The demonstration page (success criterion 1) renders a fixture fact through this macro; the Methodology stub (success criterion 5) hosts the `#confidence` / `#evidence` anchors the tokens link to. Build the demonstration as `components-demo.njk` (a pa11y-ci target) and embed one worked example in `methodology.njk`.
+The demonstration page (success criterion 1) renders a fixture fact through this macro; the Methodology stub (success criterion 5) hosts the `#confidence` / `#evidence` anchors the tokens link to. Build the demonstration as `components-demo.njk` (a pa11y-ci target) and embed one worked example in `methodology.njk`. The `.fact` wrapper is a block `<div>` because a `<span>` cannot validly contain `<details>`/`<ul>`, and every Phase 3 page inherits this macro. `styles.css` must give links and every `<summary>` the GOV.UK focus treatment (yellow #ffdd00 background, black text, a thick black bottom border / box-shadow), not merely a generic visible outline. pa11y is the floor, not proof of usability: a one-off manual keyboard + screen-reader pass over the demo is required (pa11y misses invalid nesting and focus quality).
 
 ### Pattern 4: Gates share `lib/` logic with their tests (DEBT convention)
 **What:** Each gate's logic lives in `lib/` (pure functions returning `{errors}`), imported by both a `scripts/` CLI wrapper (runs over real data, `process.exit(1)` on error, wired into `prebuild`) and a `test/` file (runs over fixtures, asserts pass/fail). This is DEBT's "ESM tool maths in a unit-tested `lib/`" pattern applied to the gates.
@@ -462,7 +470,7 @@ Phase 1 is greenfield (a fresh repository, no pre-existing runtime state, no ren
 ### Ajv runner (`lib/validate.mjs`, draft 2020-12)
 ```js
 // Source: Ajv 8 docs (2020 build) [CITED: ajv-validator/ajv]
-import Ajv2020 from "ajv/dist/2020.js";
+import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { readFileSync, readdirSync } from "node:fs";
 
@@ -480,13 +488,25 @@ export function compile(schemaDir) {
 
 ### Editorial lint denylists (`lib/editorial-rules.mjs`)
 ```js
+// Scope class A — apply EVERYWHERE (all prose AND every scanned field, attributed quotes included):
+export const EM_DASH = "—"; // plus %E2%80%94 encoded, mirror DEBT no-emdash.test.js
 export const US_SPELLINGS = ["color","flavor","fiber","center","organize","organization",
-  "analyze","behavior","defense","labeled","modeling","favorite","license"]; // word-boundary, en-GB targets
-export const SUPERLATIVES  = ["worst","scandal","shocking","outrage","disgraceful","slammed","exposed"];
+  "analyze","behavior","defense","labeled","modeling","favorite"]; // word-boundary en-GB targets.
+  // "license" is NOT listed: it is the legitimate en-GB verb (the noun is "licence").
+
+// Scope class B — analyst-authored fields and page prose ONLY, NEVER attributed-quote fields:
+export const SUPERLATIVES  = ["scandal","shocking","outrage","disgraceful","slammed"]; // framing, not vocabulary.
+  // bare "worst"/"exposed" removed: they fire on "worst-case", "exposed to air".
+export const DENIGRATORY_PHRASES = [/\bworst offenders?\b/i, /\bnaming and shaming\b/i, /\bripping off\b/i];
 export const MOTIVE_PHRASES = [/to boost margins/i, /to cut costs/i, /to increase profits?/i,
   /to save money/i, /\bgreed\b/i, /\bcynical\b/i];
-export const EM_DASH = "—"; // plus %E2%80%94 encoded, mirror DEBT no-emdash.test.js
 ```
+
+**Denylist scoping (UX-06 vs DATA-04/PROD-08).** DATA-04/PROD-08 expressly permit a manufacturer's *attributed* stated reason and a *labelled* inference, so a `statedReason` faithfully quoting "we reformulated to cut costs" is lawful to publish and must NOT fail the build. The lint therefore splits by scope:
+- **Class A (em-dash, en-GB spellings, sentence-case)** applies to ALL scanned prose and fields.
+- **Class B (superlatives, denigratory phrases, motive phrases)** applies ONLY to analyst-authored text.
+
+Field paths scanned for Class B (analyst-authored): `explanation`, `note`, `labelledInference.basis`, and page body prose (`.njk`/`.md` text). Excluded from Class B (attributed-quote fields, Class A only): `statedReason`, verbatim source quotes, `source.name`. A prose **quote-allow** mechanism (a fenced Markdown blockquote, or an inline `<!-- editorial-allow: quote -->` directive) lets a cited line containing a Class B word ship. The scan excludes `.css` (legitimate `color:`), JSON keys (`licence`/`datasetLicence`), `.mjs`/`.js`, and `test/fixtures`.
 
 ## Validation Architecture
 

@@ -11,8 +11,8 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 - [x] **TRUST-01**: Every fact-bearing field (as designated by DATA-09) carries at least one cited source, a confidence level, an evidence level, and a last-updated date
 - [x] **TRUST-02**: Confidence and evidence are two separate fields — (a) evidence level: the strength of the underlying scientific/regulatory evidence for the claim, on a four-point scale (High / Moderate / Low / Very Low, GRADE convention); (b) confidence level: the curator's certainty that this specific record is correct and current, on the same four-point scale. Source type (primary/secondary/tertiary/grey) lives in the source registry (DATA-01), not here
-- [ ] **TRUST-03**: A reader can see the source(s) behind any displayed claim (inline citation referencing the source record)
-- [ ] **TRUST-04**: A reader can see the confidence level, evidence level and last-updated date for any displayed claim, expressed as text (colour-independence per SITE-04); per-fact metadata uses progressive disclosure — a brief inline text token for confidence/evidence, with source/date/rationale behind footnote-style references to the page's sources section or a `<details>` element — never four metadata items repeated inline on every value on a dense page
+- [x] **TRUST-03**: A reader can see the source(s) behind any displayed claim (inline citation referencing the source record)
+- [x] **TRUST-04**: A reader can see the confidence level, evidence level and last-updated date for any displayed claim, expressed as text (colour-independence per SITE-04); per-fact metadata uses progressive disclosure — a brief inline text token for confidence/evidence, with source/date/rationale behind footnote-style references to the page's sources section or a `<details>` element — never four metadata items repeated inline on every value on a dense page
 - [x] **TRUST-05**: Provenance-completeness gate — the build fails if any fact-bearing field is missing a source, confidence level, evidence level, or update date
 - [x] **TRUST-06**: Regulatory facts record a GB-specific source and a checked-on date (the EU/EFSA position is not assumed to be the GB/FSA position)
 
@@ -176,8 +176,8 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 |-------------|-------|--------|
 | TRUST-01 | Phase 1 | Complete |
 | TRUST-02 | Phase 1 | Complete |
-| TRUST-03 | Phase 1 | Pending |
-| TRUST-04 | Phase 1 | Pending |
+| TRUST-03 | Phase 1 | Complete |
+| TRUST-04 | Phase 1 | Complete |
 | TRUST-05 | Phase 1 | Complete |
 | TRUST-06 | Phase 1 | Complete |
 | DATA-01 | Phase 1 | Complete |

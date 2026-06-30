@@ -1,0 +1,10 @@
+{
+  "note": "The image-rights manifest (DATA-10). Each record validates against schemas/image.schema.json and is the rights contract for one image the site references. The gate (scripts/check-images.mjs) treats the schema default, an unknown status, and any referenced-but-unmanifested image as not-cleared, so an image publishes only when a record here explicitly clears it. Phase 1 references no images; this seed record makes the manifest a non-zero corpus and proves the own-photographed happy path.",
+  "images": [
+    {
+      "id": "own-hero-shelf",
+      "reference": "assets/photography/own-hero-shelf.jpg",
+      "rightsStatus": "own-photographed"
+    }
+  ]
+}

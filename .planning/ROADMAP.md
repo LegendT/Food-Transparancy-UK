@@ -83,7 +83,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 01-07-PLAN.md — Trust rendering macro, Methodology stub and demo page (TRUST-03/04)
 - [ ] 01-08-PLAN.md — CI pipeline, pa11y floor and Netlify deploy (INFRA-01)
 - [x] 01-09-PLAN.md — Corpus selection rubric and machine-verifiable sourcing backlog (PROD-14)
-- [ ] 01-10-PLAN.md — SPIKE-01: three Tier A products end to end and re-derived corpus figures (SPIKE-01)
+- [x] 01-10-PLAN.md — SPIKE-01: three Tier A products end to end and re-derived corpus figures (SPIKE-01)
 
 ### Phase 2: Claim-Typed Verification, Per-Fact Publication Gate & Ingestion
 
@@ -228,7 +228,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 8/10 | In Progress|  |
+| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 9/10 | In Progress|  |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 0/TBD | Not started | - |
 | 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |

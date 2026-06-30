@@ -29,6 +29,7 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **VRFY-09**: Each published fact carries a staleness threshold (a small set of global classes for v1 — e.g. regulatory vs current vs historical); the VRFY-05 audit flags exceeded thresholds for re-verification
 - [ ] **VRFY-10**: An Open Food Facts revision-diff (or similar import signal) is treated as a lead, not a verified reformulation; a detected change must be human-confirmed as a genuine recipe change (not a record correction) before it can publish as a reformulation
 - [ ] **VRFY-11**: A genuinely contested fact (two credible authorities durably disagree, resolved by a human as contested rather than as a transcription error) is publishable with a visible "contested" treatment showing both positions with their sources — distinct from "unverified — withheld". This is how genuine disputes are shown honestly rather than hidden
+- [ ] **VRFY-12**: A fact past its staleness threshold renders a visible, reader-facing "last verified {date} — review due" indicator, not only an internal audit flag
 
 ### Data Model & Sourcing
 
@@ -56,13 +57,14 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **PROD-09**: A product page displays the GB-regulated major allergens present, via the structured allergen field (DATA-07), not free text
 - [ ] **PROD-10**: Each product carries a history-completeness / evidence-tier state — (A) sourced historical formulation; (B) reformulation documented at category level with a driver, but former per-product recipe not individually sourced; (C) current-only — rendered as a deliberate, sourced state (Tier C shows an explicit "no sourced historical formulation recorded for this product"); a former recipe is never inferred or fabricated to satisfy the template
 - [ ] **PROD-11**: A user can browse a curated editorial collection of products illustrating significant, well-documented formulation changes — selected and explained with sources, framed neutrally ("significant, well-documented changes", never "most transformed" / "worst offenders"), and not ordered by any computed transformation metric — as a non-expert entry point
-- [ ] **PROD-12**: The MVP publishes product pages for at least 100 UK packaged food products, drawn from a curated list agreed before the content phase and recorded in the project data
-- [ ] **PROD-13**: The site publishes its own coverage figure (e.g. "X of 100 products carry sourced historical context") so the corpus is honest about its own gaps rather than implying every product has a then-vs-now history
+- [ ] **PROD-12**: The MVP publishes product pages for a curated launch corpus (target ~100 UK packaged food products, re-derived from the Phase 1 sourcing spike — see SPIKE-01), drawn from a recorded list agreed before the content phase
+- [ ] **PROD-13**: The site publishes its own coverage figure (e.g. "X of N published products carry sourced historical context") so the corpus is honest about its own gaps rather than implying every product has a then-vs-now history
+- [ ] **PROD-14**: The launch corpus and the Tier A flagship set follow recorded, named selection criteria (e.g. UK market ubiquity, coverage across the flagship anchor categories, sourceability of a historical formulation for Tier A) with a one-line recorded rationale per product; selection is never by a computed transformation metric
 
 ### Ingredient Explorer
 
 - [ ] **INGR-01**: An ingredient page explains what it is and why it is used — name, common synonyms, function in food (at least one sentence), and E-number where applicable
-- [ ] **INGR-02**: An ingredient page summarises the scientific evidence with at least one cited evidence statement carrying an evidence level (TRUST-02), or an explicit "no adequate evidence found" with the same fields populated
+- [ ] **INGR-02**: An ingredient page may state an authoritative body's published position on the ingredient (e.g. an FSA/EFSA/SACN safety opinion or regulatory status), cited and dated. It does NOT synthesise primary scientific studies into health-effect claims — health-effect evidence synthesis is deferred to v1.x (see deferred list). Any single study may appear only as labelled illustration, never as an evidence statement
 - [ ] **INGR-03**: An ingredient page states the current UK/GB regulatory position, with source and checked-on date
 - [ ] **INGR-04**: An ingredient page lists products that contain the ingredient
 - [ ] **INGR-05**: The MVP covers the ingredients that appear in the 100-product launch corpus (approximately 200), each fully verified; the long tail of ingredients is deferred to v1.x (deep before broad)
@@ -71,13 +73,14 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 - [ ] **SRCH-01**: A user can search across products, ingredients and brands from any page, including additive E-number synonyms
 - [ ] **SRCH-02**: Search returns results ordered by text-relevance (never by health, quality or processing characteristics), linking to the relevant product, ingredient or brand page
+- [ ] **SRCH-04**: The search index is built solely from published rendered output; withheld/unverified facts and the draft/lead store are never indexed
 - [ ] **SRCH-03**: A user can filter/facet search results (e.g. by category)
 
 ### Comparison Engine
 
 - [ ] **COMP-01**: A user can compare two or more products side by side; any current-formulation/nutrition value shown carries an authoritative-verified status (VRFY-01) before it renders. The comparison specifies a 320px responsive strategy (a labelled horizontal-scroll region or stacked per-product cards) and uses programmatic header associations (scope/headers)
 - [ ] **COMP-02**: The comparison shows ingredient count, additives and nutrition (price and processing axes are deferred to v1.x)
-- [ ] **COMP-03**: The comparison presents differences neutrally, never emits an overall "winner" ranking, and renders any "certainty differs" flag as text (not a coloured cell or icon alone); per-cell provenance uses progressive disclosure rather than inline metadata on every cell
+- [ ] **COMP-03**: The comparison presents differences neutrally, never emits an overall "winner" ranking, and renders any "certainty differs" flag as text (not a coloured cell or icon alone); per-cell provenance uses progressive disclosure rather than inline metadata on every cell. A contested value (VRFY-11) renders a "contested" marker linking to the both-sides treatment on the product page, and is never silently collapsed to one side
 - [ ] **COMP-04**: A dedicated "Expectation vs Reality" page contrasts a product's recorded original recipe with its current formulation, reusing the PROD-05/06 then-vs-now component and timeline snapshots, with sources, at a permanent URL distinct from the product page
 
 ### Timeline Engine
@@ -101,6 +104,11 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **SITE-06**: A /timelines index lists products that have at least one sourced change event, linking to each product's timeline page
 - [ ] **SITE-07**: The site provides a /404 page and a /privacy page (compliant with UK GDPR and PECR)
 - [ ] **SITE-08**: A /sources index lists all source-registry records, filterable by publisher and source type, linking to each source URL
+- [ ] **SITE-09**: A persistent "not medical or dietary advice" disclaimer appears on ingredient and evidence pages and in the site footer
+- [ ] **SITE-10**: An About page states the project's purpose, who runs it, its editorial-independence and conflict-of-interest stance (no brand sponsorship of specific records; corrections decided on evidence, not commercial pressure), how it is funded, and the named accountable editor for adjudication decisions
+- [ ] **SITE-11**: Every product and ingredient page exposes a stable canonical citation ("cite this page", with the page's last-verified date) and a one-click single-record data export of the page's underlying JSON (a static file from the git store, not the deferred public API)
+- [ ] **SITE-12**: The build generates an RSS/Atom feed of new and changed published records
+- [ ] **SITE-13**: Every product and ingredient page carries a visible "report an error" link into the corrections process (SITE-02)
 
 ### Content & UX (non-expert audience)
 
@@ -111,10 +119,16 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **UX-05**: A /glossary page lists all defined terms alphabetically with definitions, machine-generated from the same source as the inline glossary terms (UX-02)
 - [ ] **UX-06**: A CI lint step enforces British English conventions (no em-dashes, en-GB spellings, sentence-case headings) and neutral editorial style (bans superlative/denigratory framing — "worst", "scandal", "shocking" — and causal-motive verbs such as "to boost margins"/"to cut costs" in change narratives), failing the build on violation
 
+### Infrastructure, Validation & Sustainability
+
+- [ ] **INFRA-01**: The Netlify static deploy (with CSP headers) and the CI pipeline that executes the build-failing gates (TRUST-05, UX-06, DATA-10) and pa11y-ci (SITE-04) are established in the foundation, so every gate has a host from day one
+- [ ] **SPIKE-01**: A foundation-phase spike sources three Tier A products end to end (historic formulation + two-pass verification + driver), measuring the real per-product effort and the dead-end rate; the launch corpus target (PROD-12) and the Tier A entry gate are re-derived from this evidence before the then-vs-now phase is scoped
+- [ ] **DATA-12**: The canonical, git-versioned JSON dataset is published under an open licence so the archive can be reused and can outlive its maintainer (the graceful-degradation / bus-factor escape hatch)
+
 ### Release & Safeguard Gates
 
-- [ ] **GATE-01**: Before public launch, a media/IP solicitor reviews the editorial style guide, a representative sample of "why changed" narratives, the PROD-11 collection framing, and the image-rights ledger; launch is blocked until sign-off is recorded
-- [ ] **GATE-02**: The data-dense widgets (then-vs-now diff, comparison table, timeline) are manually verified with at least one screen reader (NVDA or VoiceOver), keyboard-only, and at 320px reflow as a release-checklist item before each content release — pa11y-ci is the floor, not the ceiling
+- [ ] **GATE-01**: A media/IP solicitor reviews the legal pattern early — the editorial style guide, 3–5 sample "why changed" narratives, the PROD-11 framing, and the image-rights fair-dealing rationale — when the then-vs-now pattern is first authored, before it is scaled; a full terminal sign-off then precedes public launch. Both reviews are a named, budgeted launch dependency, and launch is blocked until the terminal sign-off is recorded
+- [ ] **GATE-02**: Each data-dense widget is manually verified with at least one screen reader (NVDA or VoiceOver), keyboard-only, and at 320px reflow when it is first built (the then-vs-now diff, the comparison table, the timeline), with a consolidated re-check before public launch; pa11y-ci is the automated floor, not the ceiling
 
 ## v2 / v1.x Requirements
 
@@ -129,6 +143,7 @@ Deferred. Tracked but not in the current roadmap.
 ### Platform & Breadth (deferred)
 
 - **PRICE-01**: Product price recorded as a sourced, dated fact and shown as a comparison axis
+- **EVID-SYNTH-01**: Ingredient health-effect evidence synthesis (drawn from systematic reviews / meta-analyses / authoritative bodies, behind a qualified-reviewer sign-off gate) — deferred from v1 to keep the highest-risk editorial surface out of the initial scope
 - **INGR-LONGTAIL**: Ingredient pages beyond the launch corpus (toward the original 500 target)
 - **COMM-01 / COMM-02**: Community submission of historic packaging / corrections, with provenance + moderation
 - **API-01 / API-02**: Public API and journalist export toolkit (behind a licence + privacy review gate)
@@ -159,84 +174,12 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRUST-01 | Phase 1 | Pending |
-| TRUST-02 | Phase 1 | Pending |
-| TRUST-03 | Phase 1 | Pending |
-| TRUST-04 | Phase 1 | Pending |
-| TRUST-05 | Phase 1 | Pending |
-| TRUST-06 | Phase 1 | Pending |
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
-| DATA-07 | Phase 1 | Pending |
-| DATA-09 | Phase 1 | Pending |
-| DATA-10 | Phase 1 | Pending |
-| DATA-11 | Phase 1 | Pending |
-| UX-06 | Phase 1 | Pending |
-| VRFY-01 | Phase 2 | Pending |
-| VRFY-02 | Phase 2 | Pending |
-| VRFY-03 | Phase 2 | Pending |
-| VRFY-04 | Phase 2 | Pending |
-| VRFY-05 | Phase 2 | Pending |
-| VRFY-06 | Phase 2 | Pending |
-| VRFY-07 | Phase 2 | Pending |
-| VRFY-08 | Phase 2 | Pending |
-| VRFY-09 | Phase 2 | Pending |
-| VRFY-10 | Phase 2 | Pending |
-| VRFY-11 | Phase 2 | Pending |
-| DATA-05 | Phase 2 | Pending |
-| DATA-06 | Phase 2 | Pending |
-| PROD-01 | Phase 3a | Pending |
-| PROD-02 | Phase 3a | Pending |
-| PROD-03 | Phase 3a | Pending |
-| PROD-04 | Phase 3a | Pending |
-| PROD-09 | Phase 3a | Pending |
-| INGR-01 | Phase 3a | Pending |
-| INGR-02 | Phase 3a | Pending |
-| INGR-03 | Phase 3a | Pending |
-| INGR-04 | Phase 3a | Pending |
-| SITE-04 | Phase 3b | Pending |
-| SITE-05 | Phase 3b | Pending |
-| SITE-07 | Phase 3b | Pending |
-| SITE-08 | Phase 3b | Pending |
-| UX-01 | Phase 3b | Pending |
-| UX-02 | Phase 3b | Pending |
-| UX-03 | Phase 3b | Pending |
-| PROD-05 | Phase 4 | Pending |
-| PROD-06 | Phase 4 | Pending |
-| PROD-07 | Phase 4 | Pending |
-| PROD-08 | Phase 4 | Pending |
-| PROD-10 | Phase 4 | Pending |
-| PROD-11 | Phase 4 | Pending |
-| PROD-12 | Phase 4 | Pending |
-| PROD-13 | Phase 4 | Pending |
-| INGR-05 | Phase 4 | Pending |
-| UX-04 | Phase 4 | Pending |
-| UX-05 | Phase 4 | Pending |
-| SRCH-01 | Phase 5 | Pending |
-| SRCH-02 | Phase 5 | Pending |
-| SRCH-03 | Phase 5 | Pending |
-| SITE-01 | Phase 5 | Pending |
-| SITE-03 | Phase 5 | Pending |
-| COMP-01 | Phase 6 | Pending |
-| COMP-02 | Phase 6 | Pending |
-| COMP-03 | Phase 6 | Pending |
-| COMP-04 | Phase 6 | Pending |
-| EVID-01 | Phase 7 | Pending |
-| EVID-02 | Phase 7 | Pending |
-| SITE-02 | Phase 7 | Pending |
-| TIME-01 | Phase 8 | Pending |
-| TIME-02 | Phase 8 | Pending |
-| TIME-03 | Phase 8 | Pending |
-| SITE-06 | Phase 8 | Pending |
-| GATE-01 | Phase 9 | Pending |
-| GATE-02 | Phase 9 | Pending |
+| (to be refilled by roadmapper after Round 3 refine) | — | Pending |
 
 **Coverage:**
-- v1 requirements: 73 total
-- Mapped to phases: 73 ✓
-- Unmapped: 0
+- v1 requirements: 84 total
+- Mapped to phases: 0 (pending re-plan)
+- Unmapped: 84 (pending)
 - Deferred to v1.x (not mapped): PROC-01/02/03, PRICE-01, INGR-LONGTAIL, COMM-01/02, API-01/02, NOTF-01
 
 **Per-phase counts:** Phase 1: 15 · Phase 2: 13 · Phase 3a: 9 · Phase 3b: 7 · Phase 4: 11 · Phase 5: 5 · Phase 6: 4 · Phase 7: 3 · Phase 8: 4 · Phase 9: 2 — total 73.

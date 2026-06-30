@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Food Transparency UK is an evidence-based, interactive database that explains what packaged foods contain, how their recipes have changed over time, why those changes happened, and what the scientific evidence says about nutrition, processing and additives. Its editorial thesis is that many everyday "foods" have quietly become a manipulation of the idea of the original — ice cream that is no longer cream and flavouring but stabilisers, oils and additives. The site's job is to make the gap between *what a food used to be* and *what it is now* visible and traceable.
+Food Transparency UK is an evidence-based, interactive database that explains what packaged foods contain, how their recipes have changed over time, and why those changes happened. (Multi-dimensional processing analysis and a synthesis of the scientific evidence on additives are deferred to v1.x; v1 ingredient pages stay descriptive and cite authoritative regulatory positions rather than synthesising primary studies.) Its editorial thesis is that many everyday "foods" have quietly become a manipulation of the idea of the original — ice cream that is no longer cream and flavouring but stabilisers, oils and additives. The site's job is to make the gap between *what a food used to be* and *what it is now* visible and traceable.
 
 It is built first for the ordinary shopper who has heard of "ultra-processed food" but has never connected that phrase to the specific products in their cupboard or to what those products used to be. Journalists, researchers, teachers, nutrition professionals, students and policymakers are served by the same traceable, primary-source-backed records. The UX assumes no prior expertise: plain English, the "then vs now" comparison up front, jargon defined inline.
 
@@ -78,8 +78,9 @@ Every published fact is traceable to a primary source, independently verified to
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Trust layer is foundational, not a feature | Core value is traceability; every fact needs source/confidence/evidence/date | — Pending |
-| Processing shown as multiple dimensions, never a single score | Single scores oversimplify and mislead; PRD design principle | — Pending |
-| MVP scoped to 100 products + 500 ingredients before expanding | PRD strategic guidance: deep histories before breadth | — Pending |
+| Processing shown as multiple dimensions, never a single score (when built) | Single scores oversimplify and mislead; PRD design principle | Deferred to v1.x |
+| Launch corpus sized from a Phase 1 sourcing spike (target ~100 products + ~200 launch-corpus ingredients), not a fixed upfront number | The full corpus is a 12–18 month solo effort; a 3-product spike re-derives a realistic, evidence-based scope before scaling (Round 3) | — Pending |
+| Ingredient pages are descriptive in v1; health-effect evidence synthesis deferred behind a future expert gate | Evidence synthesis is the highest-risk editorial surface and the two-pass gate fits discrete facts, not "what the science says" (Round 3) | — Pending |
 | Public archive framing, not campaigning | PRD product philosophy: transparency over persuasion | — Pending |
 | Standard granularity, Quality (Opus) planning models, research-first | User config at initialisation | — Pending |
 | DEBT is a reference blueprint, not a fork — build fresh mirroring its Eleventy conventions | User wants the proven pattern without entangling a live, deployed site | — Pending |
@@ -92,7 +93,9 @@ Every published fact is traceable to a primary source, independently verified to
 | The universal product-page spine is the trust-rendered current-state record; then-vs-now is the flagship layer | Sourced old recipes exist for only ~15–20 of 100 products; claiming then-vs-now on every page would be a bait-and-switch (Round 2) | — Pending |
 | Legal safeguards are enforced gates, not good intentions: no-imputation-of-motive, image default "not cleared", pre-launch solicitor review | Naming brands + attributing "why" enters real UK libel/IP territory, sharpened by the SEO ambition (Round 2 legal research) | — Pending |
 | pa11y-ci is the accessibility floor; manual screen-reader/keyboard/320px testing of data-dense widgets is a release gate | Automated tools catch only ~30–40%; the then-vs-now diff, comparison and timeline-gap semantics need text not colour, AT-verified (Round 2 a11y research) | — Pending |
-| Deferred to v1.x: processing explorer, price comparison, ~300 ingredient pages | Ship the verified core first; defer the biggest research unknown, the most volatile axis, and breadth that contradicts "deep before broad" (Round 2 over-engineering pass, user-approved) | — Pending |
+| Deferred to v1.x: processing explorer, price comparison, ingredient health-evidence synthesis, ingredient long tail | Ship the verified core first; defer the biggest research unknown, the most volatile axis, the highest-risk editorial surface, and breadth that contradicts "deep before broad" (Rounds 2–3, user-approved) | — Pending |
+| Open-data escape hatch + named editor + "not medical advice" + citability/RSS/report-error are in v1 | Trust, credibility and sustainability wins: a journalist checks independence/funding before citing; an unmaintained archive must be able to outlive its author; citability earns the cold-start audience (Round 3) | — Pending |
+| Legal and accessibility gates fire when each surface is first built, not only at launch | Finding an inaccessible diff or a bad legal pattern after it is replicated across pages is the most expensive moment (Round 3) | — Pending |
 | UX targets the UPF-aware-but-not-connected layperson — plain English, then-vs-now up front | The user is the archetypal user; most people have heard of UPF but not made the connection | — Pending |
 
 ## Evolution

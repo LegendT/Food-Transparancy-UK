@@ -24,18 +24,18 @@ Every published fact is traceable to a primary source, independently verified to
 
 - [ ] Claim-typed verification workflow: every published fact verified to its claim-type standard, with disagreements escalated and verification status recorded per fact
 - [ ] Tiered "what it used to be vs what it is now": full ingredient-by-ingredient then-vs-now for a flagship set (~15–20 products) where a historical formulation is genuinely sourceable (Tier A); documented category-level reformulation with its driver for the bulk where no per-product old recipe exists (Tier B); current-only, honestly flagged, otherwise (Tier C) — never an inferred or fabricated old recipe
-- [ ] A curated editorial collection of well-documented transformations as a way in for the non-expert (editorial selection, not a metric ranking)
+- [ ] A curated editorial collection of well-documented transformations as a way in for the non-expert (editorial selection, neutrally framed, not a metric ranking)
 - [ ] A historic-sourcing editorial track started in the foundation phase (the long pole), flagship-first, anchored to documented drivers (2015 ice-cream rule, 2018 sugar levy, FSA salt/sugar reduction programmes)
-- [ ] Product pages for 100 iconic UK products (current ingredients, nutrition, manufacturer, historical timeline, recipe evolution, references)
-- [ ] Ingredient explorer covering 500 ingredients (what it is, why it is used, scientific evidence, regulatory position, products containing it)
+- [ ] Product pages for 100 iconic UK products (current ingredients, nutrition, manufacturer, references), with each fact rendered through the trust component; the universal spine is the trust-rendered current-state record, with then-vs-now layered on where sourceable
+- [ ] Ingredient explorer covering the ~200 ingredients in the launch corpus (what it is, why used, scientific evidence, regulatory position, products containing it) — deep before broad
 - [ ] Search across products, ingredients and brands
-- [ ] Product comparison engine (ingredient count, additives, nutrition, processing characteristics, price)
-- [ ] Timeline engine showing recipe/formulation change over time
-- [ ] Processing explorer presenting processing as multiple dimensions, not a single score
+- [ ] Product comparison engine (ingredient count, additives, nutrition) — neutral, never a winner; price and processing axes deferred to v1.x
+- [ ] Timeline engine showing recipe/formulation change over time, with honest gaps
 - [ ] Evidence pages linking claims to primary sources
-- [ ] Trust layer: every fact carries source, confidence, update date and evidence level
+- [ ] Trust layer: every fact carries source, confidence, evidence level and update date, published only behind a claim-typed verification gate
+- [ ] Legal and accessibility safeguards: a no-imputation-of-motive gate, image-rights "not cleared by default", a pre-launch solicitor review, and manual screen-reader testing of data-dense widgets
 - [ ] Information architecture: Home, Search, Products, Ingredients, Brands, Categories, Timelines, Evidence, Methodology, About
-- [ ] Methodology page explaining sourcing, confidence model and how uncertainty is represented
+- [ ] Methodology page explaining sourcing, the confidence/evidence and verification model, the corrections policy, and how uncertainty (including contested facts) is represented
 
 ### Out of Scope
 
@@ -47,6 +47,9 @@ Every published fact is traceable to a primary source, independently verified to
 - Barcode scanning, mobile app, AI assistant, shopping integrations — Phase 3; large surface area, premature before the core archive exists
 - Anti-brand / campaigning framing — contradicts the product philosophy; the project is a public archive of food evolution, not advocacy
 - Single overall "processing score" — deliberately rejected in favour of multi-dimensional processing characteristics
+- Processing explorer and price comparison — deferred to v1.x (processing has no authoritative UK taxonomy yet and risks re-tagging every record; price is volatile and tangential to the formulation-history thesis)
+- Reproducing brand artwork/logos without cleared rights — separate copyright regime; images default to "not cleared — do not publish" (brand names as identifiers are fine)
+- Imputation of commercial/cynical motive as fact — the defamation bright line; the "why" ships only as cited regulatory context, attributed manufacturer statement, or labelled opinion
 
 ## Context
 
@@ -60,7 +63,7 @@ Every published fact is traceable to a primary source, independently verified to
 
 ## Constraints
 
-- **Two-pass verification (highest priority)**: No fact may be published until verified to the standard its claim type demands. A *corroborable* fact (an empirical claim about the world — e.g. a past or declared formulation) needs two confirming verifications against two distinct-lineage sources (at least one primary; co-derived sources do not count as independent). An *authoritative* fact (what a named authority states — e.g. the current GB regulatory status, or the current official label) needs one authority plus an independent re-read for transcription fidelity (a second "independent source" does not exist and must not be faked). An inaccessible or non-resolving source never satisfies a pass; every citation must pass an automated existence check before a pass counts; a measure mismatch between passes auto-raises a disagreement. Anything the passes do not agree on is flagged for human approval and cannot publish until resolved (AI may never adjudicate). Every fact carries a verification status (confirmed / stale / wrong / uncertain / disputed), the verifications behind it, and the date last re-verified; staleness is computed per fact class so re-verification is a generated queue, not a good intention — "verified and re-verified until we are sure". This follows and strengthens DEBT's `DATA-AUDIT.md` dual-reviewer process. The honest public statement of this model (it is not two independent human reviewers) is itself part of the trust proposition.
+- **Two-pass verification (highest priority)**: No fact may be published until verified to the standard its claim type demands. A *corroborable* fact (an empirical claim about the world — e.g. a past or declared formulation) needs two confirming verifications against two distinct-lineage sources (at least one primary; co-derived sources do not count as independent). An *authoritative* fact (what a named authority states — e.g. the current GB regulatory status, or the current official label) needs one authority plus an independent re-read for transcription fidelity (a second "independent source" does not exist and must not be faked). An inaccessible or non-resolving source never satisfies a pass; every citation must pass an automated existence check before a pass counts; a measure mismatch between passes auto-raises a disagreement. Anything the passes do not agree on is withheld and routed to human adjudication, which resolves to confirmed, corrected, or genuinely contested (AI may never adjudicate). The gate is enforced at the level of the individual fact and is continuous: a page publishes its verified subset with any unverified fact shown as an explicit "not yet verified — withheld" placeholder rather than an asserted value, and a fact later found `wrong` is automatically withheld. A genuinely contested fact is published *with* a visible "contested" treatment showing both positions and sources — this is how real disputes are shown honestly rather than hidden. Staleness is flagged by a small set of thresholds so re-verification is a generated queue, not a good intention — "verified and re-verified until we are sure". This follows and strengthens DEBT's `DATA-AUDIT.md` dual-reviewer process. The honest public statement of this model (it is not two independent human reviewers) is itself part of the trust proposition.
 - **Editorial integrity**: No claim ships without a source, confidence level, evidence level and update date — this is the core value, not a feature toggle.
 - **Neutrality**: Presentation must avoid persuasion/outrage framing; contrast traditional vs current formulations objectively.
 - **Data licensing**: Manufacturer content, supermarket archives, and trademarks carry licensing/IP risk — sourcing must respect licences and attribute correctly.
@@ -84,6 +87,12 @@ Every published fact is traceable to a primary source, independently verified to
 | Then-vs-now is tiered (A sourced / B documented-category / C current-only), not all-100 full | Genuine ingredient-by-ingredient old recipes are sourceable for only ~15–20 products; the rest must be honest, not nostalgic (Round 1 feasibility research, live API probe) | — Pending |
 | Historic sourcing starts in the foundation phase as a parallel editorial track | It is the long-lead constraint; if it waits for the content phase, the then-vs-now spine launches empty or nostalgic | — Pending |
 | Entity + TimelineEvent schemas defined in the foundation, before ingestion | Ingestion cannot field-tag into a schema that does not yet exist (Round 1 sequencing critique) | — Pending |
+| Publication gate is per-fact, not per-page; pages ship their verified subset, unverified facts shown as explicit withheld placeholders | All-or-nothing blocking would stall the corpus for a small team; granularity is the relief valve, not lowering the bar (Round 2) | — Pending |
+| Genuinely contested facts are published with a visible "contested" treatment, not hidden | "Disputed" was a dead enum that could never reach a page, contradicting "explain uncertainty honestly" (Round 2) | — Pending |
+| The universal product-page spine is the trust-rendered current-state record; then-vs-now is the flagship layer | Sourced old recipes exist for only ~15–20 of 100 products; claiming then-vs-now on every page would be a bait-and-switch (Round 2) | — Pending |
+| Legal safeguards are enforced gates, not good intentions: no-imputation-of-motive, image default "not cleared", pre-launch solicitor review | Naming brands + attributing "why" enters real UK libel/IP territory, sharpened by the SEO ambition (Round 2 legal research) | — Pending |
+| pa11y-ci is the accessibility floor; manual screen-reader/keyboard/320px testing of data-dense widgets is a release gate | Automated tools catch only ~30–40%; the then-vs-now diff, comparison and timeline-gap semantics need text not colour, AT-verified (Round 2 a11y research) | — Pending |
+| Deferred to v1.x: processing explorer, price comparison, ~300 ingredient pages | Ship the verified core first; defer the biggest research unknown, the most volatile axis, and breadth that contradicts "deep before broad" (Round 2 over-engineering pass, user-approved) | — Pending |
 | UX targets the UPF-aware-but-not-connected layperson — plain English, then-vs-now up front | The user is the archetypal user; most people have heard of UPF but not made the connection | — Pending |
 
 ## Evolution

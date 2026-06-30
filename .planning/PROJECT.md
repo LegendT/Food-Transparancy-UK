@@ -8,7 +8,7 @@ It is built first for the ordinary shopper who has heard of "ultra-processed foo
 
 ## Core Value
 
-Every published fact is traceable to a primary source, independently verified twice, and honest about its uncertainty — transparency over persuasion. If everything else fails, a user must be able to trust that nothing on the site was published without two independent primary-source checks (with any disagreement escalated for human approval), and that every claim shows its source, date, confidence and evidence level.
+Every published fact is traceable to a primary source, independently verified to a standard matched to the claim, and honest about its uncertainty — transparency over persuasion. If everything else fails, a user must be able to trust that nothing on the site was published without the verification its claim type demands (corroborable facts: two distinct-lineage sources; authoritative facts: one authority plus an independent re-read), that disagreements are escalated for human approval, and that every claim shows its source, date, confidence and evidence level.
 
 ## Requirements
 
@@ -22,9 +22,10 @@ Every published fact is traceable to a primary source, independently verified tw
 
 <!-- Current scope. Building toward these. MVP from the PRD. -->
 
-- [ ] Two-pass verification workflow: every published fact independently verified twice against its primary source, with disagreements escalated and verification status recorded per fact
-- [ ] Product pages whose spine is "what it used to be vs what it is now" — traditional vs current formulation, ingredient by ingredient, with the why and the sources
-- [ ] A flagship browse of the starkest transformations (the products whose identity has changed most), as a way in for the non-expert
+- [ ] Claim-typed verification workflow: every published fact verified to its claim-type standard, with disagreements escalated and verification status recorded per fact
+- [ ] Tiered "what it used to be vs what it is now": full ingredient-by-ingredient then-vs-now for a flagship set (~15–20 products) where a historical formulation is genuinely sourceable (Tier A); documented category-level reformulation with its driver for the bulk where no per-product old recipe exists (Tier B); current-only, honestly flagged, otherwise (Tier C) — never an inferred or fabricated old recipe
+- [ ] A curated editorial collection of well-documented transformations as a way in for the non-expert (editorial selection, not a metric ranking)
+- [ ] A historic-sourcing editorial track started in the foundation phase (the long pole), flagship-first, anchored to documented drivers (2015 ice-cream rule, 2018 sugar levy, FSA salt/sugar reduction programmes)
 - [ ] Product pages for 100 iconic UK products (current ingredients, nutrition, manufacturer, historical timeline, recipe evolution, references)
 - [ ] Ingredient explorer covering 500 ingredients (what it is, why it is used, scientific evidence, regulatory position, products containing it)
 - [ ] Search across products, ingredients and brands
@@ -59,7 +60,7 @@ Every published fact is traceable to a primary source, independently verified tw
 
 ## Constraints
 
-- **Two-pass verification (highest priority)**: No fact may be published until it has been independently verified twice against its primary source. Anything the two passes do not agree on is flagged for human approval and cannot publish until resolved. Every fact carries a verification status (e.g. confirmed / stale / wrong / uncertain), the verifications behind it, and the date last re-verified. Re-verification is a recurring obligation, not a one-off — the bar is "verified and re-verified until we are sure", following and strengthening DEBT's `DATA-AUDIT.md` dual-reviewer process (independent re-check, disagreements surfaced, no value changed without human approval).
+- **Two-pass verification (highest priority)**: No fact may be published until verified to the standard its claim type demands. A *corroborable* fact (an empirical claim about the world — e.g. a past or declared formulation) needs two confirming verifications against two distinct-lineage sources (at least one primary; co-derived sources do not count as independent). An *authoritative* fact (what a named authority states — e.g. the current GB regulatory status, or the current official label) needs one authority plus an independent re-read for transcription fidelity (a second "independent source" does not exist and must not be faked). An inaccessible or non-resolving source never satisfies a pass; every citation must pass an automated existence check before a pass counts; a measure mismatch between passes auto-raises a disagreement. Anything the passes do not agree on is flagged for human approval and cannot publish until resolved (AI may never adjudicate). Every fact carries a verification status (confirmed / stale / wrong / uncertain / disputed), the verifications behind it, and the date last re-verified; staleness is computed per fact class so re-verification is a generated queue, not a good intention — "verified and re-verified until we are sure". This follows and strengthens DEBT's `DATA-AUDIT.md` dual-reviewer process. The honest public statement of this model (it is not two independent human reviewers) is itself part of the trust proposition.
 - **Editorial integrity**: No claim ships without a source, confidence level, evidence level and update date — this is the core value, not a feature toggle.
 - **Neutrality**: Presentation must avoid persuasion/outrage framing; contrast traditional vs current formulations objectively.
 - **Data licensing**: Manufacturer content, supermarket archives, and trademarks carry licensing/IP risk — sourcing must respect licences and attribute correctly.
@@ -79,8 +80,10 @@ Every published fact is traceable to a primary source, independently verified tw
 | Public archive framing, not campaigning | PRD product philosophy: transparency over persuasion | — Pending |
 | Standard granularity, Quality (Opus) planning models, research-first | User config at initialisation | — Pending |
 | DEBT is a reference blueprint, not a fork — build fresh mirroring its Eleventy conventions | User wants the proven pattern without entangling a live, deployed site | — Pending |
-| Every published fact requires two independent primary-source verifications; disagreements escalate to human approval | Trust is the project's highest priority — "verified and re-verified until we are sure" | — Pending |
-| "What it used to be vs what it is now" is the spine of every product page, built early | It is the editorial thesis and the emotional hook for the non-expert audience, not a late add-on | — Pending |
+| Verification standard is matched to claim type — corroborable (two distinct-lineage sources) vs authoritative (one authority + independent re-read) | "Two independent primary sources" is impossible for "what does the FSA say"; forcing it would make the gate unsatisfiable for regulatory facts (Round 1 research) | — Pending |
+| Then-vs-now is tiered (A sourced / B documented-category / C current-only), not all-100 full | Genuine ingredient-by-ingredient old recipes are sourceable for only ~15–20 products; the rest must be honest, not nostalgic (Round 1 feasibility research, live API probe) | — Pending |
+| Historic sourcing starts in the foundation phase as a parallel editorial track | It is the long-lead constraint; if it waits for the content phase, the then-vs-now spine launches empty or nostalgic | — Pending |
+| Entity + TimelineEvent schemas defined in the foundation, before ingestion | Ingestion cannot field-tag into a schema that does not yet exist (Round 1 sequencing critique) | — Pending |
 | UX targets the UPF-aware-but-not-connected layperson — plain English, then-vs-now up front | The user is the archetypal user; most people have heard of UPF but not made the connection | — Pending |
 
 ## Evolution

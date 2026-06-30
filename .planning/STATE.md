@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-06-30T19:29:49.843Z"
+last_updated: "2026-06-30T19:41:05.774Z"
 last_activity: 2026-06-30
 progress:
   total_phases: 10
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-30)
 ## Current Position
 
 Phase: 01 (foundation-trust-primitives-schemas-rights-ci-deploy-sourcin) — EXECUTING
-Plan: 5 of 10
+Plan: 6 of 10
 Status: Ready to execute
 Last activity: 2026-06-30
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P01-03 | 7 | 3 tasks | 3 files |
 | Phase 01 P01-04 | 9 | - tasks | - files |
 | Phase 01 P01-05 | 14 | 3 tasks | 18 files |
+| Phase 01 P01-06 | 16 | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,7 @@ Recent decisions affecting current work:
 - Scope deferrals to v1.x: processing explorer (PROC-*), price (PRICE-01), ingredient health-effect evidence synthesis (EVID-SYNTH-01), ingredient long tail (INGR-LONGTAIL).
 - [Phase ?]: Ajv ESM import must use ajv/dist/2020.js (with .js) under Node 24; extensionless ajv/dist/2020 fails (ajv@8.20.0 has no exports field). Applies to Plan 01-05 lib/validate.mjs
 - [Phase ?]: Plan 01-05: the validation gate is live in prebuild. Ajv structural checks run first, then imperative referential, TRUST-06 and date-order checks; a non-zero-corpus assertion seeded by src/_data/demoFact.json prevents a false-green empty scan, and nine negative fixtures each prove their owning gate rejects bad input.
+- [Phase ?]: Plan 01-06: image-rights gate is default-deny over REFERENCED images (manifest is the non-zero corpus; zero references is a valid pass); editorial lint is scoped (Class A everywhere, Class B analyst-only) with a same-line editorial-allow directive and blockquote suppression so lawful attributed quotation never fails the build.
 
 ### Pending Todos
 
@@ -110,6 +112,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-30T19:29:20.068Z
+Last session: 2026-06-30T19:40:35.945Z
 Stopped at: Completed 01-03-PLAN.md
 Resume file: None

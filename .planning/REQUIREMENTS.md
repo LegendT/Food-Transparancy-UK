@@ -41,7 +41,7 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **DATA-06**: An ingestion process can import product/ingredient data from Open Food Facts into the draft store with provenance tagged at field level
 - [x] **DATA-07**: The product schema includes a structured allergen record — a typed field per GB-regulated major allergen (the 14) — distinct from the free-text ingredients list
 - [x] **DATA-09**: The schema designates each field as fact-bearing (makes an empirical claim; subject to the trust layer) or metadata (structural/administrative; exempt); the designation lives in the schema and is enforced by TRUST-05
-- [ ] **DATA-10**: Every image (product packaging, logos, historic labels, packshots) defaults to rights status "not cleared — do not publish"; the build blocks any referenced brand image unless it is an own-photographed artefact, has an explicit cleared licence, or carries a recorded, reviewed fair-dealing-for-criticism justification. Brand names used as identifiers are not images and are not gated here
+- [x] **DATA-10**: Every image (product packaging, logos, historic labels, packshots) defaults to rights status "not cleared — do not publish"; the build blocks any referenced brand image unless it is an own-photographed artefact, has an explicit cleared licence, or carries a recorded, reviewed fair-dealing-for-criticism justification. Brand names used as identifiers are not images and are not gated here
 - [x] **DATA-11**: The product, ingredient, brand and additive entity schemas and the TimelineEvent schema (with ranged dates and the DATA-04 separation) are defined in the foundation, before ingestion writes into them, and reserve verification-status and publication-status fields for the verification gate to populate
 
 ### Product Pages
@@ -117,7 +117,7 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **UX-03**: Every chart/visualisation has a full data-table fallback rendered server-side that conveys the widget's relationships (diff add/remove/substitute, timeline gaps, certainty differences) in text — not merely a list of values, and no information by chart or colour alone (per SITE-04)
 - [ ] **UX-04**: A first-time visitor reaches a concrete "then vs now" product example within one step from the home page; the home page frames the curated flagship collection as the then-vs-now showcase and the rest as the reference archive (it does not imply every product has a then-vs-now history)
 - [ ] **UX-05**: A /glossary page lists all defined terms alphabetically with definitions, machine-generated from the same source as the inline glossary terms (UX-02)
-- [ ] **UX-06**: A CI lint step enforces British English conventions (no em-dashes, en-GB spellings, sentence-case headings) and neutral editorial style (bans superlative/denigratory framing — "worst", "scandal", "shocking" — and causal-motive verbs such as "to boost margins"/"to cut costs" in change narratives), failing the build on violation
+- [x] **UX-06**: A CI lint step enforces British English conventions (no em-dashes, en-GB spellings, sentence-case headings) and neutral editorial style (bans superlative/denigratory framing — "worst", "scandal", "shocking" — and causal-motive verbs such as "to boost margins"/"to cut costs" in change narratives), failing the build on violation
 
 ### Infrastructure, Validation & Sustainability
 
@@ -186,11 +186,11 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | DATA-04 | Phase 1 | Complete |
 | DATA-07 | Phase 1 | Complete |
 | DATA-09 | Phase 1 | Complete |
-| DATA-10 | Phase 1 | Pending |
+| DATA-10 | Phase 1 | Complete |
 | DATA-11 | Phase 1 | Complete |
 | DATA-12 | Phase 1 | Pending |
 | PROD-14 | Phase 1 | Pending |
-| UX-06 | Phase 1 | Pending |
+| UX-06 | Phase 1 | Complete |
 | INFRA-01 | Phase 1 | Complete |
 | SPIKE-01 | Phase 1 | Pending |
 | VRFY-01 | Phase 2 | Pending |

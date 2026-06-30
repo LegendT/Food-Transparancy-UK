@@ -52,5 +52,127 @@ main {
 }
 
 a {
-  color: inherit;
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/*
+ * The GOV.UK focus treatment. A thick yellow block with a solid black bottom
+ * bar reads as "focused" without relying on colour perception alone, and holds
+ * 4.5:1 contrast (#0b0c0c on #ffdd00). Applied to every link and every
+ * <summary> so the keyboard focus is unmistakable. Never suppress it.
+ */
+a:focus,
+summary:focus,
+.skip-link:focus,
+[tabindex]:focus {
+  outline: 3px solid transparent;
+  color: #0b0c0c;
+  background-color: #ffdd00;
+  box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
+  text-decoration: none;
+}
+
+/* A visible focus ring for the main landmark, which is programmatically
+   focused after the skip link is used. */
+main:focus {
+  outline: 3px solid #ffdd00;
+  outline-offset: 2px;
+}
+
+.skip-link {
+  z-index: 10;
+}
+
+/*
+ * Visually-hidden utility: removed from the visual flow but read by assistive
+ * technology. Used for the trust-token suffixes that make each link
+ * distinguishable out of context.
+ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
+ * The trust component (.fact). Layout never relies on colour to convey meaning:
+ * the confidence and evidence grades are always present as text.
+ */
+.fact {
+  margin-block: 1.5rem;
+  padding: 1rem;
+  border: 2px solid #b1b4b6;
+  border-radius: 4px;
+}
+
+.fact__head {
+  margin: 0;
+}
+
+.fact__label {
+  font-weight: 700;
+}
+
+.fact__value {
+  font-weight: 700;
+}
+
+.fact__trust {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-inline-start: 0.25rem;
+}
+
+/* Each token is a generous touch target (at least 44px tall) and is underlined,
+   so it does not depend on colour to read as a link. */
+.fact__token {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.25rem;
+}
+
+.fact__detail {
+  margin-block-start: 0.75rem;
+}
+
+/* The disclosure control is a 44px touch target and keyboard operable by
+   default (native <details>/<summary>). */
+.fact__detail summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-block: 0.25rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.fact__sources {
+  margin-block: 0.5rem;
+  padding-inline-start: 1.25rem;
+}
+
+.fact__note {
+  font-style: italic;
+}
+
+/* From the medium breakpoint up, keep the value and tokens on one comfortable
+   line. Mobile-first: the base rules above already stack gracefully on narrow
+   screens. */
+@media (min-width: 40em) {
+  .fact__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
 }

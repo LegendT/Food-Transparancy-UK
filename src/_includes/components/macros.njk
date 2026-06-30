@@ -1,0 +1,81 @@
+{#
+  Reusable components as Nunjucks macros, mirroring the DEBT blueprint and
+  extended with the Food Transparency trust-rendering macro.
+  Import in a template with:
+    {% from "components/macros.njk" import sourcedValue, caveatBox %}
+
+  Autoescaping is left ON throughout. No fact value or source name is ever piped
+  through the safe filter: ingested and external strings are treated as
+  untrusted (stored-XSS boundary, threat T-07-01).
+#}
+
+{# CaveatBox: a clearly flagged caution. #}
+{% macro caveatBox(text, heading) %}
+<aside class="caveat" role="note">
+  <p class="caveat__heading">{{ heading or "Important" }}</p>
+  <p>{{ text }}</p>
+</aside>
+{% endmacro %}
+
+{# SourceNote: where a figure came from, and when. #}
+{% macro sourceNote(record) %}
+<p class="source-note">
+  Source:
+  {% if record.source_url %}<a href="{{ record.source_url }}" rel="noopener">{{ record.source_name }}</a>{% else %}{{ record.source_name }}{% endif %}.
+  {% if record.date %}Figure dated {{ record.date | readableDate }}.{% endif %}
+  {% if record.retrieved_date %}Retrieved {{ record.retrieved_date | readableDate }}.{% endif %}
+</p>
+{% endmacro %}
+
+{#
+  SourcedValue (TRUST-03 / TRUST-04): render one fact with progressive
+  disclosure of its provenance.
+
+  Contract: sourcedValue(fact, sources, label, unit)
+    fact    a SourcedValue object (value, sources[], confidence, evidence,
+            updated, claimType, optional checkedOn, optional note).
+    sources the registry ARRAY (pass sources.sources, NOT the wrapper object;
+            findBy returns undefined for a non-array, which would silently
+            render an empty source list and break TRUST-03).
+    label   optional inline label shown before the value.
+    unit    optional unit appended to the value.
+
+  The two trust tokens are TEXT, never colour alone (WCAG 1.4.1, SITE-04). Each
+  reads "confidence {grade}" / "evidence {grade}", links to the Methodology
+  anchor that defines it, and carries a visually-hidden suffix so the link text
+  is distinguishable out of context rather than a bare "confidence high".
+
+  The wrapper is a block <div>, not a <span>, because a <span> cannot validly
+  contain the <details>/<ul> disclosure, and every later page inherits this macro.
+#}
+{% macro sourcedValue(fact, sources, label, unit) %}
+<div class="fact">
+  <p class="fact__head">
+    {% if label %}<span class="fact__label">{{ label }}:</span> {% endif %}
+    <span class="fact__value">{{ fact.value }}{% if unit %}{{ unit }}{% endif %}</span>
+    <span class="fact__trust">
+      <a class="fact__token" href="/methodology/#confidence">confidence {{ fact.confidence }}<span class="visually-hidden"> (curator certainty)</span></a>
+      <a class="fact__token" href="/methodology/#evidence">evidence {{ fact.evidence }}<span class="visually-hidden"> (evidence strength)</span></a>
+    </span>
+  </p>
+  <details class="fact__detail">
+    <summary>Source and date</summary>
+    <ul class="fact__sources">
+      {%- for id in fact.sources %}
+      {%- set s = sources | findBy("id", id) %}
+      <li>
+        {% if s %}
+          {% if s.url %}<a href="{{ s.url }}" rel="noopener">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}{% if s.jurisdiction %} ({{ s.jurisdiction }}){% endif %}.
+        {% else %}
+          Unresolved source reference: {{ id }}.
+        {% endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+    <p class="fact__dates">Last updated {{ fact.updated | readableDate }}.{% if fact.checkedOn %} Checked on {{ fact.checkedOn | readableDate }}.{% endif %}</p>
+    {%- if fact.note %}
+    <p class="fact__note">{{ fact.note }}</p>
+    {%- endif %}
+  </details>
+</div>
+{% endmacro %}

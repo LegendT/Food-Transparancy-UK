@@ -1,0 +1,39 @@
+{
+  "name": "food-transparency-uk",
+  "version": "0.1.0",
+  "description": "An evidence-based, citation-first archive of what packaged UK foods contain and how their recipes have changed.",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-data.mjs",
+    "lint:editorial": "node scripts/check-editorial.mjs",
+    "check:images": "node scripts/check-images.mjs",
+    "prebuild": "npm run validate && npm run lint:editorial && npm run check:images",
+    "build": "eleventy",
+    "start": "eleventy --serve",
+    "dev": "eleventy --serve",
+    "test": "node --test 'test/**/*.test.js'",
+    "a11y:serve": "http-server _site -p 8081 -s -c-1",
+    "a11y:ci": "pa11y-ci",
+    "a11y:all": "npm run build && start-server-and-test a11y:serve http://127.0.0.1:8081 a11y:ci"
+  },
+  "keywords": [
+    "uk",
+    "food",
+    "ingredients",
+    "transparency",
+    "nutrition",
+    "eleventy"
+  ],
+  "author": "Anthony George (Legendary Tone)",
+  "license": "MIT",
+  "dependencies": {
+    "@11ty/eleventy": "3.1.6"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "http-server": "14.1.1",
+    "pa11y-ci": "4.1.1",
+    "start-server-and-test": "3.0.11"
+  }
+}

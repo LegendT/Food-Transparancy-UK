@@ -1,0 +1,56 @@
+/*
+ * Food Transparency UK base styles (placeholder).
+ *
+ * Mobile-first. Plan 01-07 extends THIS file with the GOV.UK focus treatment
+ * and the .visually-hidden utility; it is authored now so base.njk's
+ * /assets/styles.css link does not 404 and the passthrough has something to
+ * copy. Keep focus visible: never suppress the outline.
+ */
+
+:root {
+  --colour-text: #0b0c0c;
+  --colour-background: #ffffff;
+  --measure: 70ch;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--colour-text);
+  background-color: var(--colour-background);
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  padding: 0.5rem 1rem;
+  background: var(--colour-background);
+  color: var(--colour-text);
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+main {
+  padding-block: 1.5rem;
+}
+
+a {
+  color: inherit;
+}

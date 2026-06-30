@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- set pageTitle = (title + " | " + site.title) if title else site.title %}
+  {%- set pageDesc = description or site.description %}
+  <title>{{ pageTitle }}</title>
+  <meta name="description" content="{{ pageDesc }}">
+  <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="site-header__brand" href="{{ '/' | url }}">{{ site.title }}</a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul class="site-nav__list">
+          {%- for item in site.nav %}
+          <li>
+            <a href="{{ item.url | url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.text }}</a>
+          </li>
+          {%- endfor %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap" tabindex="-1">
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>{{ site.title }} is an evidence-based archive. Every fact shows its source, date, confidence and evidence level, and may be revised.</p>
+    </div>
+  </footer>
+</body>
+</html>

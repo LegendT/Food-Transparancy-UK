@@ -1,0 +1,10 @@
+{
+  "title": "Food Transparency UK",
+  "tagline": "What packaged foods contain, how their recipes have changed, and why, with every fact traceable to its source.",
+  "description": "An evidence-based archive of UK packaged foods. Every published fact shows its source, date, confidence and evidence level.",
+  "lang": "en-GB",
+  "nav": [
+    { "text": "Home", "url": "/" },
+    { "text": "Methodology", "url": "/methodology/" }
+  ]
+}

@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Build output
+_site/
+
+# Accessibility run artefacts
+.pa11y/
+pa11y-ci-results.json
+
+# Operating system cruft
+.DS_Store

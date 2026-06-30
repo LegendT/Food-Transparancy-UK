@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/product.schema.json",
+  "title": "Product entity",
+  "description": "A packaged product record (DATA-11). Metadata fields (id, slug, name, brandId, categoryId) are plain scalars and exempt from provenance. Every fact-bearing field reuses the SourcedValue envelope by $ref (DATA-09). The structured allergens array is distinct from the free-text ingredientsText and nests its provenance under a single provenance $ref. Verification and publication status are reserved empty for the Phase 2 gate (DATA-11).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "slug", "name"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable identifier for the product.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL slug.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Product display name."
+    },
+    "brandId": {
+      "type": "string",
+      "description": "Plain reference to a brand record id."
+    },
+    "categoryId": {
+      "type": "string",
+      "description": "Plain reference to a category id."
+    },
+    "manufacturer": {
+      "$ref": "sourced-value.schema.json",
+      "description": "Fact-bearing: the named manufacturer of the current product, sourced."
+    },
+    "ingredientsText": {
+      "$ref": "sourced-value.schema.json",
+      "description": "Fact-bearing: the free-text declared ingredients list, sourced. Distinct from the structured allergens array."
+    },
+    "nutrition": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Back-of-pack nutrition declaration per 100g. Each figure is fact-bearing and reuses the SourcedValue envelope.",
+      "properties": {
+        "energyKj": { "$ref": "sourced-value.schema.json" },
+        "energyKcal": { "$ref": "sourced-value.schema.json" },
+        "fat": { "$ref": "sourced-value.schema.json" },
+        "saturates": { "$ref": "sourced-value.schema.json" },
+        "carbohydrate": { "$ref": "sourced-value.schema.json" },
+        "sugars": { "$ref": "sourced-value.schema.json" },
+        "fibre": { "$ref": "sourced-value.schema.json" },
+        "protein": { "$ref": "sourced-value.schema.json" },
+        "salt": { "$ref": "sourced-value.schema.json" }
+      }
+    },
+    "regulatoryStatus": {
+      "description": "Fact-bearing regulatory-position field. Marked claimDomain regulatory so the TRUST-06 referential gate (plan 01-05) can key on it. The allOf combines the shared envelope with a const, adding no new property, so the envelope's additionalProperties false is satisfied.",
+      "allOf": [
+        { "$ref": "sourced-value.schema.json" },
+        {
+          "type": "object",
+          "properties": { "claimDomain": { "const": "regulatory" } },
+          "required": ["claimDomain"]
+        }
+      ]
+    },
+    "allergens": {
+      "type": "array",
+      "description": "Structured 14-allergen field, distinct from the free-text ingredientsText. Each item nests its provenance under a single provenance $ref; the envelope is NOT spread via allOf siblings (its additionalProperties false would reject every record).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["allergen", "presence", "provenance"],
+        "properties": {
+          "allergen": {
+            "enum": [
+              "celery",
+              "cereals-containing-gluten",
+              "crustaceans",
+              "eggs",
+              "fish",
+              "lupin",
+              "milk",
+              "molluscs",
+              "mustard",
+              "tree-nuts",
+              "peanuts",
+              "sesame",
+              "soya",
+              "sulphur-dioxide-and-sulphites"
+            ],
+            "description": "One of the 14 GB-regulated allergen ids, kept in sync with src/_data/allergens.json (verified by test/schema-consistency.test.js)."
+          },
+          "presence": {
+            "enum": ["present", "may-contain", "absent"],
+            "description": "Three-state presence vocabulary."
+          },
+          "provenance": {
+            "$ref": "sourced-value.schema.json",
+            "description": "The sourced provenance for this allergen determination."
+          }
+        }
+      }
+    },
+    "verificationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 verification gate (DATA-11); present-and-empty (null) validates."
+    },
+    "publicationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 publication gate (DATA-11); present-and-empty (null) validates."
+    }
+  }
+}

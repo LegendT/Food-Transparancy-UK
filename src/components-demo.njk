@@ -1,0 +1,18 @@
+---
+layout: layouts/base.njk
+title: Trust component demonstration
+description: A fixture page that renders the sourcedValue trust component, used as an accessibility target.
+permalink: /components-demo/
+eleventyExcludeFromCollections: true
+---
+{% from "components/macros.njk" import sourcedValue %}
+
+<h1>Trust component demonstration</h1>
+
+<p class="lede">This is a component demonstration, not content. It exists to prove the trust component renders a fact correctly and to serve as an accessibility target. The fact below is a fixture: its grades are illustrative and are not a verified record.</p>
+
+<p>The component shows the value, two inline text tokens for confidence and evidence (each a link to the part of the methodology that defines it), and the source, date and any note behind a disclosure you can open.</p>
+
+{{ sourcedValue(demoFact, sources.sources, "Demonstration fact") }}
+
+<p><a href="{{ '/methodology/' | url }}">Read the methodology</a> for what the confidence and evidence grades mean.</p>

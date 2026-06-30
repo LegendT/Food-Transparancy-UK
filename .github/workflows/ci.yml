@@ -36,13 +36,15 @@ jobs:
       - name: Install dependencies from the committed lockfile
         run: npm ci
 
-      # Audit the PRODUCTION tree only. The whole dependency tree is build-time
-      # and dev-time and the output is static HTML, so the routine pa11y-ci to
-      # pa11y to puppeteer advisories have zero runtime relevance. A full-tree
-      # audit would fail on day one on those; --omit=dev scopes them out so a
-      # genuine high-severity CVE in a shipped dependency still fails the job.
-      - name: Audit the production dependency tree
-        run: npm audit --omit=dev --audit-level=high
+      # Audit the WHOLE dependency tree. On a static site every dependency runs
+      # at build time on the runner and the Netlify build host, so the dev tree
+      # (pa11y to pa11y to puppeteer) is exactly the supply-chain surface the
+      # SHA-pin defence above protects, and must not be exempted. The level is
+      # set to "critical" rather than "high" so the routine high-severity
+      # puppeteer-chain advisories (no runtime relevance to static HTML) do not
+      # fail the build, while a genuine critical compromise anywhere still does.
+      - name: Audit the full dependency tree
+        run: npm audit --audit-level=critical
 
       # pa11y drives headless Chrome through Puppeteer. Cache the browser between
       # runs and install it explicitly so the Chrome launch cannot fail. The

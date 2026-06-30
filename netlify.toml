@@ -23,7 +23,7 @@
     # allowances are dropped. The Phase 1 build emits no inline styles, so
     # style-src is 'self' (verify-then-tighten); if a later inline style proves
     # unavoidable, reintroduce 'unsafe-inline' and record it as a known relaxation.
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
 
 # Assets are not fingerprinted, so we deliberately do NOT set a long max-age:
 # Netlify's CDN invalidates on every deploy and browsers revalidate cheaply via

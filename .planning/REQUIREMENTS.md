@@ -104,22 +104,63 @@ Explicitly excluded for v1. Documented to prevent scope creep.
 | "Switch to a healthier product" recommendations | Forces a normative verdict; conflicts with transparency-over-persuasion |
 | Anti-brand / campaigning framing | Project is a public archive, not advocacy |
 | Open user submissions before provenance tooling | Needs moderation + rights tooling not justified for MVP (deferred to v2) |
-| Public API / data export | ODbL share-alike obligations require a licence review gate first (deferred to v2) |
+| Public API / data export | ODbL share-alike obligations require a licence + privacy review gate first (deferred to v2) |
 | Barcode scanning, mobile app, AI assistant, shopping integrations | PRD Phase 3; premature before the core archive exists |
 
 ## Traceability
 
-Populated during roadmap creation. Each requirement maps to exactly one phase.
+Each requirement maps to exactly one phase. See ROADMAP.md for phase detail.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (to be filled by roadmapper) | — | Pending |
+| TRUST-01 | Phase 1 | Pending |
+| TRUST-02 | Phase 1 | Pending |
+| TRUST-03 | Phase 1 | Pending |
+| TRUST-04 | Phase 1 | Pending |
+| TRUST-05 | Phase 1 | Pending |
+| TRUST-06 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| DATA-05 | Phase 2 | Pending |
+| DATA-06 | Phase 2 | Pending |
+| PROD-01 | Phase 3 | Pending |
+| PROD-04 | Phase 3 | Pending |
+| PROD-05 | Phase 3 | Pending |
+| INGR-01 | Phase 3 | Pending |
+| INGR-02 | Phase 3 | Pending |
+| INGR-03 | Phase 3 | Pending |
+| INGR-04 | Phase 3 | Pending |
+| INGR-05 | Phase 3 | Pending |
+| SITE-04 | Phase 3 | Pending |
+| SITE-05 | Phase 3 | Pending |
+| SRCH-01 | Phase 4 | Pending |
+| SRCH-02 | Phase 4 | Pending |
+| SRCH-03 | Phase 4 | Pending |
+| SITE-01 | Phase 4 | Pending |
+| SITE-03 | Phase 4 | Pending |
+| COMP-01 | Phase 5 | Pending |
+| COMP-02 | Phase 5 | Pending |
+| COMP-03 | Phase 5 | Pending |
+| PROC-01 | Phase 5 | Pending |
+| PROC-02 | Phase 5 | Pending |
+| PROC-03 | Phase 5 | Pending |
+| EVID-01 | Phase 6 | Pending |
+| EVID-02 | Phase 6 | Pending |
+| SITE-02 | Phase 6 | Pending |
+| TIME-01 | Phase 7 | Pending |
+| TIME-02 | Phase 7 | Pending |
+| TIME-03 | Phase 7 | Pending |
+| PROD-02 | Phase 7 | Pending |
+| PROD-03 | Phase 7 | Pending |
+| COMP-04 | Phase 7 | Pending |
 
 **Coverage:**
-- v1 requirements: 40 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 40 ⚠️
+- v1 requirements: 42 total (note: the earlier "40" count was a miscount; the enumerated list is 42)
+- Mapped to phases: 42 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-30*
-*Last updated: 2026-06-30 after initial definition*
+*Last updated: 2026-06-30 after roadmap traceability mapping*

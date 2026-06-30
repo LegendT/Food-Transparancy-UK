@@ -35,7 +35,7 @@ It is built first for the ordinary shopper who has heard of "ultra-processed foo
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
 | **Eleventy (11ty)** | 3.1.6 (latest stable, May 2025) | Static site generator + build-time data layer | Your default; bundler-free ESM; treats `_data` files as a queryable cascade; outputs crawlable HTML ideal for external citations and SEO. Do **not** use the 4.0 alpha yet. |
-| **Node.js** | 22 LTS (or 20 LTS) | Build runtime + ingestion scripts | Required by Eleventy 3; LTS for long-term maintainability of the archive. |
+| **Node.js** | 24 LTS | Build runtime + ingestion scripts | Required by Eleventy 3; pinned to 24 (active LTS) via `.node-version` and `netlify.toml`. |
 | **Nunjucks / WebC** | bundled with 11ty | Page templating / components | Nunjucks for pages and layouts; WebC for reusable components (the fact-with-provenance "chip", citation footnote, timeline row). Liquid is an equal alternative if preferred. |
 | **Flat structured data files** | n/a (JSON + YAML front matter + Markdown) | Canonical fact/source store | Local-first, diffable, reviewable in PRs (provenance auditing happens *in the diff*), zero infrastructure. Genuinely sufficient at this scale. |
 | **Ajv + JSON Schema** | Ajv 8.x | Build-time validation of the trust-layer data model | Enforces "no fact without source/confidence/evidence/date" programmatically. The single most important non-default addition — it makes your core value a compile error, not a hope. |
@@ -145,7 +145,7 @@ It is built first for the ordinary shopper who has heard of "ultra-processed foo
 
 | Package A | Compatible With | Notes |
 |-----------|-----------------|-------|
-| `@11ty/eleventy@3.1.6` | Node 18+ (use 20 or 22 LTS) | v3 is ESM-first; author config/scripts as ESM. |
+| `@11ty/eleventy@3.1.6` | Node 18+ (project pins 24 LTS) | v3 is ESM-first; author config/scripts as ESM. |
 | `pagefind@1.x` | Any SSG output (runs on built HTML) | Run as a post-build step against the output dir; framework-agnostic. |
 | `ajv@8` | Node 18+ | JSON Schema draft 2020-12 supported; use for the trust-layer gate. |
 | `@observablehq/plot@0.6` | `jsdom` for server/build-time SVG | Pulls D3 as a dependency; only include if actually used. |

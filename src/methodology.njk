@@ -1,0 +1,54 @@
+---
+layout: layouts/base.njk
+title: Methodology
+description: How Food Transparency UK records sources, confidence and evidence, and the verification standard it is built to meet.
+---
+{% from "components/macros.njk" import sourcedValue %}
+
+<h1>Methodology</h1>
+
+<p class="lede">This page explains how every claim on Food Transparency UK is recorded and what the words "confidence" and "evidence" mean when you see them next to a value.</p>
+
+<aside class="caveat" role="note">
+  <p class="caveat__heading">Provisional foundation stub</p>
+  <p>This is an early foundation page. It describes the verification standard the archive is built to meet and defines the two trust grades. A later phase (Phase 7) finalises the full public methodology. Treat this version as provisional.</p>
+</aside>
+
+<h2>Two grades on every fact</h2>
+<p>Each fact carries two separate grades, shown inline as plain text so they never depend on colour to be read. <strong>Confidence</strong> is how certain the curator is that the record is correct and current. <strong>Evidence</strong> is the strength of the underlying regulatory or scientific evidence. They are deliberately kept apart: a record can be confidently transcribed from a single source while the evidence behind the claim is still limited.</p>
+
+<section id="confidence" aria-labelledby="confidence-heading">
+  <h2 id="confidence-heading">Confidence</h2>
+  <p>Confidence is the curator's certainty that this record is correct and current.</p>
+  <dl class="grade-list">
+    {%- for grade, definition in meta.confidenceLevels %}
+    <dt class="grade-list__term">{{ grade }}</dt>
+    <dd class="grade-list__def">{{ definition }}</dd>
+    {%- endfor %}
+  </dl>
+</section>
+
+<section id="evidence" aria-labelledby="evidence-heading">
+  <h2 id="evidence-heading">Evidence</h2>
+  <p>Evidence is the strength of the regulatory position or research that underpins the claim.</p>
+  <dl class="grade-list">
+    {%- for grade, definition in meta.evidenceLevels %}
+    <dt class="grade-list__term">{{ grade }}</dt>
+    <dd class="grade-list__def">{{ definition }}</dd>
+    {%- endfor %}
+  </dl>
+</section>
+
+<h2>The verification standard</h2>
+<p>This section describes how facts are <em>intended</em> to be verified. It is the standard the archive is built to meet. It is not a claim that every record already in the archive has passed it.</p>
+<p>A fact about the world (a past or declared formulation, for example) is intended to be confirmed against two distinct-lineage sources, at least one of them primary. A fact about what a named authority states (the current regulatory position, for example) is intended to be confirmed against that authority plus an independent re-read for transcription fidelity. Anything the two passes do not agree on is withheld and routed to a human for a decision. The system never decides a genuine disagreement on its own.</p>
+
+<h2>Which fields carry provenance</h2>
+<p>A field is fact-bearing if and only if its schema uses the shared SourcedValue envelope. That envelope makes a source, confidence, evidence and a last-updated date mandatory on the field, so the build fails if any of them is missing. This guard enforces provenance only on fields already declared as the envelope; it cannot, by itself, catch an empirical field that was mistakenly modelled as a bare value. A separate schema-consistency check is responsible for that (DATA-09).</p>
+
+<h2>An illustrative example</h2>
+<aside class="example" role="note" aria-labelledby="example-heading">
+  <p class="caveat__heading" id="example-heading">Illustrative only, not a verified record</p>
+  <p>The fact below is a demonstration of the trust component. Its grades are invented to show how a claim is displayed. It is not a worked verification and must not be read as confirmed content.</p>
+  {{ sourcedValue(demoFact, sources.sources, "Example claim") }}
+</aside>

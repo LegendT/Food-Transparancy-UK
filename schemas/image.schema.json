@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/image.schema.json",
+  "title": "Image-rights record",
+  "description": "The rights contract for an image the site references (DATA-10). It gives the image gate (plan 01-06) a rightsStatus to enforce. The gate treats the default, and any referenced-but-unmanifested image, as not-cleared (research Pitfall 4). Brand names used as identifiers are not images and are not gated here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "reference", "rightsStatus"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable identifier for the image-rights record.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "reference": {
+      "type": "string",
+      "description": "The image path or identifier this rights record applies to."
+    },
+    "rightsStatus": {
+      "enum": ["own-photographed", "cleared", "fair-dealing-criticism", "not-cleared"],
+      "default": "not-cleared",
+      "description": "The rights determination. The gate treats the default and any unknown reference as not-cleared."
+    },
+    "justification": {
+      "type": "string",
+      "description": "Required by convention when rightsStatus is fair-dealing-criticism: the plain-English basis for the fair-dealing claim. Recorded here so the rights position is auditable."
+    }
+  }
+}

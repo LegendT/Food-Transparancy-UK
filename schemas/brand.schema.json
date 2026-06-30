@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/brand.schema.json",
+  "title": "Brand entity",
+  "description": "A brand record (DATA-11). In v1 brands are identifiers and filtered lists only, so this schema is deliberately minimal. Metadata fields (id, slug, name) are plain scalars. Any fact-bearing field reuses the SourcedValue envelope by $ref (DATA-09). Verification and publication status are reserved for the Phase 2 gate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "slug", "name"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable identifier for the brand.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL slug.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Brand display name. Used as an identifier; a brand name is not an image and is not gated by image.schema.json."
+    },
+    "manufacturer": {
+      "$ref": "sourced-value.schema.json",
+      "description": "Optional fact-bearing: the owning manufacturer or parent company, sourced."
+    },
+    "verificationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 verification gate (DATA-11); present-and-empty (null) validates."
+    },
+    "publicationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 publication gate (DATA-11); present-and-empty (null) validates."
+    }
+  }
+}

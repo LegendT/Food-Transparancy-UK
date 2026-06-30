@@ -12,7 +12,11 @@ which carries a share-alike obligation. The canonical choice is recorded
 machine-readably in src/_data/meta.json (datasetLicence).
 
 Note: the project's source code is licensed separately under MIT (see LICENSE).
-Each source record additionally carries its own per-source licence object.
+Each source record additionally carries its own per-source licence object. ODbL
+governs the database (its structure, selection and arrangement); individual
+Contents may carry their own rights, recorded in each source's licence object,
+and third-party quotations are included under fair dealing and the quotation
+exception rather than relicensed under ODbL.
 
 --------------------------------------------------------------------------------
 

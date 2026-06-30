@@ -7,6 +7,9 @@
   {%- set pageDesc = description or site.description %}
   <title>{{ pageTitle }}</title>
   <meta name="description" content="{{ pageDesc }}">
+  {%- if site.url %}
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  {%- endif %}
   <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}">
 </head>
 <body>
@@ -34,6 +37,7 @@
   <footer class="site-footer">
     <div class="wrap">
       <p>{{ site.title }} is an evidence-based archive. Every fact shows its source, date, confidence and evidence level, and may be revised.</p>
+      <p class="site-footer__licence">Contains public sector information licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>.{# ODbL attribution: add "and information from Open Food Facts, made available under the Open Database License (ODbL)" when the first OFF-derived fact is rendered (Phase 2), per ODbL section 4.3. #}</p>
     </div>
   </footer>
 </body>

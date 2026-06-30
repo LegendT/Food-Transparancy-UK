@@ -1,0 +1,11 @@
+{
+  "note": "DATA-10 negative fixture: a rival-brand packshot that is referenced by entity data but whose rights record is not-cleared. The gate must reject it. Self-contained as { manifest, referenced } so scripts/check-images.mjs can be spawned against it in isolation.",
+  "manifest": [
+    {
+      "id": "rival-cola-packshot",
+      "reference": "packshots/rival-cola.jpg",
+      "rightsStatus": "not-cleared"
+    }
+  ],
+  "referenced": ["packshots/rival-cola.jpg"]
+}

@@ -1,0 +1,5 @@
+{
+  "id": "demo-product-ghost",
+  "name": "Demo product referencing an unmanifested image",
+  "imageRef": "packshots/ghost-packshot.jpg"
+}

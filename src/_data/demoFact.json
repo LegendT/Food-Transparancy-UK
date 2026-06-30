@@ -1,0 +1,9 @@
+{
+  "value": "This seed fact guarantees the validation gate scans a non-zero corpus at wave 4, before any product or timeline records exist. Plan 01-07 renders this same file; it is no longer created there.",
+  "sources": ["fsa-allergen-guidance"],
+  "confidence": "high",
+  "evidence": "high",
+  "updated": "2026-06-30",
+  "claimType": "authoritative",
+  "claimDomain": "general"
+}

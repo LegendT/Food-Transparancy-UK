@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/sourced-value.schema.json",
+  "title": "SourcedValue",
+  "description": "The reusable provenance envelope $ref'd by every fact-bearing field (TRUST-01, DATA-09). A field is fact-bearing if and only if its schema uses this $ref. Phase 1 enforces only the STRUCTURAL claim-type shape; pass-counting and the transcription re-read record are added by the Phase 2 verification gate.",
+  "type": "object",
+  "required": ["value", "sources", "confidence", "evidence", "updated", "claimType"],
+  "additionalProperties": false,
+  "properties": {
+    "value": {
+      "description": "The asserted value; any type."
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string" },
+      "description": "One or more source ids resolved against sources.json. uniqueItems is true so a corroborable fact citing [\"off\",\"off\"] cannot satisfy minItems 2; lineage-level distinctness remains a Phase 2 concern."
+    },
+    "confidence": {
+      "$ref": "#/$defs/grade",
+      "description": "Curator certainty (TRUST-02); GRADE 4-point enum kept in sync with meta.json confidenceLevels."
+    },
+    "evidence": {
+      "$ref": "#/$defs/grade",
+      "description": "Evidence strength (TRUST-02); GRADE 4-point enum kept in sync with meta.json evidenceLevels."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this record was last updated."
+    },
+    "checkedOn": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional; REQUIRED for regulatory facts by the TRUST-06 referential gate (plan 01-05), rendered by the macro (plan 01-07)."
+    },
+    "claimType": {
+      "enum": ["corroborable", "authoritative"],
+      "description": "corroborable: an empirical claim about the world (structurally requires >=2 distinct sources). authoritative: what a named authority states (>=1 source)."
+    },
+    "claimDomain": {
+      "enum": ["general", "regulatory", "nutrition", "allergen", "ingredient-function"],
+      "description": "Optional discriminator the TRUST-06 gate keys on; claimDomain \"regulatory\" triggers the GB-source + checkedOn rule in the referential gate."
+    },
+    "note": {
+      "type": "string"
+    },
+    "verificationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 verification gate (DATA-11); present-and-empty (null) validates."
+    },
+    "publicationStatus": {
+      "type": ["string", "null"],
+      "description": "Reserved for the Phase 2 publication gate (DATA-11); present-and-empty (null) validates."
+    }
+  },
+  "$defs": {
+    "grade": {
+      "enum": ["high", "moderate", "low", "very-low"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": { "claimType": { "const": "corroborable" } }
+      },
+      "then": {
+        "properties": {
+          "sources": { "type": "array", "minItems": 2 }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Dependabot keeps the SHA-pinned actions and the npm dependencies current so
+# the pins do not rot. Pinning to a commit SHA freezes a version; without this,
+# a pinned action never receives a security patch.
+version: 2
+updates:
+  # Bump the SHA-pinned GitHub Actions in .github/workflows when a new release
+  # lands, refreshing each pin to the new release's commit SHA.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+
+  # Keep the committed npm lockfile patched.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore

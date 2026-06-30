@@ -1,0 +1,76 @@
+# Continuous integration for Food Transparency UK.
+# Runs the prebuild gates, the negative-fixture suite, the build, a production
+# dependency audit and the pa11y-ci accessibility floor on every push and pull
+# request, so a bad commit cannot merge. Mirrors the gates that Netlify runs at
+# deploy time (npm run build fires the prebuild chain).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Least privilege: the job only reads the repository. It never writes contents,
+# packages or deployments. pull_request (not pull_request_target) keeps a fork
+# pull request from gaining write access to this repository's secrets.
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    name: Gates, tests, build and accessibility floor
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned to full commit SHAs resolved from their release tags
+      # (git ls-remote), not mutable @v4 tags. A repointed tag is the tj-actions /
+      # Shai-Hulud 2025 supply-chain vector; a pinned SHA cannot be moved.
+      # Dependabot (.github/dependabot.yml) keeps these pins current.
+      - name: Check out the repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies from the committed lockfile
+        run: npm ci
+
+      # Audit the PRODUCTION tree only. The whole dependency tree is build-time
+      # and dev-time and the output is static HTML, so the routine pa11y-ci to
+      # pa11y to puppeteer advisories have zero runtime relevance. A full-tree
+      # audit would fail on day one on those; --omit=dev scopes them out so a
+      # genuine high-severity CVE in a shipped dependency still fails the job.
+      - name: Audit the production dependency tree
+        run: npm audit --omit=dev --audit-level=high
+
+      # pa11y drives headless Chrome through Puppeteer. Cache the browser between
+      # runs and install it explicitly so the Chrome launch cannot fail. The
+      # no-sandbox args needed on the runner already live in .pa11yci.json.
+      - name: Cache the Puppeteer browser
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-puppeteer-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-puppeteer-
+
+      - name: Install headless Chrome for pa11y
+        run: npx puppeteer browsers install chrome
+
+      # The four logical gates: Ajv structural validation plus referential
+      # integrity, the editorial lint and the image-rights default-deny.
+      - name: Run the prebuild gates
+        run: npm run prebuild
+
+      - name: Run the negative-fixture test suite
+        run: npm test
+
+      - name: Build the static site
+        run: npm run build
+
+      # Serve the already-built _site and run pa11y-ci against it (WCAG 2.2 AA).
+      # start-server-and-test is a committed dependency, so npx resolves it from
+      # node_modules and downloads nothing (no npx of an unverified package).
+      - name: Run the accessibility floor
+        run: npx start-server-and-test a11y:serve http://127.0.0.1:8081 a11y:ci

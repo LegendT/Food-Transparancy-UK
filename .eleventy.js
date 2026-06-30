@@ -10,15 +10,19 @@
  */
 import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
-// The build-failing gate scripts, run before every production build. They do
-// not exist until Wave 4 (Plans 01-05 / 01-06); until then the hook skips each
-// missing script cleanly so a Wave 1 `npx @11ty/eleventy` build still passes.
+// Resolve the gate scripts ABSOLUTELY against this config file's directory, not
+// the current working directory. A cwd-relative path would let an `eleventy`
+// build launched from any other directory find no scripts and silently skip
+// every gate (a fail-open). Anchored here, the hook gates regardless of cwd.
+const HERE = dirname(fileURLToPath(import.meta.url));
 const GATE_SCRIPTS = [
   "scripts/validate-data.mjs",
   "scripts/check-editorial.mjs",
   "scripts/check-images.mjs",
-];
+].map((s) => resolve(HERE, s));
 
 export default function (eleventyConfig) {
   // Copy static assets straight through so pages ship styled.
@@ -74,8 +78,11 @@ export default function (eleventyConfig) {
   eleventyConfig.on("eleventy.before", (eventsArg) => {
     if (eventsArg.runMode !== "build") return;
     for (const script of GATE_SCRIPTS) {
-      // Skip cleanly until the gate scripts exist (Wave 4 creates them).
-      if (!existsSync(script)) continue;
+      // Fail closed: the gate scripts exist from Wave 4 on, so a missing one is
+      // an error, never a silent skip (a skip would let a build pass ungated).
+      if (!existsSync(script)) {
+        throw new Error(`Build gate missing: ${script}`);
+      }
       const result = spawnSync(process.execPath, [script], { stdio: "inherit" });
       if (result.status !== 0) {
         throw new Error(`Build gate failed: ${script} exited with ${result.status}`);

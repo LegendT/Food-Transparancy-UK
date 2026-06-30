@@ -12,7 +12,7 @@
 // against the pinned file-to-schema map below; a single JSON file is validated
 // as one SourcedValue fact against the default registry.
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
-import { resolve, join, dirname } from "node:path";
+import { resolve, join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { compile, validateDataset } from "../lib/validate.mjs";
 import {
@@ -49,10 +49,18 @@ const ENTITY_DIRS = [
 
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
 const isDir = (path) => existsSync(path) && statSync(path).isDirectory();
-const jsonFilesIn = (dir) =>
-  readdirSync(dir)
-    .filter((name) => name.endsWith(".json"))
-    .map((name) => join(dir, name));
+// RECURSIVE: descend into nested subfolders too. Eleventy auto-loads every file
+// under src/_data recursively; a non-recursive scan would let a fact in (say)
+// products/archive/old.json render but escape validation.
+const jsonFilesIn = (dir) => {
+  const out = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...jsonFilesIn(full));
+    else if (entry.name.endsWith(".json")) out.push(full);
+  }
+  return out;
+};
 
 // Collect the corpus from the target. factBearing files are both validated as
 // whole entities and mined for facts and ranges; registry records (sources,
@@ -118,6 +126,29 @@ if (factBearing.length === 0) {
 }
 console.log(`Scanned ${factBearing.length} fact-bearing file(s) and ${registry.length} registry record(s).`);
 
+// Corpus-escape guard: Eleventy renders every .json under src/_data, but the
+// gate validates only a pinned allowlist of entity dirs plus the named registry
+// files. Any OTHER .json that carries a SourcedValue fact would render unverified.
+// Walk the whole tree and fail on any fact-bearing file outside the validated set.
+if (isDir(target)) {
+  const validated = new Set([
+    ...factBearing.map((f) => f.path),
+    join(target, "sources.json"),
+    join(target, "images.json"),
+  ]);
+  for (const path of jsonFilesIn(target)) {
+    if (validated.has(path)) continue;
+    const stray = collectFacts(readJson(path), path);
+    if (stray.length > 0) {
+      console.error(
+        `Validation failed: ${path} carries ${stray.length} fact(s) but sits outside the validated corpus ` +
+        `(not in a known entity directory). Move it under a validated entity dir or extend ENTITY_DIRS.`
+      );
+      process.exit(1);
+    }
+  }
+}
+
 // Gate 1: Ajv structural validation, run FIRST. The imperative checks below
 // assume structurally-valid input (for example checkDateRanges never sees a
 // missing or non-date bound, because Ajv has already rejected it), so a clean
@@ -136,6 +167,15 @@ const ranges = [];
 for (const { path, data } of factBearing) {
   facts.push(...collectFacts(data, path));
   ranges.push(...collectDateRanges(data, path));
+}
+
+// Non-zero FACT assertion (not just non-zero files): a corpus of metadata-only
+// records (e.g. brand stubs with id/slug/name and no SourcedValue) would pass a
+// file-count check while every downstream gate runs over an empty fact list and
+// trivially passes. Assert real facts were inspected.
+if (facts.length === 0) {
+  console.error(`Validation failed: scanned ${factBearing.length} file(s) but found zero fact-bearing values (a metadata-only corpus is a false green).`);
+  process.exit(1);
 }
 
 // Gates 2 to 4: referential integrity, TRUST-06 jurisdiction, ranged-date order.

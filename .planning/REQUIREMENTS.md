@@ -153,17 +153,94 @@ Explicitly excluded for v1. Documented to prevent scope creep.
 
 ## Traceability
 
-Each requirement maps to exactly one phase. See ROADMAP.md for phase detail. Note: a one-phase mapping is not one-phase independence — some requirements have cross-phase *data* dependencies (e.g. PROD-02/03 depend on the historic-sourcing workstream and link to Phase 8 timeline pages).
+Each requirement maps to exactly one phase. See ROADMAP.md for phase detail. Note: a one-phase mapping is **not** one-phase independence — some requirements have cross-phase *data* dependencies. PROD-02/03 (Phase 3a) depend on the historic-sourcing workstream and link conditionally to Phase 8 timeline pages; PROD-05/06/07/10/11 (Phase 4) depend on the historic-sourcing track meeting the ≥ 15 Tier A entry gate; COMP-04 (Phase 6) reuses the Phase 4 then-vs-now component; TIME-*/SITE-06 (Phase 8) depend on the ≥ 15-verified-change-event entry gate; GATE-01/02 (Phase 9) review surfaces built in Phases 1, 4, 6 and 8.
+
+Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shell, accessibility, crawlability, non-expert UX).
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (to be refilled by roadmapper after Round 2 refine) | — | Pending |
+| TRUST-01 | Phase 1 | Pending |
+| TRUST-02 | Phase 1 | Pending |
+| TRUST-03 | Phase 1 | Pending |
+| TRUST-04 | Phase 1 | Pending |
+| TRUST-05 | Phase 1 | Pending |
+| TRUST-06 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| DATA-07 | Phase 1 | Pending |
+| DATA-09 | Phase 1 | Pending |
+| DATA-10 | Phase 1 | Pending |
+| DATA-11 | Phase 1 | Pending |
+| UX-06 | Phase 1 | Pending |
+| VRFY-01 | Phase 2 | Pending |
+| VRFY-02 | Phase 2 | Pending |
+| VRFY-03 | Phase 2 | Pending |
+| VRFY-04 | Phase 2 | Pending |
+| VRFY-05 | Phase 2 | Pending |
+| VRFY-06 | Phase 2 | Pending |
+| VRFY-07 | Phase 2 | Pending |
+| VRFY-08 | Phase 2 | Pending |
+| VRFY-09 | Phase 2 | Pending |
+| VRFY-10 | Phase 2 | Pending |
+| VRFY-11 | Phase 2 | Pending |
+| DATA-05 | Phase 2 | Pending |
+| DATA-06 | Phase 2 | Pending |
+| PROD-01 | Phase 3a | Pending |
+| PROD-02 | Phase 3a | Pending |
+| PROD-03 | Phase 3a | Pending |
+| PROD-04 | Phase 3a | Pending |
+| PROD-09 | Phase 3a | Pending |
+| INGR-01 | Phase 3a | Pending |
+| INGR-02 | Phase 3a | Pending |
+| INGR-03 | Phase 3a | Pending |
+| INGR-04 | Phase 3a | Pending |
+| SITE-04 | Phase 3b | Pending |
+| SITE-05 | Phase 3b | Pending |
+| SITE-07 | Phase 3b | Pending |
+| SITE-08 | Phase 3b | Pending |
+| UX-01 | Phase 3b | Pending |
+| UX-02 | Phase 3b | Pending |
+| UX-03 | Phase 3b | Pending |
+| PROD-05 | Phase 4 | Pending |
+| PROD-06 | Phase 4 | Pending |
+| PROD-07 | Phase 4 | Pending |
+| PROD-08 | Phase 4 | Pending |
+| PROD-10 | Phase 4 | Pending |
+| PROD-11 | Phase 4 | Pending |
+| PROD-12 | Phase 4 | Pending |
+| PROD-13 | Phase 4 | Pending |
+| INGR-05 | Phase 4 | Pending |
+| UX-04 | Phase 4 | Pending |
+| UX-05 | Phase 4 | Pending |
+| SRCH-01 | Phase 5 | Pending |
+| SRCH-02 | Phase 5 | Pending |
+| SRCH-03 | Phase 5 | Pending |
+| SITE-01 | Phase 5 | Pending |
+| SITE-03 | Phase 5 | Pending |
+| COMP-01 | Phase 6 | Pending |
+| COMP-02 | Phase 6 | Pending |
+| COMP-03 | Phase 6 | Pending |
+| COMP-04 | Phase 6 | Pending |
+| EVID-01 | Phase 7 | Pending |
+| EVID-02 | Phase 7 | Pending |
+| SITE-02 | Phase 7 | Pending |
+| TIME-01 | Phase 8 | Pending |
+| TIME-02 | Phase 8 | Pending |
+| TIME-03 | Phase 8 | Pending |
+| SITE-06 | Phase 8 | Pending |
+| GATE-01 | Phase 9 | Pending |
+| GATE-02 | Phase 9 | Pending |
 
 **Coverage:**
 - v1 requirements: 73 total
-- Mapped to phases: 0 (pending re-plan)
-- Unmapped: 73 ⚠️
+- Mapped to phases: 73 ✓
+- Unmapped: 0
+- Deferred to v1.x (not mapped): PROC-01/02/03, PRICE-01, INGR-LONGTAIL, COMM-01/02, API-01/02, NOTF-01
+
+**Per-phase counts:** Phase 1: 15 · Phase 2: 13 · Phase 3a: 9 · Phase 3b: 7 · Phase 4: 11 · Phase 5: 5 · Phase 6: 4 · Phase 7: 3 · Phase 8: 4 · Phase 9: 2 — total 73.
 
 ---
 *Requirements defined: 2026-06-30*
-*Last updated: 2026-06-30 after Round 2 critique (contested-fact state, fact-level publication gate, legal safeguards, data-dense accessibility, scope deferrals: processing/price/ingredient-breadth)*
+*Last updated: 2026-06-30 after Round 2 critique — traceability refilled, 73/73 mapped across 9 phases (Phase 3 split into 3a/3b; Phase 9 launch-readiness gates added; processing/price/ingredient-breadth deferred to v1.x)*

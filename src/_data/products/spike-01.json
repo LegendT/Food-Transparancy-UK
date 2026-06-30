@@ -5,12 +5,13 @@
   "brandId": "lucozade",
   "categoryId": "soft-drinks",
   "manufacturer": {
-    "value": "Lucozade Ribena Suntory",
-    "sources": ["off"],
+    "value": "Suntory Beverage and Food GB and Ireland (Lucozade Ribena Suntory until 2020)",
+    "sources": ["sbf-gbi-2020"],
     "confidence": "high",
     "evidence": "moderate",
     "updated": "2026-06-30",
-    "claimType": "authoritative"
+    "claimType": "authoritative",
+    "note": "The maker was renamed from Lucozade Ribena Suntory to Suntory Beverage and Food GB and Ireland in September 2020; Open Food Facts still records the legacy name."
   },
   "ingredientsText": {
     "value": "Carbonated Water, Glucose Syrup (13%), Acids (Citric Acid, Lactic Acid), Flavourings, Acidity Regulator (Sodium Citrate), Preservative (Potassium Sorbate), Caffeine, Sweeteners (Sucralose, Acesulfame K), Antioxidant (Ascorbic Acid), Colours (Sunset Yellow, Ponceau 4R), Niacin (B3)",

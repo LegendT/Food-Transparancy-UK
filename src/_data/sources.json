@@ -42,7 +42,7 @@
       "name": "Soft Drinks Industry Levy",
       "publisher": "HM Revenue and Customs",
       "url": "https://www.gov.uk/government/publications/soft-drinks-industry-levy",
-      "covers": "The 2018 GB levy on sugar-sweetened soft drinks, a fiscal incentive that prompted reformulation of many products.",
+      "covers": "The 2018 GB levy on sugar-sweetened soft drinks, a fiscal incentive associated with widespread reformulation of many products.",
       "updateFrequency": "As amended",
       "retrievedDate": "2026-06-30",
       "sourceType": "primary",
@@ -224,6 +224,40 @@
       "licence": {
         "id": "all-rights-reserved",
         "url": "https://www.foodlabellingservices.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "cadbury-uk-2026",
+      "name": "Cadbury UK: Cadbury Dairy Milk product page",
+      "publisher": "Mondelez UK (Cadbury)",
+      "url": "https://www.cadbury.co.uk/products/cadbury-dairy-milk-chocolate-bar-110g/",
+      "covers": "Manufacturer product page giving the current GB ingredients list and allergen advice for Cadbury Dairy Milk.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "primary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.cadbury.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "sbf-gbi-2020",
+      "name": "Suntory Beverage and Food GB and Ireland corporate identity",
+      "publisher": "Suntory Beverage and Food GB and Ireland",
+      "url": "https://suntorybeverageandfood-europe.com/en-GB/gbi/",
+      "covers": "The current corporate identity of the maker of Lucozade and Ribena, renamed from Lucozade Ribena Suntory in September 2020.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "primary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://suntorybeverageandfood-europe.com/",
         "attributionRequired": true,
         "shareAlike": false
       }

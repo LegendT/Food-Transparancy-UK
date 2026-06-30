@@ -14,14 +14,14 @@
     "note": "Cadbury has been owned by Mondelez International since the 2010 Kraft takeover."
   },
   "ingredientsText": {
-    "value": "Milk, Sugar, Cocoa Butter, Cocoa Mass, Vegetable Fats (Palm, Shea), Dried Skimmed Milk, Dried Whey (from Milk), Emulsifiers (E442, E476, Soya Lecithin), Milk Fat, Flavourings",
-    "sources": ["off"],
-    "confidence": "moderate",
-    "evidence": "low",
+    "value": "Milk, Sugar, Cocoa Butter, Cocoa Mass, Vegetable Fats (Palm, Shea), Emulsifiers (E442, E476), Flavourings",
+    "sources": ["cadbury-uk-2026"],
+    "confidence": "high",
+    "evidence": "moderate",
     "updated": "2026-06-30",
     "claimType": "authoritative",
     "claimDomain": "ingredient-function",
-    "note": "Open Food Facts transcription. An Ocado listing for the standard bar gives a shorter ingredient list (likely a different pack size or a condensed retailer transcription); this discrepancy should route to human adjudication rather than be silently reconciled. Vegetable fats (palm, shea) are permitted up to 5% under GB/EU chocolate rules."
+    "note": "Current GB label from the manufacturer's own product page. An earlier Open Food Facts transcription carried a longer, soya-lecithin-bearing list (with dried whey and milk fat); that appears to be a non-GB or stale formulation and was set aside in favour of the manufacturer page. GB Dairy Milk uses emulsifiers E442 and E476 rather than soya lecithin. Vegetable fats (palm, shea) are permitted up to 5% under GB chocolate rules."
   },
   "nutrition": {
     "sugars": {
@@ -40,23 +40,10 @@
       "allergen": "milk",
       "presence": "present",
       "provenance": {
-        "value": "Declared on the current label",
-        "sources": ["off"],
+        "value": "Declared on the current GB label",
+        "sources": ["cadbury-uk-2026"],
         "confidence": "high",
-        "evidence": "low",
-        "updated": "2026-06-30",
-        "claimType": "authoritative",
-        "claimDomain": "allergen"
-      }
-    },
-    {
-      "allergen": "soya",
-      "presence": "present",
-      "provenance": {
-        "value": "Soya lecithin declared in the emulsifiers on the current label",
-        "sources": ["off"],
-        "confidence": "high",
-        "evidence": "low",
+        "evidence": "moderate",
         "updated": "2026-06-30",
         "claimType": "authoritative",
         "claimDomain": "allergen"
@@ -66,10 +53,23 @@
       "allergen": "tree-nuts",
       "presence": "may-contain",
       "provenance": {
-        "value": "Carries a may-contain-nuts precautionary statement on the current label",
-        "sources": ["off"],
-        "confidence": "moderate",
-        "evidence": "low",
+        "value": "Carries a may-contain-nuts precautionary statement on the current GB label",
+        "sources": ["cadbury-uk-2026"],
+        "confidence": "high",
+        "evidence": "moderate",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "claimDomain": "allergen"
+      }
+    },
+    {
+      "allergen": "cereals-containing-gluten",
+      "presence": "may-contain",
+      "provenance": {
+        "value": "Carries a may-contain-wheat precautionary statement on the current GB label",
+        "sources": ["cadbury-uk-2026"],
+        "confidence": "high",
+        "evidence": "moderate",
         "updated": "2026-06-30",
         "claimType": "authoritative",
         "claimDomain": "allergen"

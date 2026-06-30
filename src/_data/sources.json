@@ -1,0 +1,62 @@
+{
+  "note": "The source/rights registry. Each source is recorded once with its licence, rights, jurisdiction and source-type, and is cited by id from facts. Every record validates against schemas/source.schema.json.",
+  "sources": [
+    {
+      "id": "off",
+      "name": "Open Food Facts",
+      "publisher": "Open Food Facts contributors",
+      "url": "https://world.openfoodfacts.org/",
+      "covers": "Crowd-sourced current ingredients and nutrition for packaged products.",
+      "updateFrequency": "Continuous",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "tertiary",
+      "jurisdiction": "international",
+      "licence": {
+        "id": "ODbL-1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1-0/",
+        "attributionRequired": true,
+        "shareAlike": true
+      },
+      "driver": null
+    },
+    {
+      "id": "fsa-allergen-guidance",
+      "name": "FSA: Food allergy and intolerance guidance",
+      "publisher": "Food Standards Agency",
+      "url": "https://www.food.gov.uk/safety-hygiene/food-allergy-and-intolerance",
+      "covers": "GB regulatory position on the 14 major allergens and allergen labelling requirements.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "primary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "driver": null
+    },
+    {
+      "id": "sdil-2018",
+      "name": "Soft Drinks Industry Levy",
+      "publisher": "HM Revenue and Customs",
+      "url": "https://www.gov.uk/government/publications/soft-drinks-industry-levy",
+      "covers": "The 2018 GB levy on sugar-sweetened soft drinks, a fiscal incentive that prompted reformulation of many products.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "primary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "driver": {
+        "type": "incentive",
+        "name": "Soft Drinks Industry Levy 2018"
+      }
+    }
+  ]
+}

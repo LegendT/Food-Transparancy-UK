@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/source.schema.json",
+  "title": "Source registry record",
+  "description": "One citable source in the registry (DATA-01/DATA-02/TRUST-06). A fact references a source by id; licence, rights, jurisdiction and source-type are recorded here once, never on the fact.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "publisher",
+    "url",
+    "covers",
+    "updateFrequency",
+    "retrievedDate",
+    "sourceType",
+    "jurisdiction",
+    "licence"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable short identifier cited by facts.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable source name."
+    },
+    "publisher": {
+      "type": "string",
+      "description": "Organisation or body responsible for the source."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical URL or stable reference for the source."
+    },
+    "covers": {
+      "type": "string",
+      "description": "Plain-English statement of what this source covers."
+    },
+    "updateFrequency": {
+      "type": "string",
+      "description": "How often the source is refreshed (for example Continuous, Annual, As amended)."
+    },
+    "retrievedDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the source was last retrieved or checked."
+    },
+    "sourceType": {
+      "enum": ["primary", "secondary", "tertiary", "grey"],
+      "description": "Provenance class of the source (TRUST-02): primary, secondary, tertiary or grey literature."
+    },
+    "jurisdiction": {
+      "enum": ["GB", "EU", "international"],
+      "description": "Regulatory jurisdiction the source speaks for (TRUST-06): GB, EU or international."
+    },
+    "licence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "url", "attributionRequired", "shareAlike"],
+      "description": "Licence and rights status, so re-use obligations are auditable (DATA-02).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Licence identifier, for example ODbL-1.0 or OGL-3.0."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the full licence text."
+        },
+        "attributionRequired": {
+          "type": "boolean",
+          "description": "Whether re-use must attribute the source."
+        },
+        "shareAlike": {
+          "type": "boolean",
+          "description": "Whether the licence imposes a share-alike obligation (for example ODbL)."
+        }
+      }
+    },
+    "driver": {
+      "description": "For policy sources, the regulatory driver behind a change. Recorded now (DATA-01); the mandate-vs-incentive publication rule is enforced in Phase 4.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "name"],
+          "properties": {
+            "type": {
+              "enum": ["mandate", "incentive"],
+              "description": "A mandate compels; an incentive only nudges."
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the policy instrument."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

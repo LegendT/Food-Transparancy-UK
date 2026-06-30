@@ -13,8 +13,8 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [x] **TRUST-02**: Confidence and evidence are two separate fields — (a) evidence level: the strength of the underlying scientific/regulatory evidence for the claim, on a four-point scale (High / Moderate / Low / Very Low, GRADE convention); (b) confidence level: the curator's certainty that this specific record is correct and current, on the same four-point scale. Source type (primary/secondary/tertiary/grey) lives in the source registry (DATA-01), not here
 - [ ] **TRUST-03**: A reader can see the source(s) behind any displayed claim (inline citation referencing the source record)
 - [ ] **TRUST-04**: A reader can see the confidence level, evidence level and last-updated date for any displayed claim, expressed as text (colour-independence per SITE-04); per-fact metadata uses progressive disclosure — a brief inline text token for confidence/evidence, with source/date/rationale behind footnote-style references to the page's sources section or a `<details>` element — never four metadata items repeated inline on every value on a dense page
-- [ ] **TRUST-05**: Provenance-completeness gate — the build fails if any fact-bearing field is missing a source, confidence level, evidence level, or update date
-- [ ] **TRUST-06**: Regulatory facts record a GB-specific source and a checked-on date (the EU/EFSA position is not assumed to be the GB/FSA position)
+- [x] **TRUST-05**: Provenance-completeness gate — the build fails if any fact-bearing field is missing a source, confidence level, evidence level, or update date
+- [x] **TRUST-06**: Regulatory facts record a GB-specific source and a checked-on date (the EU/EFSA position is not assumed to be the GB/FSA position)
 
 ### Verification
 
@@ -33,10 +33,10 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 ### Data Model & Sourcing
 
-- [ ] **DATA-01**: A source registry stores each source as a citable record (id, name, publisher, URL/reference, what it covers, update frequency, retrieved date, source type [primary/secondary/tertiary/grey], licence/rights, and for policy drivers a mandate-vs-incentive flag), mirroring DEBT's sources.json
+- [x] **DATA-01**: A source registry stores each source as a citable record (id, name, publisher, URL/reference, what it covers, update frequency, retrieved date, source type [primary/secondary/tertiary/grey], licence/rights, and for policy drivers a mandate-vs-incentive flag), mirroring DEBT's sources.json
 - [ ] **DATA-02**: Each source record carries its licence and rights status so re-use obligations (e.g. ODbL attribution/share-alike) are auditable
 - [x] **DATA-03**: Dates support ranged/uncertain values (e.g. "circa 2015", "between 2012 and 2014") rather than forcing false precision
-- [ ] **DATA-04**: Recipe-change records separate documented change, manufacturer's stated reason, and labelled analyst inference — motive is never stored as fact
+- [x] **DATA-04**: Recipe-change records separate documented change, manufacturer's stated reason, and labelled analyst inference — motive is never stored as fact
 - [ ] **DATA-05**: Open Food Facts and other imported data are stored as unverified leads (draft) until verified, never as authority
 - [ ] **DATA-06**: An ingestion process can import product/ingredient data from Open Food Facts into the draft store with provenance tagged at field level
 - [x] **DATA-07**: The product schema includes a structured allergen record — a typed field per GB-regulated major allergen (the 14) — distinct from the free-text ingredients list
@@ -178,12 +178,12 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | TRUST-02 | Phase 1 | Complete |
 | TRUST-03 | Phase 1 | Pending |
 | TRUST-04 | Phase 1 | Pending |
-| TRUST-05 | Phase 1 | Pending |
-| TRUST-06 | Phase 1 | Pending |
-| DATA-01 | Phase 1 | Pending |
+| TRUST-05 | Phase 1 | Complete |
+| TRUST-06 | Phase 1 | Complete |
+| DATA-01 | Phase 1 | Complete |
 | DATA-02 | Phase 1 | Pending |
 | DATA-03 | Phase 1 | Complete |
-| DATA-04 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Complete |
 | DATA-07 | Phase 1 | Complete |
 | DATA-09 | Phase 1 | Complete |
 | DATA-10 | Phase 1 | Pending |

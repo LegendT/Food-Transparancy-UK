@@ -78,7 +78,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 01-02-PLAN.md — Two-axis trust enums, source/rights registry and open-data licence (TRUST-02, DATA-01/02/12, TRUST-06)
 - [x] 01-03-PLAN.md — Core trust schemas: SourcedValue envelope, ranged dates, 14-allergen vocabulary (TRUST-01, DATA-03/07/09/11)
 - [x] 01-04-PLAN.md — Entity and TimelineEvent schemas with DATA-04 separation and image-rights record (DATA-04/07/09/10/11)
-- [ ] 01-05-PLAN.md — Data validation gate (Ajv + referential) with negative fixtures (TRUST-05, TRUST-06, DATA-01/03/04/07/11)
+- [x] 01-05-PLAN.md — Data validation gate (Ajv + referential) with negative fixtures (TRUST-05, TRUST-06, DATA-01/03/04/07/11)
 - [ ] 01-06-PLAN.md — Image-rights and British-English/neutral-editorial gates with negative fixtures (DATA-10, UX-06)
 - [ ] 01-07-PLAN.md — Trust rendering macro, Methodology stub and demo page (TRUST-03/04)
 - [ ] 01-08-PLAN.md — CI pipeline, pa11y floor and Netlify deploy (INFRA-01)
@@ -228,7 +228,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 5/10 | In Progress|  |
+| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 6/10 | In Progress|  |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 0/TBD | Not started | - |
 | 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |

@@ -77,8 +77,9 @@ summary:focus,
    link-style yellow block: a `[tabindex]:focus` rule here previously
    out-specified this and flooded the whole content region yellow on skip. */
 main:focus {
-  outline: 3px solid #ffdd00;
+  outline: 3px solid #0b0c0c;
   outline-offset: 2px;
+  box-shadow: 0 0 0 6px #ffdd00;
 }
 
 .skip-link {
@@ -155,6 +156,28 @@ main:focus {
   padding-block: 0.25rem;
   cursor: pointer;
   font-weight: 700;
+}
+
+/* inline-flex removes the native disclosure marker, so draw a chevron that
+   points right when closed and down when open, as a visible expand affordance. */
+.fact__detail summary::before {
+  content: "";
+  display: inline-block;
+  width: 0.45em;
+  height: 0.45em;
+  margin-inline-end: 0.5em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+.fact__detail[open] summary::before {
+  transform: rotate(45deg);
+}
+
+/* Give the primary-nav links a target comfortably above the 24px (2.5.8) floor. */
+.site-nav a {
+  display: inline-block;
+  padding-block: 0.25rem;
 }
 
 .fact__sources {

@@ -1,7 +1,7 @@
 # Requirements: Food Transparency UK
 
 **Defined:** 2026-06-30
-**Core Value:** Every fact is traceable to a primary source with an explicit confidence level — transparency over persuasion.
+**Core Value:** Every published fact is traceable to a primary source, independently verified twice, and honest about its uncertainty — transparency over persuasion.
 
 ## v1 Requirements
 
@@ -16,9 +16,18 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **TRUST-05**: The build fails if any fact-bearing field is missing a source, confidence level, evidence level, or update date
 - [ ] **TRUST-06**: Regulatory facts record a GB-specific source and a checked-on date (EU/EFSA position is not assumed to be the GB/FSA position)
 
+### Verification
+
+- [ ] **VRFY-01**: A fact cannot be published until it has two independent primary-source verifications recorded against it
+- [ ] **VRFY-02**: When the two verifications disagree, the fact is flagged for human approval and is withheld from publication until resolved
+- [ ] **VRFY-03**: Every fact carries a verification status (confirmed / stale / wrong / uncertain) and the date it was last (re-)verified
+- [ ] **VRFY-04**: The build fails / blocks publication if any published fact lacks two recorded verifications or carries an unresolved disagreement
+- [ ] **VRFY-05**: A reviewer can run a re-verification audit that re-checks facts against their primary source and records the new status (supporting "verified and re-verified" over time)
+- [ ] **VRFY-06**: A reviewer-facing audit record (mirroring DEBT's DATA-AUDIT.md) lists each fact's status, the two verdicts, and any disagreements ordered worst-first, and no value changes without human approval
+
 ### Data Model & Sourcing
 
-- [ ] **DATA-01**: A source registry stores each primary/secondary source as a citable record (title, publisher, URL/reference, retrieved date, licence/rights)
+- [ ] **DATA-01**: A source registry stores each primary/secondary source as a citable record (id, name, publisher, URL/reference, what it covers, update frequency, retrieved date, licence/rights), mirroring DEBT's sources.json
 - [ ] **DATA-02**: Each source field records its licence and rights status so re-use obligations (e.g. ODbL attribution/share-alike) are auditable
 - [ ] **DATA-03**: Dates support ranged/uncertain values (e.g. "circa 2015", "between 2012 and 2014") rather than forcing false precision
 - [ ] **DATA-04**: Recipe-change records separate documented change, manufacturer's stated reason, and labelled analyst inference — motive is never stored as fact
@@ -32,6 +41,9 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **PROD-03**: A product page shows the product's recipe evolution (what changed and when, with sources)
 - [ ] **PROD-04**: A product page lists the references/sources behind its claims
 - [ ] **PROD-05**: The MVP covers 100 iconic UK products with product pages
+- [ ] **PROD-06**: A product page leads with a "what it used to be vs what it is now" view — traditional vs current formulation, presented ingredient by ingredient, each difference sourced
+- [ ] **PROD-07**: Where evidence exists, the then-vs-now view explains why an ingredient was added, removed or substituted (kept separate from fact: documented change vs stated reason vs labelled inference)
+- [ ] **PROD-08**: A user can browse a flagship collection of the starkest transformations (products whose identity has changed most) as an entry point
 
 ### Ingredient Explorer
 
@@ -76,8 +88,15 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **SITE-01**: The site provides the navigation/IA: Home, Search, Products, Ingredients, Brands, Categories, Timelines, Evidence, Methodology, About
 - [ ] **SITE-02**: A Methodology page explains sourcing, the confidence/evidence model, and how uncertainty is represented
 - [ ] **SITE-03**: A user can browse products by brand and by category
-- [ ] **SITE-04**: All pages meet WCAG 2.2 AA (semantic HTML, keyboard navigable, 4.5:1 contrast, visible focus, 44px targets), mobile-first
+- [ ] **SITE-04**: All pages meet WCAG 2.2 AA (semantic HTML, keyboard navigable, 4.5:1 contrast, visible focus, 44px targets), mobile-first, verified by pa11y-ci across every route
 - [ ] **SITE-05**: Product and ingredient pages are server-rendered/static and crawlable so external citations resolve to indexable pages
+
+### Content & UX (non-expert audience)
+
+- [ ] **UX-01**: Pages are written in plain English (GOV.UK-style, neutral, factual; interpretation kept separate from fact) so a reader who has only heard of "UPF" can follow them
+- [ ] **UX-02**: Unfamiliar terms (additives, processing terms, E-numbers) are defined inline via a glossary term component
+- [ ] **UX-03**: Every chart/visualisation has a full data-table fallback rendered server-side (no information conveyed by chart or colour alone)
+- [ ] **UX-04**: A first-time visitor reaches a concrete "then vs now" product example within one step from the home page (the connection, not an explainer wall)
 
 ## v2 Requirements
 
@@ -113,54 +132,13 @@ Each requirement maps to exactly one phase. See ROADMAP.md for phase detail.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRUST-01 | Phase 1 | Pending |
-| TRUST-02 | Phase 1 | Pending |
-| TRUST-03 | Phase 1 | Pending |
-| TRUST-04 | Phase 1 | Pending |
-| TRUST-05 | Phase 1 | Pending |
-| TRUST-06 | Phase 1 | Pending |
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
-| DATA-05 | Phase 2 | Pending |
-| DATA-06 | Phase 2 | Pending |
-| PROD-01 | Phase 3 | Pending |
-| PROD-04 | Phase 3 | Pending |
-| PROD-05 | Phase 3 | Pending |
-| INGR-01 | Phase 3 | Pending |
-| INGR-02 | Phase 3 | Pending |
-| INGR-03 | Phase 3 | Pending |
-| INGR-04 | Phase 3 | Pending |
-| INGR-05 | Phase 3 | Pending |
-| SITE-04 | Phase 3 | Pending |
-| SITE-05 | Phase 3 | Pending |
-| SRCH-01 | Phase 4 | Pending |
-| SRCH-02 | Phase 4 | Pending |
-| SRCH-03 | Phase 4 | Pending |
-| SITE-01 | Phase 4 | Pending |
-| SITE-03 | Phase 4 | Pending |
-| COMP-01 | Phase 5 | Pending |
-| COMP-02 | Phase 5 | Pending |
-| COMP-03 | Phase 5 | Pending |
-| PROC-01 | Phase 5 | Pending |
-| PROC-02 | Phase 5 | Pending |
-| PROC-03 | Phase 5 | Pending |
-| EVID-01 | Phase 6 | Pending |
-| EVID-02 | Phase 6 | Pending |
-| SITE-02 | Phase 6 | Pending |
-| TIME-01 | Phase 7 | Pending |
-| TIME-02 | Phase 7 | Pending |
-| TIME-03 | Phase 7 | Pending |
-| PROD-02 | Phase 7 | Pending |
-| PROD-03 | Phase 7 | Pending |
-| COMP-04 | Phase 7 | Pending |
+| (to be refilled by roadmapper after re-planning) | — | Pending |
 
 **Coverage:**
-- v1 requirements: 42 total (note: the earlier "40" count was a miscount; the enumerated list is 42)
-- Mapped to phases: 42 ✓
-- Unmapped: 0 ✓
+- v1 requirements: 55 total
+- Mapped to phases: 0 (pending re-plan)
+- Unmapped: 55 ⚠️
 
 ---
 *Requirements defined: 2026-06-30*
-*Last updated: 2026-06-30 after roadmap traceability mapping*
+*Last updated: 2026-06-30 after DEBT-blueprint + two-pass-verification + then-vs-now revision*

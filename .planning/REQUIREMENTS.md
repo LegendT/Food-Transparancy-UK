@@ -121,7 +121,7 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 ### Infrastructure, Validation & Sustainability
 
-- [ ] **INFRA-01**: The Netlify static deploy (with CSP headers) and the CI pipeline that executes the build-failing gates (TRUST-05, UX-06, DATA-10) and pa11y-ci (SITE-04) are established in the foundation, so every gate has a host from day one
+- [x] **INFRA-01**: The Netlify static deploy (with CSP headers) and the CI pipeline that executes the build-failing gates (TRUST-05, UX-06, DATA-10) and pa11y-ci (SITE-04) are established in the foundation, so every gate has a host from day one
 - [ ] **SPIKE-01**: A foundation-phase spike sources three Tier A products end to end (historic formulation + two-pass verification + driver), measuring the real per-product effort and the dead-end rate; the launch corpus target (PROD-12) and the Tier A entry gate are re-derived from this evidence before the then-vs-now phase is scoped
 - [ ] **DATA-12**: The canonical, git-versioned JSON dataset is published under an open licence so the archive can be reused and can outlive its maintainer (the graceful-degradation / bus-factor escape hatch)
 
@@ -191,7 +191,7 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | DATA-12 | Phase 1 | Pending |
 | PROD-14 | Phase 1 | Pending |
 | UX-06 | Phase 1 | Pending |
-| INFRA-01 | Phase 1 | Pending |
+| INFRA-01 | Phase 1 | Complete |
 | SPIKE-01 | Phase 1 | Pending |
 | VRFY-01 | Phase 2 | Pending |
 | VRFY-02 | Phase 2 | Pending |
@@ -260,6 +260,7 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | GATE-02 | Phase 9 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 84 total
 - Mapped to phases: 84 ✓
 - Unmapped: 0

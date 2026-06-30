@@ -1,0 +1,159 @@
+{
+  "note": "Candidate pool for the historic-sourcing track (PROD-14). These are tiered CANDIDATES the SPIKE-01 spike winnows, not 20 confirmed Tier A products. The pool deliberately spans tiers A/B/C so it does not over-promise against the project's roughly 15 to 20 Tier A feasibility ceiling. Selection is editorial by the named criteria in docs/SELECTION-CRITERIA.md, never by a computed transformation metric.",
+  "targets": [
+    {
+      "name": "Wall's Vienetta",
+      "category": "ice cream",
+      "driver": { "type": "mandate", "name": "2015 ice cream compositional rule" },
+      "tier": "A-candidate",
+      "rationale": "Long-standing GB frozen dessert often cited for the dairy-cream-to-vegetable-oil compositional shift; an archived historical ice cream formulation looks sourceable from old packaging and trade press."
+    },
+    {
+      "name": "Wall's Soft Scoop (Blue Ribbon)",
+      "category": "ice cream",
+      "driver": { "type": "mandate", "name": "2015 ice cream compositional rule" },
+      "tier": "A-candidate",
+      "rationale": "Mass-market tub product with a documented move from ice cream to frozen dessert labelling; a historical formulation is plausibly sourceable from archived labels."
+    },
+    {
+      "name": "Wall's Cornetto",
+      "category": "ice cream",
+      "driver": { "type": "mandate", "name": "2015 ice cream compositional rule" },
+      "tier": "B-candidate",
+      "rationale": "Ubiquitous GB cone product in the ice cream anchor category; category-level reformulation is documentable even where a per-product historical recipe is harder to confirm."
+    },
+    {
+      "name": "Carte D'Or",
+      "category": "ice cream",
+      "driver": { "type": "mandate", "name": "2015 ice cream compositional rule" },
+      "tier": "B-candidate",
+      "rationale": "Widely stocked tub brand in the ice cream category; reformulation against the compositional rule is documentable at category level pending a sourceable historical recipe."
+    },
+    {
+      "name": "Supermarket own-label soft scoop frozen dessert",
+      "category": "ice cream",
+      "driver": { "type": "mandate", "name": "2015 ice cream compositional rule" },
+      "tier": "C-candidate",
+      "rationale": "Current-only own-label example of the frozen dessert category, included for category breadth with no historical formulation expected to be sourceable."
+    },
+    {
+      "name": "Lucozade Energy",
+      "category": "soft drinks",
+      "driver": { "type": "incentive", "name": "2018 Soft Drinks Industry Levy" },
+      "tier": "A-candidate",
+      "rationale": "GB sports-energy drink with a publicly reported sugar reduction around 2017 ahead of the levy; historical sugar content looks sourceable from contemporaneous reporting and archived labels."
+    },
+    {
+      "name": "Ribena",
+      "category": "soft drinks",
+      "driver": { "type": "incentive", "name": "2018 Soft Drinks Industry Levy" },
+      "tier": "A-candidate",
+      "rationale": "Ubiquitous GB blackcurrant drink with a documented pre-levy sugar reduction; a historical formulation is plausibly sourceable from packaging archives and trade coverage."
+    },
+    {
+      "name": "Irn-Bru",
+      "category": "soft drinks",
+      "driver": { "type": "incentive", "name": "2018 Soft Drinks Industry Levy" },
+      "tier": "A-candidate",
+      "rationale": "Well-known GB soft drink whose 2018 sugar reduction was widely reported; historical sugar content is well documented and sourceable."
+    },
+    {
+      "name": "Fanta (GB)",
+      "category": "soft drinks",
+      "driver": { "type": "incentive", "name": "2018 Soft Drinks Industry Levy" },
+      "tier": "B-candidate",
+      "rationale": "Widely sold GB carbonate reformulated around the levy period; the category-level driver is clear with a per-product historical recipe to confirm."
+    },
+    {
+      "name": "Sprite (GB)",
+      "category": "soft drinks",
+      "driver": { "type": "incentive", "name": "2018 Soft Drinks Industry Levy" },
+      "tier": "B-candidate",
+      "rationale": "Ubiquitous GB lemon-lime carbonate in the soft drinks anchor; levy-period reformulation is documentable pending a sourceable historical formulation."
+    },
+    {
+      "name": "Vimto",
+      "category": "soft drinks",
+      "driver": { "type": "incentive", "name": "2018 Soft Drinks Industry Levy" },
+      "tier": "B-candidate",
+      "rationale": "Established GB cordial and carbonate brand touched by the levy; reformulation is documentable at category level."
+    },
+    {
+      "name": "Lilt",
+      "category": "soft drinks",
+      "driver": { "type": "incentive", "name": "2018 Soft Drinks Industry Levy" },
+      "tier": "C-candidate",
+      "rationale": "Current-only GB carbonate example for category breadth; a historical formulation is not expected to be readily sourceable."
+    },
+    {
+      "name": "Cadbury Dairy Milk",
+      "category": "chocolate",
+      "driver": { "type": "incentive", "name": "FSA sugar reduction programme (2015 onwards)" },
+      "tier": "A-candidate",
+      "rationale": "Widely sold GB moulded chocolate with documented recipe and format changes; a historical formulation is plausibly sourceable from packaging archives and trade press."
+    },
+    {
+      "name": "Cadbury Creme Egg",
+      "category": "chocolate",
+      "driver": { "type": "incentive", "name": "FSA sugar reduction programme (2015 onwards)" },
+      "tier": "A-candidate",
+      "rationale": "GB seasonal confection whose 2015 chocolate-shell change was widely reported; a historical formulation is well documented and sourceable."
+    },
+    {
+      "name": "Terry's Chocolate Orange",
+      "category": "chocolate",
+      "driver": { "type": "incentive", "name": "FSA sugar reduction programme (2015 onwards)" },
+      "tier": "B-candidate",
+      "rationale": "Long-standing GB confection in the chocolate anchor; format and recipe changes are documentable pending a sourceable historical recipe."
+    },
+    {
+      "name": "Toblerone (GB)",
+      "category": "chocolate",
+      "driver": { "type": "incentive", "name": "FSA sugar reduction programme (2015 onwards)" },
+      "tier": "B-candidate",
+      "rationale": "Widely sold in GB with a documented 2016 format change; a per-product historical formulation is to be confirmed against the sugar programme context."
+    },
+    {
+      "name": "Mars bar",
+      "category": "chocolate",
+      "driver": { "type": "incentive", "name": "FSA sugar reduction programme (2015 onwards)" },
+      "tier": "B-candidate",
+      "rationale": "Ubiquitous GB countline relevant to the sugar programme; category-level reformulation is documentable with a historical recipe to source."
+    },
+    {
+      "name": "Quality Street",
+      "category": "chocolate",
+      "driver": { "type": "incentive", "name": "FSA sugar reduction programme (2015 onwards)" },
+      "tier": "C-candidate",
+      "rationale": "Current-only GB confection selection for category breadth; a per-sweet historical formulation is unlikely to be cleanly sourceable."
+    },
+    {
+      "name": "Hovis Wholemeal",
+      "category": "bread",
+      "driver": { "type": "incentive", "name": "FSA salt reduction programme (2006 onwards)" },
+      "tier": "A-candidate",
+      "rationale": "Major GB wrapped loaf within the salt reduction programme; historical salt content looks sourceable from programme reporting and archived nutrition panels."
+    },
+    {
+      "name": "Warburtons Toastie",
+      "category": "bread",
+      "driver": { "type": "incentive", "name": "FSA salt reduction programme (2006 onwards)" },
+      "tier": "B-candidate",
+      "rationale": "Widely stocked GB loaf affected by the salt programme; reformulation is documentable at category level pending a sourceable historical panel."
+    },
+    {
+      "name": "Kingsmill 50/50",
+      "category": "bread",
+      "driver": { "type": "incentive", "name": "FSA salt reduction programme (2006 onwards)" },
+      "tier": "B-candidate",
+      "rationale": "Established GB loaf in the bread anchor; salt and recipe changes are documentable against the programme with a historical panel to confirm."
+    },
+    {
+      "name": "Hovis Best of Both",
+      "category": "bread",
+      "driver": { "type": "incentive", "name": "FSA salt reduction programme (2006 onwards)" },
+      "tier": "C-candidate",
+      "rationale": "Current-only GB loaf example for category breadth; a clean historical formulation is not expected to be readily sourceable."
+    }
+  ]
+}

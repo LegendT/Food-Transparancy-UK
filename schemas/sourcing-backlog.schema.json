@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/sourcing-backlog.schema.json",
+  "title": "Historic-sourcing backlog",
+  "description": "The PROD-14 sourcing backlog: a pool of candidate targets for the historic-sourcing track. Each target names a flagship product, its anchor category, a documented driver, a tier hint and a one-line editorial rationale. Targets are CANDIDATES the SPIKE-01 spike winnows, not confirmed Tier A. Selection is editorial by named criteria (see docs/SELECTION-CRITERIA.md), never a computed transformation metric.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["targets"],
+  "properties": {
+    "note": {
+      "type": "string",
+      "description": "Optional plain-English note about the backlog and its candidate framing."
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 20,
+      "description": "At least 20 candidate targets across tiers A/B/C. The pool must not be all-Tier-A-candidate, so it cannot over-promise against the project's roughly 15 to 20 Tier A feasibility ceiling.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "category", "driver", "tier", "rationale"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The candidate product or product family."
+          },
+          "category": {
+            "enum": ["ice cream", "soft drinks", "chocolate", "bread"],
+            "description": "One of the flagship anchor categories."
+          },
+          "driver": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "name"],
+            "description": "The documented driver this target is anchored to.",
+            "properties": {
+              "type": {
+                "enum": ["mandate", "incentive"],
+                "description": "A mandate compels a compositional change; an incentive only nudges (a levy or a voluntary programme)."
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Name of the documented driver, for example the 2018 Soft Drinks Industry Levy or the FSA sugar reduction programme."
+              }
+            }
+          },
+          "tier": {
+            "enum": ["A-candidate", "B-candidate", "C-candidate"],
+            "description": "Tier hint. A-candidate: a sourceable historical formulation looks likely. B-candidate: category-level reformulation is documentable. C-candidate: current-only, included for category breadth."
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One-line editorial rationale for including this target, by named criteria, never a computed score."
+          }
+        }
+      }
+    }
+  }
+}

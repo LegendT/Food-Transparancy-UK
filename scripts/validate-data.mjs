@@ -128,8 +128,20 @@ console.log(`Scanned ${factBearing.length} fact-bearing file(s) and ${registry.l
 
 // Corpus-escape guard: Eleventy renders every .json under src/_data, but the
 // gate validates only a pinned allowlist of entity dirs plus the named registry
-// files. Any OTHER .json that carries a SourcedValue fact would render unverified.
-// Walk the whole tree and fail on any fact-bearing file outside the validated set.
+// files. Any OTHER .json that carries a fact would render unverified. Walk the
+// whole tree and fail on any fact-bearing file outside the validated set. The
+// detector is DELIBERATELY looser than collectFacts: any object with a `sources`
+// array counts, even one missing claimType (the omission must not be an escape
+// hatch). meta/allergens/site are controlled vocab/config with no facts.
+const VOCAB_FILES = new Set(["meta.json", "allergens.json", "site.json"]);
+const hasSourcedShape = (node) => {
+  if (Array.isArray(node)) return node.some(hasSourcedShape);
+  if (node && typeof node === "object") {
+    if (Array.isArray(node.sources)) return true;
+    return Object.values(node).some(hasSourcedShape);
+  }
+  return false;
+};
 if (isDir(target)) {
   const validated = new Set([
     ...factBearing.map((f) => f.path),
@@ -137,15 +149,37 @@ if (isDir(target)) {
     join(target, "images.json"),
   ]);
   for (const path of jsonFilesIn(target)) {
-    if (validated.has(path)) continue;
-    const stray = collectFacts(readJson(path), path);
-    if (stray.length > 0) {
+    if (validated.has(path) || VOCAB_FILES.has(basename(path))) continue;
+    if (hasSourcedShape(readJson(path))) {
       console.error(
-        `Validation failed: ${path} carries ${stray.length} fact(s) but sits outside the validated corpus ` +
-        `(not in a known entity directory). Move it under a validated entity dir or extend ENTITY_DIRS.`
+        `Validation failed: ${path} carries a fact-shaped value (a "sources" array) but sits outside the ` +
+        `validated corpus (not in a known entity directory). Move it under a validated entity dir or extend ENTITY_DIRS.`
       );
       process.exit(1);
     }
+  }
+}
+
+// JSON-only-data invariant: Eleventy also loads global-data .js/.cjs modules in
+// _data and *.11tydata.* directory-data files ANYWHERE under src, none of which
+// this gate can see. Forbid them so every rendered fact stays in gate-visible
+// JSON. (Template front-matter data is page-scoped and out of scope here.)
+if (target === DEFAULT_DATA_DIR) {
+  const SRC_DIR = resolve(DEFAULT_DATA_DIR, "..");
+  const nonJsonData = [];
+  const walkSrc = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) { walkSrc(full); continue; }
+      if (/\.11tydata\.(js|cjs|mjs|json)$/.test(entry.name)) nonJsonData.push(full);
+      else if (full.startsWith(DEFAULT_DATA_DIR) && /\.(js|cjs|mjs)$/.test(entry.name)) nonJsonData.push(full);
+    }
+  };
+  if (isDir(SRC_DIR)) walkSrc(SRC_DIR);
+  if (nonJsonData.length > 0) {
+    console.error("Validation failed: non-JSON data files bypass the gate (data must be plain JSON so it can be validated):");
+    for (const path of nonJsonData) console.error(`  ${path}`);
+    process.exit(1);
   }
 }
 

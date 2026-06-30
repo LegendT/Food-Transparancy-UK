@@ -43,6 +43,21 @@ test("a fact-bearing file outside the validated corpus fails the build", () => {
   }
 });
 
+test("a stray fact missing claimType still fails (the escape guard is looser than collectFacts)", () => {
+  const dir = tempDir();
+  try {
+    writeFileSync(join(dir, "sources.json"), JSON.stringify(MINIMAL_SOURCES));
+    writeFileSync(join(dir, "demoFact.json"), JSON.stringify(VALID_FACT));
+    // A provenance-shaped value with a sources array but NO claimType.
+    writeFileSync(join(dir, "featured.json"), JSON.stringify({ value: "x", sources: ["off"], confidence: "high", evidence: "high", updated: "2026-06-30" }));
+    const r = runGate(dir);
+    assert.notEqual(r.status, 0);
+    assert.match(r.stderr, /fact-shaped/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("a corpus with files but zero facts fails (metadata-only false green)", () => {
   const dir = tempDir();
   try {

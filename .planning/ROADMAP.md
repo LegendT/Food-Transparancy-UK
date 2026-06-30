@@ -68,7 +68,17 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. The image-rights gate blocks the build for any referenced brand image whose status is not own-photographed, explicitly cleared, or a recorded fair-dealing-for-criticism justification — the default is "not cleared — do not publish" — while brand names used as identifiers are not gated (DATA-10); a deliberately uncleared packshot fails the build.
   5. The CI/deploy substrate exists and runs the gates: a Netlify static deploy with CSP headers is configured, and a CI pipeline executes the build-failing gates (TRUST-05, UX-06, DATA-10) and pa11y-ci (SITE-04) on every build so each gate has a host from day one (INFRA-01); the CI lint fails the build on an em-dash, a non-en-GB spelling, a superlative/denigratory term ("worst", "scandal", "shocking") or a causal-motive verb ("to boost margins", "to cut costs") in a change narrative (UX-06); and a Methodology stub page exists so every confidence/evidence badge links to a real page from day one.
   6. The historic-sourcing track opens with the SPIKE-01 spike: three Tier A products are taken fully end to end (historic formulation + two-pass verification + assigned driver), the real per-product effort and dead-end rate are recorded, and the launch-corpus target (PROD-12) and the Tier A entry gate that opens Phase 4 are re-derived from that evidence; the named corpus/Tier A selection criteria (PROD-14) are recorded with a one-line rationale per target, and a sourcing backlog of ≥ 20 flagship targets, each with an assigned documented driver, exists in the project data.
-**Plans**: TBD
+**Plans**: 10 plans (6 waves)
+- [ ] 01-01-PLAN.md — Project scaffold, dependencies (behind a confirm gate) and Netlify CSP config (INFRA-01)
+- [ ] 01-02-PLAN.md — Two-axis trust enums, source/rights registry and open-data licence (TRUST-02, DATA-01/02/12, TRUST-06)
+- [ ] 01-03-PLAN.md — Core trust schemas: SourcedValue envelope, ranged dates, 14-allergen vocabulary (TRUST-01, DATA-03/07/09/11)
+- [ ] 01-04-PLAN.md — Entity and TimelineEvent schemas with DATA-04 separation and image-rights record (DATA-04/07/09/10/11)
+- [ ] 01-05-PLAN.md — Data validation gate (Ajv + referential) with negative fixtures (TRUST-05, TRUST-06, DATA-01/03/04/07/11)
+- [ ] 01-06-PLAN.md — Image-rights and British-English/neutral-editorial gates with negative fixtures (DATA-10, UX-06)
+- [ ] 01-07-PLAN.md — Trust rendering macro, Methodology stub and demo page (TRUST-03/04)
+- [ ] 01-08-PLAN.md — CI pipeline, pa11y floor and Netlify deploy (INFRA-01)
+- [ ] 01-09-PLAN.md — Corpus selection rubric and machine-verifiable sourcing backlog (PROD-14)
+- [ ] 01-10-PLAN.md — SPIKE-01: three Tier A products end to end and re-derived corpus figures (SPIKE-01)
 
 ### Phase 2: Claim-Typed Verification, Per-Fact Publication Gate & Ingestion
 **Goal**: The claim-typed two-pass verification workflow and the per-fact verification-sufficiency gate (an extension of the Phase 1 validation harness) exist and gate everything downstream: a page publishes its verified subset with every unverified fact shown as an explicit withheld placeholder, a contested fact publishes with a visible both-sides treatment, disagreements escalate to human approval, every fact carries a workflow/published status and a last-verified date, a fact past its staleness threshold shows a reader-facing "review due" indicator, the gate is continuous (a fact found `wrong` auto-withdraws), and Open Food Facts data enters only as provenance-tagged draft leads. The continuous verification editorial track starts here.
@@ -186,7 +196,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 0/TBD | Not started | - |
+| 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 0/10 | Not started | - |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 0/TBD | Not started | - |
 | 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |

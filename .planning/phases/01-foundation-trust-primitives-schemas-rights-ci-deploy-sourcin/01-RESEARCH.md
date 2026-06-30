@@ -579,22 +579,25 @@ export const EM_DASH = "—"; // plus %E2%80%94 encoded, mirror DEBT no-emdash.t
 | A5 | Phase 1 claim-type enforcement is structural only; counting/passes deferred to Phase 2 | Pitfall 5 | If the user expects full counting now, Phase 1 scope grows. Confirm boundary |
 | A6 | Provisional Tier A entry gate (>=15) and corpus target (~100) are placeholders SPIKE-01 re-derives | SPIKE-01 | These are explicitly provisional in the ROADMAP; spike output replaces them |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Dataset licence (DATA-12).**
    - What we know: ODbL is OFF-compatible and serves the outlive-maintainer goal; CC BY 4.0 is more permissive but needs OFF segregation.
    - What's unclear: the project's preference between share-alike and permissive reuse.
    - Recommendation: take to discuss-phase; default to ODbL 1.0 if unaddressed.
+   - **RESOLVED: ODbL 1.0 adopted as the default (Plan 01-02), with CC BY 4.0 noted as the flagged alternative in LICENSE-DATA. Surfaced to the user for confirmation before execution.**
 
 2. **Sentence-case heading enforcement (UX-06).**
    - What we know: em-dash, US spellings, superlatives, and motive phrases are reliably lintable with denylists/regex.
    - What's unclear: sentence-case detection is heuristic (Title Case is hard to distinguish from legitimate proper nouns).
    - Recommendation: ship the four reliable checks as build-failing; make sentence-case a best-effort warning, not a hard gate, in Phase 1. [ASSUMED — confirm acceptable]
+   - **RESOLVED: the four reliable checks ship build-failing; sentence-case is a best-effort warning, not a hard gate, in Phase 1 (Plan 01-06).**
 
 3. **Where the gates run canonically.**
    - What we know: `prebuild` makes Netlify deploy enforce them; GitHub Actions can run the richer suite (tests + pa11y).
    - What's unclear: whether the user wants GitHub Actions at all or prefers Netlify-only.
    - Recommendation: GitHub Actions for the gate/test/a11y pipeline + Netlify for deploy; both run `prebuild`, so deploy is safe even without Actions.
+   - **RESOLVED: GitHub Actions runs the gate/test/pa11y pipeline and Netlify runs deploy; both run the `prebuild` gates, so deploy is safe even without Actions (Plan 01-08).**
 
 ## Environment Availability
 

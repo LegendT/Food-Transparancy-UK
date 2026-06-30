@@ -1,0 +1,81 @@
+{
+  "id": "cadbury-dairy-milk",
+  "slug": "cadbury-dairy-milk",
+  "name": "Cadbury Dairy Milk",
+  "brandId": "cadbury",
+  "categoryId": "chocolate",
+  "manufacturer": {
+    "value": "Mondelez International (Cadbury)",
+    "sources": ["off"],
+    "confidence": "high",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "claimType": "authoritative",
+    "note": "Cadbury has been owned by Mondelez International since the 2010 Kraft takeover."
+  },
+  "ingredientsText": {
+    "value": "Milk, Sugar, Cocoa Butter, Cocoa Mass, Vegetable Fats (Palm, Shea), Dried Skimmed Milk, Dried Whey (from Milk), Emulsifiers (E442, E476, Soya Lecithin), Milk Fat, Flavourings",
+    "sources": ["off"],
+    "confidence": "moderate",
+    "evidence": "low",
+    "updated": "2026-06-30",
+    "claimType": "authoritative",
+    "claimDomain": "ingredient-function",
+    "note": "Open Food Facts transcription. An Ocado listing for the standard bar gives a shorter ingredient list (likely a different pack size or a condensed retailer transcription); this discrepancy should route to human adjudication rather than be silently reconciled. Vegetable fats (palm, shea) are permitted up to 5% under GB/EU chocolate rules."
+  },
+  "nutrition": {
+    "sugars": {
+      "value": 57,
+      "sources": ["off"],
+      "confidence": "moderate",
+      "evidence": "low",
+      "updated": "2026-06-30",
+      "claimType": "authoritative",
+      "claimDomain": "nutrition",
+      "note": "About 56 to 57g per 100g, stable across 2019 to 2026. The FSA-linked sugar reduction produced a separate lower-sugar variant (see the timeline event), not a reduction of the standard bar."
+    }
+  },
+  "allergens": [
+    {
+      "allergen": "milk",
+      "presence": "present",
+      "provenance": {
+        "value": "Declared on the current label",
+        "sources": ["off"],
+        "confidence": "high",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "claimDomain": "allergen"
+      }
+    },
+    {
+      "allergen": "soya",
+      "presence": "present",
+      "provenance": {
+        "value": "Soya lecithin declared in the emulsifiers on the current label",
+        "sources": ["off"],
+        "confidence": "high",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "claimDomain": "allergen"
+      }
+    },
+    {
+      "allergen": "tree-nuts",
+      "presence": "may-contain",
+      "provenance": {
+        "value": "Carries a may-contain-nuts precautionary statement on the current label",
+        "sources": ["off"],
+        "confidence": "moderate",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "claimDomain": "allergen"
+      }
+    }
+  ],
+  "verificationStatus": null,
+  "publicationStatus": null
+}

@@ -1,0 +1,78 @@
+{
+  "id": "walls-soft-scoop-vanilla",
+  "slug": "walls-soft-scoop-vanilla",
+  "name": "Wall's Soft Scoop Vanilla",
+  "brandId": "walls",
+  "categoryId": "ice-cream",
+  "manufacturer": {
+    "value": "Wall's (Unilever / The Magnum Ice Cream Company)",
+    "sources": ["walls-onestop-2026"],
+    "confidence": "high",
+    "evidence": "low",
+    "updated": "2026-06-30",
+    "claimType": "authoritative"
+  },
+  "ingredientsText": {
+    "value": "Reconstituted Skimmed Milk, Water, Glucose Syrup, Sugar, Coconut Fat, Fructose, Whey Solids (Milk), Stabilisers (Guar Gum, Tara Gum, Carrageenan, Locust Bean Gum), Emulsifier (Mono- and Di-Glycerides of Fatty Acids), Colours (Annatto Norbixin, Curcumin), Flavourings",
+    "sources": ["walls-onestop-2026", "walls-which-2018"],
+    "confidence": "moderate",
+    "evidence": "low",
+    "updated": "2026-06-30",
+    "claimType": "authoritative",
+    "claimDomain": "ingredient-function",
+    "note": "The fat is coconut (vegetable) fat, not cream or milk fat; the only dairy is reconstituted skimmed milk and whey solids supplying protein. A 2018 Which? investigation independently recorded no cream, fresh milk or vanilla. Open Food Facts lists a generic 'vegetable fat'; the 'coconut' specificity rests on the One Stop label."
+  },
+  "nutrition": {
+    "sugars": {
+      "value": 17,
+      "sources": ["walls-archive-2026"],
+      "confidence": "moderate",
+      "evidence": "moderate",
+      "updated": "2026-06-30",
+      "claimType": "authoritative",
+      "claimDomain": "nutrition",
+      "note": "17g per 100g from the manufacturer archival snapshot (primary). The per-100ml figure of 7.5g is independently corroborated by One Stop; Open Food Facts records a higher 21g per 100g that appears stale or a different pack and is withheld pending re-verification (a measure mismatch the Phase 2 gate should auto-raise as a disagreement)."
+    }
+  },
+  "regulatoryStatus": {
+    "value": "Does not meet the compositional standard for 'dairy ice cream', which requires the fat to be milk-derived; its fat is coconut (vegetable) fat, so it is marketed as 'Soft Scoop Ice Cream Dessert'. In GB the 'ice cream' and 'dairy ice cream' compositional specifications now sit in a voluntary industry code (Ice Cream Alliance / Euroglace) rather than statute.",
+    "sources": ["icecream-foodlaw-reading", "icecream-foodlabelling-services"],
+    "confidence": "moderate",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "checkedOn": "2026-06-30",
+    "claimType": "authoritative",
+    "claimDomain": "regulatory",
+    "note": "Corrects a common misconception: current GB law does not bar a vegetable-fat product from the term 'ice cream'. The operative point is that coconut fat disqualifies it from 'dairy ice cream'. The revocation and voluntary-code position should be re-verified against the primary statutory instrument before this is treated as settled."
+  },
+  "allergens": [
+    {
+      "allergen": "milk",
+      "presence": "present",
+      "provenance": {
+        "value": "Reconstituted skimmed milk and whey solids declared on the current label",
+        "sources": ["walls-onestop-2026"],
+        "confidence": "high",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "claimDomain": "allergen"
+      }
+    },
+    {
+      "allergen": "soya",
+      "presence": "may-contain",
+      "provenance": {
+        "value": "Carries a may-contain-soy precautionary statement on the current label",
+        "sources": ["walls-onestop-2026"],
+        "confidence": "moderate",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "claimDomain": "allergen"
+      }
+    }
+  ],
+  "verificationStatus": null,
+  "publicationStatus": null
+}

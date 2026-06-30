@@ -1,0 +1,37 @@
+{
+  "id": "lucozade-energy-2017-sugar-cut",
+  "productId": "lucozade-energy",
+  "date": {
+    "from": "2016",
+    "to": "2017",
+    "basis": "announced November 2016, rolled out from April 2017 and completed by July 2017"
+  },
+  "changes": [
+    {
+      "documentedChange": {
+        "value": "Sugar reduced by roughly half to below 4.5g per 100ml, with high-intensity sweeteners (sucralose and acesulfame K) added to the glucose-syrup base.",
+        "sources": ["lucozade-grocer-2017", "diabetes-couk-2017"],
+        "confidence": "low",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "corroborable",
+        "note": "The exact pre-reformulation figure is contested across distinct sources: about 13g sugar per 100ml (The Grocer, Energy Orange), about 17g carbohydrate per 100ml (diabetes.co.uk, Original) and about 12.4g sugar per 100ml (Guardian and Telegraph reports). Published as an approximation; the exact figure is withheld pending adjudication. No pre-2017 primary nutrition panel could be obtained, as the archival route was unavailable."
+      },
+      "statedReason": {
+        "value": "The world has changed with consumers now wanting healthier drinks and more action from the brands they regularly enjoy. (Peter Harding, Chief Operating Officer, Lucozade Ribena Suntory, November 2016)",
+        "sources": ["lrs-beveragedaily-2016"],
+        "confidence": "moderate",
+        "evidence": "moderate",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "note": "Attributed manufacturer statement. The characterisation of the change as levy-avoidance is press framing, not the manufacturer's own stated reason."
+      },
+      "labelledInference": {
+        "basis": "The Soft Drinks Industry Levy took effect in April 2018 with a lower band at 5g sugar per 100ml; the reformulation to below 4.5g per 100ml completed in July 2017, ahead of the levy.",
+        "text": "The target and timing are consistent with positioning the product below the levy's lower band, although the manufacturer's own stated reason emphasises consumer health rather than the levy."
+      }
+    }
+  ],
+  "verificationStatus": null,
+  "publicationStatus": null
+}

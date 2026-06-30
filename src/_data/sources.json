@@ -57,6 +57,193 @@
         "type": "incentive",
         "name": "Soft Drinks Industry Levy 2018"
       }
+    },
+    {
+      "id": "lucozade-grocer-2017",
+      "name": "The Grocer: Lucozade sales after the sugar reduction",
+      "publisher": "The Grocer (William Reed)",
+      "url": "https://www.thegrocer.co.uk/",
+      "covers": "Trade-press reporting on the 2017 Lucozade Energy reformulation, citing a pre-reformulation figure of about 13g sugar per 100ml falling to 4.5g.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.thegrocer.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "diabetes-couk-2017",
+      "name": "diabetes.co.uk: Lucozade reformulation coverage",
+      "publisher": "Diabetes Digital Media",
+      "url": "https://www.diabetes.co.uk/",
+      "covers": "Health-community reporting on Lucozade carbohydrate content before and after the 2017 reformulation, citing about 17g carbohydrate per 100ml falling to 8.9g.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.diabetes.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "lrs-beveragedaily-2016",
+      "name": "BeverageDaily: Lucozade Ribena Suntory sugar-reduction statement",
+      "publisher": "BeverageDaily (William Reed)",
+      "url": "https://www.beveragedaily.com/",
+      "covers": "Trade-press reporting carrying Lucozade Ribena Suntory's November 2016 statement on its sugar-reduction plan and the attributed reason.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "international",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.beveragedaily.com/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "cdm-grocer-2019",
+      "name": "The Grocer: Cadbury Dairy Milk 30% Less Sugar launch",
+      "publisher": "The Grocer (William Reed)",
+      "url": "https://www.thegrocer.co.uk/news/mondelez-unveils-cadbury-dairy-milk-30-less-sugar/595899.article",
+      "covers": "Trade-press reporting on the July 2019 launch of Cadbury Dairy Milk 30% Less Sugar, carrying an attributed Mondelez statement.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.thegrocer.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "cdm-confectionerynews-2019",
+      "name": "ConfectioneryNews: Cadbury Dairy Milk 30% Less Sugar",
+      "publisher": "ConfectioneryNews (William Reed)",
+      "url": "https://www.confectionerynews.com/Article/2019/07/24/Cadbury-Dairy-Milk-now-available-with-30-less-sugar/",
+      "covers": "Trade-press reporting on the 2019 Cadbury Dairy Milk 30% Less Sugar launch and its reformulation approach.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "international",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.confectionerynews.com/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "cdm-justfood-2023",
+      "name": "Just Food: Mondelez delists lower-sugar Cadbury Dairy Milk",
+      "publisher": "Just Food (GlobalData)",
+      "url": "https://www.just-food.com/news/mondelez-scraps-lower-sugar-cadbury-dairy-milk/",
+      "covers": "Trade-press reporting on the October 2023 delisting of the lower-sugar Cadbury Dairy Milk variant, with an attributed Mondelez statement.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "international",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.just-food.com/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "walls-onestop-2026",
+      "name": "One Stop: Wall's Soft Scoop Ice Cream Dessert Vanilla",
+      "publisher": "One Stop Stores",
+      "url": "https://www.onestop.co.uk/product/heartbrand-walls-soft-scoop-ice-cream-dessert-vanilla-1-8-l/",
+      "covers": "GB retailer product page reproducing the current Wall's Soft Scoop Vanilla label, ingredients (including coconut fat) and nutrition.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.onestop.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "walls-archive-2026",
+      "name": "Wall's Soft Scoop Vanilla product page (Internet Archive snapshot)",
+      "publisher": "Unilever / Wall's, via the Internet Archive",
+      "url": "http://web.archive.org/web/20260121211831/https://www.wallsicecream.com/uk/p/wall%27s-soft-scoop-vanilla-1800ml.html",
+      "covers": "Archived snapshot (21 January 2026) of the manufacturer product page carrying the current Wall's Soft Scoop Vanilla nutrition declaration.",
+      "updateFrequency": "Snapshot",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "primary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.wallsicecream.com/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "icecream-foodlaw-reading",
+      "name": "Food law reference: ice cream labelling",
+      "publisher": "Bryant Research (Reading food-law reference)",
+      "url": "https://bryantresearch.co.uk/foodlaw/label/ice-cream.htm",
+      "covers": "Reference on GB ice cream and dairy ice cream compositional standards, noting the surviving specifications are a voluntary industry code rather than statute.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://bryantresearch.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "icecream-foodlabelling-services",
+      "name": "Food Labelling Services: ice cream composition and labelling",
+      "publisher": "Food Labelling Services",
+      "url": "https://www.foodlabellingservices.co.uk/news/ice-cream-composition-and-labelling/",
+      "covers": "Commentary on GB ice cream compositional and labelling rules, including the historic 5% fat / 2.5% milk protein standard and the dairy ice cream milk-fat requirement.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.foodlabellingservices.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
+    },
+    {
+      "id": "walls-which-2018",
+      "name": "Which? / HuffPost: vanilla ice creams containing no cream or vanilla",
+      "publisher": "HuffPost UK (reporting a Which? investigation)",
+      "url": "https://www.huffingtonpost.co.uk/entry/your-vanilla-ice-creams-do-not-contain-vanilla-or-cream_uk_5b7fe65ee4b0729515121b72",
+      "covers": "Consumer investigation (August 2018) naming Wall's Soft Scoop Vanilla as containing no cream, fresh milk or vanilla.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.huffingtonpost.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      }
     }
   ]
 }

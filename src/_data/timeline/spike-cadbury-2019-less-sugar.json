@@ -1,0 +1,33 @@
+{
+  "id": "cadbury-dairy-milk-2019-less-sugar",
+  "productId": "cadbury-dairy-milk",
+  "date": "2019-07-24",
+  "changes": [
+    {
+      "documentedChange": {
+        "value": "Mondelez launched a '30% Less Sugar' variant (about 37g sugar per 100g, against about 56g for the standard bar) using soluble maize fibre; it was delisted by October 2023. The standard bar's recipe was not reduced.",
+        "sources": ["cdm-grocer-2019", "cdm-confectionerynews-2019", "cdm-justfood-2023"],
+        "confidence": "low",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "corroborable",
+        "note": "The 2019 launch reports are likely co-derived from a single Mondelez press release, so their lineage independence is weak; this is treated as authoritative-attribution rather than independently corroborated. No archival primary label was obtained."
+      },
+      "statedReason": {
+        "value": "There is an increasing trend for people wanting to manage their sugar intake, and that is why we have worked to create a Cadbury Dairy Milk bar with 30% less sugar. (Claire Low, Associate Marketing Director, Mondelez, July 2019)",
+        "sources": ["cdm-grocer-2019"],
+        "confidence": "moderate",
+        "evidence": "moderate",
+        "updated": "2026-06-30",
+        "claimType": "authoritative",
+        "note": "Attributed manufacturer statement."
+      },
+      "labelledInference": {
+        "basis": "The change created a separate lower-sugar product rather than reducing the flagship recipe, and Mondelez did not name the FSA or PHE sugar-reduction programme.",
+        "text": "The lower-sugar variant is consistent with the incentive of the FSA sugar-reduction programme, but Mondelez framed it as consumer-demand-led and did not attribute it to the programme."
+      }
+    }
+  ],
+  "verificationStatus": null,
+  "publicationStatus": null
+}

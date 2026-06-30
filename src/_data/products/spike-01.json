@@ -1,0 +1,39 @@
+{
+  "id": "lucozade-energy",
+  "slug": "lucozade-energy",
+  "name": "Lucozade Energy (Original)",
+  "brandId": "lucozade",
+  "categoryId": "soft-drinks",
+  "manufacturer": {
+    "value": "Lucozade Ribena Suntory",
+    "sources": ["off"],
+    "confidence": "high",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "claimType": "authoritative"
+  },
+  "ingredientsText": {
+    "value": "Carbonated Water, Glucose Syrup (13%), Acids (Citric Acid, Lactic Acid), Flavourings, Acidity Regulator (Sodium Citrate), Preservative (Potassium Sorbate), Caffeine, Sweeteners (Sucralose, Acesulfame K), Antioxidant (Ascorbic Acid), Colours (Sunset Yellow, Ponceau 4R), Niacin (B3)",
+    "sources": ["off"],
+    "confidence": "moderate",
+    "evidence": "low",
+    "updated": "2026-06-30",
+    "claimType": "authoritative",
+    "claimDomain": "ingredient-function",
+    "note": "Current label as transcribed by Open Food Facts (tertiary); the high-intensity sweeteners sucralose and acesulfame K are a reformulation addition to the glucose-syrup base. A direct manufacturer or retailer label page could not be retrieved (Tesco returned HTTP 403), so this rests on a single tertiary transcription pending an independent re-read."
+  },
+  "nutrition": {
+    "sugars": {
+      "value": 4.16,
+      "sources": ["off"],
+      "confidence": "moderate",
+      "evidence": "low",
+      "updated": "2026-06-30",
+      "claimType": "authoritative",
+      "claimDomain": "nutrition",
+      "note": "Open Food Facts records 4.16g sugars per 100g; the marketed GB label figure is below 4.5g per 100ml (a small per-100g versus per-100ml unit difference, not a contradiction)."
+    }
+  },
+  "verificationStatus": null,
+  "publicationStatus": null
+}

@@ -41,3 +41,7 @@ Selection is editorial and is made against the named criteria above. The archive
 > There is no league table of products ranked as the "most transformed" or as "worst offenders", and no such ranking will be produced. Presentation contrasts a traditional formulation with a current one objectively, and avoids persuasion or outrage framing.
 
 This rule exists so the corpus cannot drift into an anti-brand ranking dressed up as data. The backlog stores a driver, a tier hint and a rationale per target; it stores no score. The machine-verifiable test in `test/backlog.test.js` asserts the count, the per-target driver, the tier hint and the rationale, and asserts that the pool is not all-Tier-A-candidate.
+
+## Editorial confirmation
+
+The named rubric above and the 22-candidate backlog in `docs/sourcing-backlog.json` (8 A-candidate, 10 B-candidate, 4 C-candidate, spanning all four flagship anchor categories) were confirmed by the editor on 2026-06-30. The selection is editorial, made against the named criteria, and is held to no transformation metric.

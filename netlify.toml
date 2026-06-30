@@ -1,0 +1,29 @@
+# Netlify build and headers for Food Transparency UK.
+# Netlify runs the Eleventy build (via `npm run build`, which fires the prebuild
+# gate chain) and serves the generated _site folder.
+
+[build]
+  command = "npm run build"
+  publish = "_site"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Security headers on every response.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    # Tightened for Phase 1: no analytics, so the Cloudflare script-src/connect-src
+    # allowances are dropped. The Phase 1 build emits no inline styles, so
+    # style-src is 'self' (verify-then-tighten); if a later inline style proves
+    # unavoidable, reintroduce 'unsafe-inline' and record it as a known relaxation.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+
+# Assets are not fingerprinted, so we deliberately do NOT set a long max-age:
+# Netlify's CDN invalidates on every deploy and browsers revalidate cheaply via
+# ETag, which avoids serving stale CSS after a deploy.

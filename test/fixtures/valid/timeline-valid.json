@@ -1,0 +1,35 @@
+{
+  "id": "demo-event-1",
+  "productId": "demo-baked-beans",
+  "date": {
+    "from": "2017",
+    "to": "2018-04-06",
+    "basis": "Between the last archived old-recipe label and the levy taking effect."
+  },
+  "changes": [
+    {
+      "documentedChange": {
+        "value": "Total sugars fell from 5.0g to 4.7g per 100g.",
+        "sources": ["off", "sdil-2018"],
+        "confidence": "moderate",
+        "evidence": "moderate",
+        "updated": "2026-06-30",
+        "claimType": "corroborable"
+      },
+      "statedReason": {
+        "value": "The manufacturer states the recipe was changed in response to the levy.",
+        "sources": ["sdil-2018"],
+        "confidence": "moderate",
+        "evidence": "moderate",
+        "updated": "2026-06-30",
+        "claimType": "authoritative"
+      },
+      "labelledInference": {
+        "basis": "The reduction coincides with the levy threshold date.",
+        "text": "The change is consistent with a levy-driven reformulation."
+      }
+    }
+  ],
+  "verificationStatus": null,
+  "publicationStatus": null
+}

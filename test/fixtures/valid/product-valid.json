@@ -1,0 +1,59 @@
+{
+  "id": "demo-baked-beans",
+  "slug": "demo-baked-beans",
+  "name": "Demo Baked Beans in Tomato Sauce",
+  "brandId": "demo-brand",
+  "categoryId": "tinned-goods",
+  "manufacturer": {
+    "value": "Demo Foods Ltd",
+    "sources": ["off"],
+    "confidence": "high",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "claimType": "authoritative"
+  },
+  "ingredientsText": {
+    "value": "Beans (51%), Tomatoes (34%), Water, Sugar, Salt",
+    "sources": ["off"],
+    "confidence": "moderate",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "claimType": "authoritative"
+  },
+  "nutrition": {
+    "sugars": {
+      "value": 4.7,
+      "sources": ["off"],
+      "confidence": "moderate",
+      "evidence": "moderate",
+      "updated": "2026-06-30",
+      "claimType": "authoritative"
+    }
+  },
+  "regulatoryStatus": {
+    "value": "Permitted for retail sale in Great Britain under retained food law.",
+    "sources": ["fsa-allergen-guidance"],
+    "confidence": "high",
+    "evidence": "high",
+    "updated": "2026-06-30",
+    "checkedOn": "2026-06-30",
+    "claimType": "authoritative",
+    "claimDomain": "regulatory"
+  },
+  "allergens": [
+    {
+      "allergen": "milk",
+      "presence": "may-contain",
+      "provenance": {
+        "value": "May contain milk.",
+        "sources": ["off"],
+        "confidence": "moderate",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "authoritative"
+      }
+    }
+  ],
+  "verificationStatus": null,
+  "publicationStatus": null
+}

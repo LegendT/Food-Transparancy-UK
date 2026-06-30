@@ -9,8 +9,8 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 ### Trust Layer
 
-- [ ] **TRUST-01**: Every fact-bearing field (as designated by DATA-09) carries at least one cited source, a confidence level, an evidence level, and a last-updated date
-- [ ] **TRUST-02**: Confidence and evidence are two separate fields — (a) evidence level: the strength of the underlying scientific/regulatory evidence for the claim, on a four-point scale (High / Moderate / Low / Very Low, GRADE convention); (b) confidence level: the curator's certainty that this specific record is correct and current, on the same four-point scale. Source type (primary/secondary/tertiary/grey) lives in the source registry (DATA-01), not here
+- [x] **TRUST-01**: Every fact-bearing field (as designated by DATA-09) carries at least one cited source, a confidence level, an evidence level, and a last-updated date
+- [x] **TRUST-02**: Confidence and evidence are two separate fields — (a) evidence level: the strength of the underlying scientific/regulatory evidence for the claim, on a four-point scale (High / Moderate / Low / Very Low, GRADE convention); (b) confidence level: the curator's certainty that this specific record is correct and current, on the same four-point scale. Source type (primary/secondary/tertiary/grey) lives in the source registry (DATA-01), not here
 - [ ] **TRUST-03**: A reader can see the source(s) behind any displayed claim (inline citation referencing the source record)
 - [ ] **TRUST-04**: A reader can see the confidence level, evidence level and last-updated date for any displayed claim, expressed as text (colour-independence per SITE-04); per-fact metadata uses progressive disclosure — a brief inline text token for confidence/evidence, with source/date/rationale behind footnote-style references to the page's sources section or a `<details>` element — never four metadata items repeated inline on every value on a dense page
 - [ ] **TRUST-05**: Provenance-completeness gate — the build fails if any fact-bearing field is missing a source, confidence level, evidence level, or update date
@@ -35,14 +35,14 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 - [ ] **DATA-01**: A source registry stores each source as a citable record (id, name, publisher, URL/reference, what it covers, update frequency, retrieved date, source type [primary/secondary/tertiary/grey], licence/rights, and for policy drivers a mandate-vs-incentive flag), mirroring DEBT's sources.json
 - [ ] **DATA-02**: Each source record carries its licence and rights status so re-use obligations (e.g. ODbL attribution/share-alike) are auditable
-- [ ] **DATA-03**: Dates support ranged/uncertain values (e.g. "circa 2015", "between 2012 and 2014") rather than forcing false precision
+- [x] **DATA-03**: Dates support ranged/uncertain values (e.g. "circa 2015", "between 2012 and 2014") rather than forcing false precision
 - [ ] **DATA-04**: Recipe-change records separate documented change, manufacturer's stated reason, and labelled analyst inference — motive is never stored as fact
 - [ ] **DATA-05**: Open Food Facts and other imported data are stored as unverified leads (draft) until verified, never as authority
 - [ ] **DATA-06**: An ingestion process can import product/ingredient data from Open Food Facts into the draft store with provenance tagged at field level
-- [ ] **DATA-07**: The product schema includes a structured allergen record — a typed field per GB-regulated major allergen (the 14) — distinct from the free-text ingredients list
-- [ ] **DATA-09**: The schema designates each field as fact-bearing (makes an empirical claim; subject to the trust layer) or metadata (structural/administrative; exempt); the designation lives in the schema and is enforced by TRUST-05
+- [x] **DATA-07**: The product schema includes a structured allergen record — a typed field per GB-regulated major allergen (the 14) — distinct from the free-text ingredients list
+- [x] **DATA-09**: The schema designates each field as fact-bearing (makes an empirical claim; subject to the trust layer) or metadata (structural/administrative; exempt); the designation lives in the schema and is enforced by TRUST-05
 - [ ] **DATA-10**: Every image (product packaging, logos, historic labels, packshots) defaults to rights status "not cleared — do not publish"; the build blocks any referenced brand image unless it is an own-photographed artefact, has an explicit cleared licence, or carries a recorded, reviewed fair-dealing-for-criticism justification. Brand names used as identifiers are not images and are not gated here
-- [ ] **DATA-11**: The product, ingredient, brand and additive entity schemas and the TimelineEvent schema (with ranged dates and the DATA-04 separation) are defined in the foundation, before ingestion writes into them, and reserve verification-status and publication-status fields for the verification gate to populate
+- [x] **DATA-11**: The product, ingredient, brand and additive entity schemas and the TimelineEvent schema (with ranged dates and the DATA-04 separation) are defined in the foundation, before ingestion writes into them, and reserve verification-status and publication-status fields for the verification gate to populate
 
 ### Product Pages
 
@@ -174,20 +174,20 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRUST-01 | Phase 1 | Pending |
-| TRUST-02 | Phase 1 | Pending |
+| TRUST-01 | Phase 1 | Complete |
+| TRUST-02 | Phase 1 | Complete |
 | TRUST-03 | Phase 1 | Pending |
 | TRUST-04 | Phase 1 | Pending |
 | TRUST-05 | Phase 1 | Pending |
 | TRUST-06 | Phase 1 | Pending |
 | DATA-01 | Phase 1 | Pending |
 | DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Complete |
 | DATA-04 | Phase 1 | Pending |
-| DATA-07 | Phase 1 | Pending |
-| DATA-09 | Phase 1 | Pending |
+| DATA-07 | Phase 1 | Complete |
+| DATA-09 | Phase 1 | Complete |
 | DATA-10 | Phase 1 | Pending |
-| DATA-11 | Phase 1 | Pending |
+| DATA-11 | Phase 1 | Complete |
 | DATA-12 | Phase 1 | Pending |
 | PROD-14 | Phase 1 | Pending |
 | UX-06 | Phase 1 | Pending |

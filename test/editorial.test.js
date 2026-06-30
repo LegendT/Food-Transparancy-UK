@@ -80,3 +80,13 @@ test("the script exits non-zero on an empty corpus (the non-zero-corpus guard)",
     rmSync(work, { recursive: true, force: true });
   }
 });
+
+// The "soy" US-spelling rule (added during the Phase 1 review): "soy" is caught
+// as a Class A offender, but "soya" (the en-GB form) is not, because the rule is
+// word-boundary anchored.
+test("soy is flagged as a US spelling but soya is not", () => {
+  const onSoy = lint("Carries a may-contain-soy statement", { scope: "analyst" });
+  assert.ok(onSoy.some((o) => o.rule === "us-spelling" && o.term.toLowerCase() === "soy"));
+  const onSoya = lint("Carries a may-contain-soya statement", { scope: "analyst" });
+  assert.equal(onSoya.filter((o) => o.rule === "us-spelling").length, 0);
+});

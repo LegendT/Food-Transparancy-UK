@@ -23,7 +23,7 @@
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { resolve, join, dirname, extname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { lint, sentenceCaseWarnings } from "../lib/editorial-rules.mjs";
+import { lint, sentenceCaseWarnings, ANALYST_JSON_FIELDS } from "../lib/editorial-rules.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(here, "..");
@@ -50,6 +50,41 @@ function proseFiles(dir) {
       out.push(...proseFiles(full));
     } else if (PROSE_EXT.has(extname(entry.name))) {
       out.push(full);
+    }
+  }
+  return out;
+}
+
+// Data-layer roots whose JSON analyst-prose fields are linted (the page-prose
+// allowlist above does not cover JSON, so author commentary in note/basis/etc.
+// would otherwise ship unchecked). Only ANALYST_JSON_FIELDS keys are read.
+const DATA_DIRS = ["src/_data", "docs"].map((d) => resolve(ROOT, d));
+
+function jsonFilesUnder(dir) {
+  const out = [];
+  if (!existsSync(dir)) return out;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (isExcluded(entry.name)) continue;
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...jsonFilesUnder(full));
+    else if (extname(entry.name) === ".json") out.push(full);
+  }
+  return out;
+}
+
+// Recursively pull the string values of analyst-prose keys, each with a dotted
+// path for the offender report.
+function analystStrings(node, path, out) {
+  if (Array.isArray(node)) {
+    node.forEach((value, index) => analystStrings(value, `${path}[${index}]`, out));
+  } else if (node && typeof node === "object") {
+    for (const [key, value] of Object.entries(node)) {
+      const childPath = path ? `${path}.${key}` : key;
+      if (typeof value === "string" && ANALYST_JSON_FIELDS.has(key)) {
+        out.push({ path: childPath, text: value });
+      } else {
+        analystStrings(value, childPath, out);
+      }
     }
   }
   return out;
@@ -87,6 +122,31 @@ for (const file of files) {
   for (const warning of sentenceCaseWarnings(text)) {
     warnings.push(`${relative}: ${warning}`);
   }
+}
+
+// Data-layer pass (default mode only; an explicit fixture target stays prose-
+// only). Lint the analyst-prose fields inside src/_data and docs JSON at the
+// same analyst scope as page prose. Verbatim-quote and value fields are not
+// read (see ANALYST_JSON_FIELDS), so a faithful quotation is never failed.
+if (!process.argv[2]) {
+  const dataFiles = DATA_DIRS.flatMap(jsonFilesUnder);
+  let scannedFields = 0;
+  for (const file of dataFiles) {
+    const relative = file.startsWith(ROOT) ? file.slice(ROOT.length + 1) : file;
+    let parsed;
+    try {
+      parsed = JSON.parse(readFileSync(file, "utf8"));
+    } catch {
+      continue; // malformed JSON is the data gate's job, not the lint's.
+    }
+    for (const { path, text } of analystStrings(parsed, "", [])) {
+      scannedFields += 1;
+      for (const offender of lint(text, { scope: "analyst" })) {
+        offenders.push(`${relative} [${path}] ${offender.rule} "${offender.term}"`);
+      }
+    }
+  }
+  console.log(`Scanned ${scannedFields} analyst-prose field(s) across ${dataFiles.length} data file(s).`);
 }
 
 // Sentence-case is a non-failing warning (research Open Question 2): printed,

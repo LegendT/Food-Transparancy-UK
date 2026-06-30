@@ -239,6 +239,7 @@ food-transparency/
 ```jsonc
 // schemas/sourced-value.schema.json (draft 2020-12)
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://foodtransparency.uk/schemas/sourced-value.schema.json",
   "type": "object",
   "required": ["value", "sources", "confidence", "evidence", "updated", "claimType"],
@@ -263,10 +264,11 @@ food-transparency/
   "$defs": { "grade": { "enum": ["high", "moderate", "low", "very-low"] } },
   // Phase 1 STRUCTURAL claim-type rule (workflow counting is Phase 2):
   "allOf": [
-    { "if": { "properties": { "claimType": { "const": "corroborable" } } },
-      "then": { "properties": { "sources": { "minItems": 2 } } } }
-    // authoritative: one authority source is sufficient (minItems 1 from base);
-    // the transcription re-read record is added by Phase 2 (VRFY-01).
+    { "if": { "type": "object", "properties": { "claimType": { "const": "corroborable" } } },
+      "then": { "properties": { "sources": { "type": "array", "minItems": 2 } } } }
+    // Restate "type" in both branches to silence Ajv strictTypes:"log" and future-proof
+    // against strictTypes:true. authoritative: one authority source is sufficient
+    // (minItems 1 from base); the transcription re-read record is added by Phase 2 (VRFY-01).
   ]
 }
 ```
@@ -276,7 +278,7 @@ Every fact-bearing field in the entity schemas is then just `{ "$ref": "sourced-
 ```jsonc
 "from": { "anyOf": [ { "type": "string", "format": "date" }, { "type": "string", "pattern": "^[0-9]{4}$" } ] }
 ```
-JSON Schema cannot express `to >= from`. The structural shape (missing `from`, non-date/non-year) is asserted by Ajv; the **order** check (`to` earlier than `from`, normalising a 4-digit year to its 1 Jan / 31 Dec bound) is an imperative `checkDateRanges()` in the validation gate (Plan 01-05), never Ajv.
+JSON Schema cannot express `to >= from`. The structural shape (missing `from`, non-date/non-year) is asserted by Ajv; the **order** check is an imperative `checkDateRanges()` in the validation gate (Plan 01-05), never Ajv. Method (no Date objects): normalise every bound to a full `YYYY-MM-DD` string (a 4-digit year on `from` becomes `-01-01`, on `to` becomes `-12-31`), then compare the two strings lexicographically (ISO date strings sort chronologically), erroring when `to` sorts earlier than `from`. This removes the string-vs-Date hazard.
 
 ### Pattern 2: Two-axis trust in `meta.json`, source-type in the registry
 **What:** `confidence` and `evidence` are two separate GRADE 4-point enums defined in `meta.json` (mirroring DEBT's single `confidenceLevels` block). Source-type (`primary/secondary/tertiary/grey`) is NOT on the fact; it lives on the source record (TRUST-02, DATA-01).
@@ -396,14 +398,24 @@ This is a genuine policy choice with valid alternatives, so it is tagged `[ASSUM
 
 ## Allergen Field (DATA-07)
 
-The 14 GB-regulated major allergens (retained Food Information Regulations 2014 / Regulation 1169/2011): celery; cereals containing gluten; crustaceans; eggs; fish; lupin; milk; molluscs; mustard; tree nuts; peanuts; sesame; soybeans; sulphur dioxide and sulphites. [CITED: UK FSA allergen guidance — verify exact wording at publish] Model as a controlled vocabulary in `src/_data/allergens.json`, with the product schema carrying a structured `allergens` array where each item is `{ allergen: <one of 14>, presence: <enum>, ...SourcedValue }`, distinct from the free-text ingredients list:
+The 14 GB-regulated major allergens (retained Food Information Regulations 2014 / Regulation 1169/2011): celery; cereals containing gluten; crustaceans; eggs; fish; lupin; milk; molluscs; mustard; tree nuts; peanuts; sesame; soybeans; sulphur dioxide and sulphites. [CITED: UK FSA allergen guidance — verify exact wording at publish] Model as a controlled vocabulary in `src/_data/allergens.json`, with the product schema carrying a structured `allergens` array. CRITICAL Ajv modelling rule: each allergen item must NEST its provenance under a `provenance` property that `$ref`s the SourcedValue envelope, NOT spread the envelope via `allOf:[{$ref:sourced-value},{properties:{allergen,presence}}]`. With `additionalProperties:false` on the envelope, Ajv does NOT see sibling `allergen`/`presence` from another `allOf`/`$ref` branch (per the Ajv FAQ on `additionalProperties` with combined schemas), so a spread item fails validation for EVERY record. Nest instead:
 ```jsonc
-// product allergen item
-{ "allergen": "milk", "presence": "present",        // present | may-contain | absent
-  "value": "present", "sources": ["off"], "confidence": "moderate",
-  "evidence": "moderate", "updated": "2026-06-30", "claimType": "authoritative" }
+// product schema: allergens array item (NESTED provenance, NOT spread)
+"allergens": {
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["allergen", "presence", "provenance"],
+    "properties": {
+      "allergen":  { "enum": [ /* the 14 ids from allergens.json */ ] },
+      "presence":  { "enum": ["present", "may-contain", "absent"] },
+      "provenance": { "$ref": "sourced-value.schema.json" }   // the envelope lives here, nested
+    }
+  }
+}
 ```
-The schema enum is the 14 allergen ids; a 15th or a typo fails validation (negative fixture). `presence` carries the three-state vocabulary so "may contain" is never silently equated with "present."
+The allergen enum is the 14 allergen ids; a 15th or a typo fails validation (negative fixture). `presence` carries the three-state vocabulary so "may contain" is never silently equated with "present." The schema-consistency test therefore reads the allergen enum at `product...allergens.items.properties.allergen.enum` and the DATA-09 provenance guard at `product...allergens.items.properties.provenance.$ref`. (The regulatory `allOf`+`const` pattern on SCALAR fact-bearing fields is fine and stays: it adds NO new property to the envelope, it only constrains `claimDomain`. Only the allergen item added sibling properties, which is the bug this nesting fixes.)
 
 ## Runtime State Inventory
 
@@ -459,6 +471,11 @@ Phase 1 is greenfield (a fresh repository, no pre-existing runtime state, no ren
     "check:images":   "node scripts/check-images.mjs",
     "prebuild":       "npm run validate && npm run lint:editorial && npm run check:images",
     "build":          "eleventy",
+    // build stays bare "eleventy": npm's lifecycle fires "prebuild" before it, AND
+    // .eleventy.js registers an eleventyConfig.on("eleventy.before", ...) hook that runs the
+    // same gates, so even a direct `npx @11ty/eleventy` (which never invokes the npm "build"
+    // script) cannot bypass them. Do NOT chain `npm run prebuild && eleventy`: under
+    // `npm run build` that double-runs the gates and still misses a direct eleventy call.
     "test":           "node --test 'test/**/*.test.js'",
     "a11y:serve":     "http-server _site -p 8081 -s -c-1",
     "a11y:ci":        "pa11y-ci",
@@ -506,7 +523,9 @@ export const MOTIVE_PHRASES = [/to boost margins/i, /to cut costs/i, /to increas
 - **Class A (em-dash, en-GB spellings, sentence-case)** applies to ALL scanned prose and fields.
 - **Class B (superlatives, denigratory phrases, motive phrases)** applies ONLY to analyst-authored text.
 
-Field paths scanned for Class B (analyst-authored): `explanation`, `note`, `labelledInference.basis`, and page body prose (`.njk`/`.md` text). Excluded from Class B (attributed-quote fields, Class A only): `statedReason`, verbatim source quotes, `source.name`. A prose **quote-allow** mechanism (a fenced Markdown blockquote, or an inline `<!-- editorial-allow: quote -->` directive) lets a cited line containing a Class B word ship. The scan excludes `.css` (legitimate `color:`), JSON keys (`licence`/`datasetLicence`), `.mjs`/`.js`, and `test/fixtures`.
+Field paths scanned for Class B (analyst-authored): `explanation`, `note`, `labelledInference.basis`, and page body prose (`.njk`/`.md` text). Excluded from Class B (attributed-quote fields, Class A only): `statedReason`, verbatim source quotes, `source.name`. A prose **quote-allow** mechanism (a fenced Markdown blockquote, or an inline `<!-- editorial-allow: quote -->` directive) lets a cited line containing a Class B word ship.
+
+**The scan scope is an explicit ALLOWLIST of roots, not a repo walk** (mirrors DEBT `no-emdash.test.js`: `SCAN_DIRS = ["src","docs"]` + `SCAN_FILES = ["README.md"]`). The default scan set is `src/` + `docs/` + the single root `README.md` ONLY. A root walk would scan `.planning/` (hundreds of em-dashes), `CLAUDE.md`, and this RESEARCH file's own denylist examples, turning the build permanently red. HARD-EXCLUDE: `.planning/` and every dot-directory, `CLAUDE.md`, `.mjs`/`.js` source, `.css` (legitimate `color:`), JSON keys (`licence`/`datasetLicence`), and `test/fixtures/`. Everything authored under the allowlist (README.md and every `docs/*.md`) must therefore be clean en-GB / neutral prose, except where it legitimately quotes banned vocabulary behind the `<!-- editorial-allow: quote -->` directive (see the rule-explaining-docs note carried into Plans 01-07/01-09/01-10).
 
 ## Validation Architecture
 

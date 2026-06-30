@@ -1,0 +1,10 @@
+{
+  "value": "Regulatory position carrying a checked-on date but citing only an international source, so only the GB-jurisdiction half of TRUST-06 fails.",
+  "sources": ["off"],
+  "confidence": "high",
+  "evidence": "high",
+  "updated": "2026-06-30",
+  "checkedOn": "2026-06-30",
+  "claimType": "authoritative",
+  "claimDomain": "regulatory"
+}

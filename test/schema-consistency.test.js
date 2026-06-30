@@ -39,12 +39,18 @@ const sortedEqual = (a, b) => {
 };
 
 // A field resolves to the SourcedValue envelope if it is a direct $ref to the
-// envelope, or an allOf that includes a branch $ref'ing the envelope.
-const resolvesToEnvelope = (node) => {
+// envelope, an allOf with a branch that resolves to the envelope, or a local
+// $ref to a #/$defs/ entry that itself resolves to the envelope (e.g. the
+// nutritionValue $def, which composes the envelope with a numeric value bound).
+const resolvesToEnvelope = (node, schema) => {
   if (!node || typeof node !== "object") return false;
   if (node.$ref === ENVELOPE_REF) return true;
+  if (typeof node.$ref === "string" && node.$ref.startsWith("#/$defs/") && schema) {
+    const def = (schema.$defs || {})[node.$ref.slice("#/$defs/".length)];
+    return resolvesToEnvelope(def, schema);
+  }
   if (Array.isArray(node.allOf)) {
-    return node.allOf.some((branch) => branch && branch.$ref === ENVELOPE_REF);
+    return node.allOf.some((branch) => resolvesToEnvelope(branch, schema));
   }
   return false;
 };
@@ -68,23 +74,23 @@ const collectClaimDomainConsts = (node, acc = []) => {
 
 test("(a) every enumerated fact-bearing field resolves to the SourcedValue envelope", () => {
   const cases = [
-    ["product", product.properties.manufacturer],
-    ["product", product.properties.ingredientsText],
-    ["product", product.properties.regulatoryStatus],
-    ["ingredient", ingredient.properties.functionDescription],
-    ["ingredient", ingredient.properties.regulatoryStatus],
-    ["additive", additive.properties.function],
-    ["additive", additive.properties.regulatoryStatus],
+    ["product", product.properties.manufacturer, product],
+    ["product", product.properties.ingredientsText, product],
+    ["product", product.properties.regulatoryStatus, product],
+    ["ingredient", ingredient.properties.functionDescription, ingredient],
+    ["ingredient", ingredient.properties.regulatoryStatus, ingredient],
+    ["additive", additive.properties.function, additive],
+    ["additive", additive.properties.regulatoryStatus, additive],
   ];
 
-  // Every nutrition figure is fact-bearing too.
+  // Every nutrition figure is fact-bearing too (via the nutritionValue $def).
   for (const [figure, node] of Object.entries(product.properties.nutrition.properties)) {
-    cases.push([`product.nutrition.${figure}`, node]);
+    cases.push([`product.nutrition.${figure}`, node, product]);
   }
 
-  for (const [label, node] of cases) {
+  for (const [label, node, schema] of cases) {
     assert.ok(
-      resolvesToEnvelope(node),
+      resolvesToEnvelope(node, schema),
       `${label} does not resolve to the SourcedValue envelope ($ref ${ENVELOPE_REF})`,
     );
   }

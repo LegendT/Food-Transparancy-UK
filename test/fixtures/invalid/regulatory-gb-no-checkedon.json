@@ -1,0 +1,9 @@
+{
+  "value": "Regulatory position citing a GB source but carrying no checked-on date, so only the checkedOn half of TRUST-06 fails.",
+  "sources": ["fsa-allergen-guidance"],
+  "confidence": "high",
+  "evidence": "high",
+  "updated": "2026-06-30",
+  "claimType": "authoritative",
+  "claimDomain": "regulatory"
+}

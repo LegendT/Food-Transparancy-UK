@@ -1,0 +1,16 @@
+{
+  "id": "bad-nutrition",
+  "slug": "bad-nutrition",
+  "name": "Bad nutrition value",
+  "nutrition": {
+    "sugars": {
+      "value": "57",
+      "sources": ["off"],
+      "confidence": "high",
+      "evidence": "high",
+      "updated": "2026-06-30",
+      "claimType": "authoritative",
+      "claimDomain": "nutrition"
+    }
+  }
+}

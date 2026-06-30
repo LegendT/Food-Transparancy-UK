@@ -73,3 +73,27 @@ test("a malformed registry record is rejected by Ajv (DATA-01)", () => {
   assert.equal(ok, false);
   assert.ok(errors.length > 0);
 });
+
+// H1 (review round 3): a nutrition figure must be a non-negative NUMBER, so a
+// string/negative/null cannot pass as a back-of-pack value and break comparison.
+test("a string nutrition value is rejected by Ajv (H1: numeric integrity)", () => {
+  const { ok, errors } = validate("product", load("fixtures/invalid/bad-nutrition-value.json"));
+  assert.equal(ok, false);
+  assert.ok(errors.some((e) => /must be number/.test(e.message)), JSON.stringify(errors));
+});
+
+// M1 (review round 3): the core value is "no claim without source, confidence,
+// evidence and update date". Strip each required envelope field in turn and
+// assert rejection, so a regression dropping any single one is caught.
+test("each required provenance field is independently enforced (core value)", () => {
+  const base = {
+    value: "x", sources: ["off"], confidence: "high", evidence: "high",
+    updated: "2026-06-30", claimType: "authoritative",
+  };
+  for (const field of Object.keys(base)) {
+    const partial = { ...base };
+    delete partial[field];
+    const { ok } = validate("sourced-value", partial);
+    assert.equal(ok, false, `removing "${field}" must fail validation`);
+  }
+});

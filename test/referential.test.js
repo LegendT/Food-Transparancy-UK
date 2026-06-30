@@ -53,9 +53,25 @@ test("a fact citing an unknown source id is rejected by checkReferences (DATA-01
   assert.ok(checkReferences(facts, registry).errors.length > 0);
 });
 
-test("a regulatory fact citing only a non-GB source is rejected by checkRegulatoryJurisdiction (TRUST-06)", () => {
+test("a regulatory fact citing only a non-GB source with no checkedOn is rejected (TRUST-06, both halves)", () => {
   const facts = collectFacts(load("fixtures/invalid/regulatory-non-gb.json"));
   assert.ok(checkRegulatoryJurisdiction(facts, registry).errors.length > 0);
+});
+
+// TRUST-06 has two independent halves; each is guarded by its own surgical
+// fixture so a regression that drops one half cannot hide behind the other.
+test("TRUST-06: a GB-sourced regulatory fact missing checkedOn fails ONLY the checkedOn rule", () => {
+  const facts = collectFacts(load("fixtures/invalid/regulatory-gb-no-checkedon.json"));
+  const { errors } = checkRegulatoryJurisdiction(facts, registry);
+  assert.ok(errors.some((e) => /checkedOn date/.test(e)), "the checkedOn rule must fire");
+  assert.ok(!errors.some((e) => /GB-jurisdiction/.test(e)), "the GB-jurisdiction rule must NOT fire");
+});
+
+test("TRUST-06: a regulatory fact with checkedOn but only a non-GB source fails ONLY the jurisdiction rule", () => {
+  const facts = collectFacts(load("fixtures/invalid/regulatory-noncgb-with-checkedon.json"));
+  const { errors } = checkRegulatoryJurisdiction(facts, registry);
+  assert.ok(errors.some((e) => /GB-jurisdiction/.test(e)), "the GB-jurisdiction rule must fire");
+  assert.ok(!errors.some((e) => /checkedOn date/.test(e)), "the checkedOn rule must NOT fire");
 });
 
 test("a to-earlier-than-from range passes Ajv but is rejected by checkDateRanges (DATA-03)", () => {

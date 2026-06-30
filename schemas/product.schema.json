@@ -42,15 +42,15 @@
       "additionalProperties": false,
       "description": "Back-of-pack nutrition declaration per 100g. Each figure is fact-bearing and reuses the SourcedValue envelope.",
       "properties": {
-        "energyKj": { "$ref": "sourced-value.schema.json" },
-        "energyKcal": { "$ref": "sourced-value.schema.json" },
-        "fat": { "$ref": "sourced-value.schema.json" },
-        "saturates": { "$ref": "sourced-value.schema.json" },
-        "carbohydrate": { "$ref": "sourced-value.schema.json" },
-        "sugars": { "$ref": "sourced-value.schema.json" },
-        "fibre": { "$ref": "sourced-value.schema.json" },
-        "protein": { "$ref": "sourced-value.schema.json" },
-        "salt": { "$ref": "sourced-value.schema.json" }
+        "energyKj": { "$ref": "#/$defs/nutritionValue" },
+        "energyKcal": { "$ref": "#/$defs/nutritionValue" },
+        "fat": { "$ref": "#/$defs/nutritionValue" },
+        "saturates": { "$ref": "#/$defs/nutritionValue" },
+        "carbohydrate": { "$ref": "#/$defs/nutritionValue" },
+        "sugars": { "$ref": "#/$defs/nutritionValue" },
+        "fibre": { "$ref": "#/$defs/nutritionValue" },
+        "protein": { "$ref": "#/$defs/nutritionValue" },
+        "salt": { "$ref": "#/$defs/nutritionValue" }
       }
     },
     "regulatoryStatus": {
@@ -109,6 +109,18 @@
     "publicationStatus": {
       "type": ["string", "null"],
       "description": "Reserved for the Phase 2 publication gate (DATA-11); present-and-empty (null) validates."
+    }
+  },
+  "$defs": {
+    "nutritionValue": {
+      "description": "A back-of-pack nutrition figure: the SourcedValue envelope with its value constrained to a non-negative number, so a string, negative, null or object cannot pass as a numeric fact. Constraining the existing `value` property adds no new key, so the envelope's additionalProperties:false still holds.",
+      "allOf": [
+        { "$ref": "sourced-value.schema.json" },
+        {
+          "type": "object",
+          "properties": { "value": { "type": "number", "minimum": 0 } }
+        }
+      ]
     }
   }
 }

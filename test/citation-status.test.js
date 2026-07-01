@@ -115,6 +115,17 @@ test("isBlockedHost refuses a malformed or empty host", () => {
   assert.equal(isBlockedHost("[not-an-ipv6"), true);
 });
 
+test("C2: isBlockedHost refuses name-based loopback aliases but not a public host", () => {
+  assert.equal(isBlockedHost("localhost"), true);
+  assert.equal(isBlockedHost("LOCALHOST"), true);
+  assert.equal(isBlockedHost("foo.localhost"), true);
+  assert.equal(isBlockedHost("ip6-localhost"), true);
+  assert.equal(isBlockedHost("ip6-loopback"), true);
+  // A multi-label internal name is the documented DNS-rebinding residual, allowed.
+  assert.equal(isBlockedHost("api.internal"), false);
+  assert.equal(isBlockedHost("www.food.gov.uk"), false);
+});
+
 // ---- assertPublicHttpsUrl: scheme + host policy ----
 
 test("assertPublicHttpsUrl accepts a public https url and returns a URL", () => {

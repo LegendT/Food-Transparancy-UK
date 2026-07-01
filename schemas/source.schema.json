@@ -82,6 +82,13 @@
         }
       }
     },
+    "derivedFrom": {
+      "description": "Optional lineage tag (D-12): the parent source id this source is co-derived from (for example trade reports tracing to one press release), or null for a root. The distinct-lineage gate follows this transitively so co-derived sources count as one lineage, not two.",
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }
+      ]
+    },
     "driver": {
       "description": "For policy sources, the regulatory driver behind a change. Recorded now (DATA-01); the mandate-vs-incentive publication rule is enforced in Phase 4.",
       "oneOf": [

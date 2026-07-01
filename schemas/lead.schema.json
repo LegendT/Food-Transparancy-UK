@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foodtransparency.uk/schemas/lead.schema.json",
+  "title": "OFF ingestion lead",
+  "description": "A raw imported lead (DATA-05/DATA-06/D-19), NOT a fact. A lead carries field-level OFF provenance and lives outside src/_data, so the Eleventy cascade never renders it and the prebuild corpus walk never validates it as a fact. It deliberately has NO key named sources at any level, so a misplaced lead can never trip the corpus-escape guard's hasSourcedShape detector (D-19/C4). Promotion into a published SourcedValue is an explicit human step.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["leadId", "leadType", "barcode", "capturedAt", "provenance", "fields"],
+  "properties": {
+    "leadId": {
+      "type": "string",
+      "description": "Stable identifier for the lead (for example off-3017620422003-r30)."
+    },
+    "leadType": {
+      "enum": ["off-import", "off-revision-diff"],
+      "description": "off-import is a captured product snapshot; off-revision-diff records a change between two OFF revisions as an unverified reformulation lead (VRFY-10)."
+    },
+    "barcode": {
+      "type": "string",
+      "description": "The product barcode this lead was captured for."
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the lead was captured from Open Food Facts."
+    },
+    "offRevision": {
+      "type": "integer",
+      "description": "The OFF rev number of the captured snapshot; two captures with different revisions form an off-revision-diff lead."
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset", "licence", "url", "retrievedAt"],
+      "description": "Dataset-level ODbL provenance for the whole lead (DATA-02).",
+      "properties": {
+        "dataset": {
+          "type": "string",
+          "description": "The originating dataset, for example open-food-facts."
+        },
+        "licence": {
+          "type": "string",
+          "description": "Dataset licence identifier, for example ODbL-1.0."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Canonical URL of the captured product on the source dataset."
+        },
+        "retrievedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp the capture was retrieved."
+        }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "description": "Field-level provenance (DATA-06): each imported value with the OFF field it came from and its structured measure, so a later promotion carries the correct basis and the measure-mismatch is caught rather than silently merged.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "offField", "value"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "The intended target path in a promoted entity (for example nutrition.sugars)."
+          },
+          "offField": {
+            "type": "string",
+            "description": "The Open Food Facts field this value came from (for example sugars_100g)."
+          },
+          "value": {
+            "description": "The imported value; any type."
+          },
+          "measure": { "$ref": "sourced-value.schema.json#/$defs/measure" },
+          "offRevision": {
+            "type": "integer",
+            "description": "The OFF rev this specific field value was read from."
+          }
+        }
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "description": "The human promotion state; a lead never publishes until an editor promotes it into a SourcedValue.",
+      "properties": {
+        "status": {
+          "enum": ["pending", "promoted", "rejected"],
+          "default": "pending",
+          "description": "Promotion workflow state; defaults to pending."
+        },
+        "note": {
+          "type": "string",
+          "description": "Editor note on the promotion decision."
+        },
+        "promotedTo": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string" }
+          ],
+          "description": "The entity path or id the lead was promoted into, or null while pending."
+        },
+        "by": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string" }
+          ],
+          "description": "Who promoted the lead, or null while pending."
+        },
+        "date": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "format": "date" }
+          ],
+          "description": "Date of promotion, or null while pending."
+        }
+      }
+    },
+    "revisionDiff": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fromRev", "toRev", "changedFields"],
+          "description": "For an off-revision-diff lead: the two OFF revisions compared and the fields that changed. Phase 2 records the diff; it does NOT build an automated differ.",
+          "properties": {
+            "fromRev": { "type": "integer" },
+            "toRev": { "type": "integer" },
+            "changedFields": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ],
+      "description": "Nullable; populated only for off-revision-diff leads."
+    }
+  }
+}

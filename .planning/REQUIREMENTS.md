@@ -18,17 +18,17 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 ### Verification
 
-- [ ] **VRFY-01**: A fact is publishable only when verified to the standard matched to its claim type: a **corroborable** fact (an empirical claim about the world, e.g. a past or declared formulation) requires two confirming verifications against two distinct-lineage sources, at least one primary; an **authoritative** fact (what a named authority states, e.g. current GB regulatory status, or the current official label) requires one authority plus an independent re-read for transcription fidelity
-- [ ] **VRFY-02**: When the recorded verifications disagree, the fact is withheld from publication and routed to human adjudication, which resolves to exactly one of: confirmed, corrected (value amended then re-verified), or contested (see VRFY-11); AI may never adjudicate a disagreement, and no value changes without human approval
-- [ ] **VRFY-03**: Every fact carries a verification status — workflow states (unverified / in-review / open-disagreement-withheld) and published states (confirmed / contested / stale / wrong) — plus the date it was last (re-)verified
-- [ ] **VRFY-04**: Verification-sufficiency gate, enforced at the level of the individual fact: a fact is published only if it has the passes its claim type requires, has no open disagreement, and no pass returned inaccessible / not-found (an inaccessible source never satisfies a pass). A page publishes its verified subset; any unverified or withheld fact is rendered as an explicit "not yet verified — withheld" placeholder, never asserted. A fact whose audit status later becomes `wrong` is automatically withheld (the gate is continuous, not only at publish time)
+- [x] **VRFY-01**: A fact is publishable only when verified to the standard matched to its claim type: a **corroborable** fact (an empirical claim about the world, e.g. a past or declared formulation) requires two confirming verifications against two distinct-lineage sources, at least one primary; an **authoritative** fact (what a named authority states, e.g. current GB regulatory status, or the current official label) requires one authority plus an independent re-read for transcription fidelity
+- [x] **VRFY-02**: When the recorded verifications disagree, the fact is withheld from publication and routed to human adjudication, which resolves to exactly one of: confirmed, corrected (value amended then re-verified), or contested (see VRFY-11); AI may never adjudicate a disagreement, and no value changes without human approval
+- [x] **VRFY-03**: Every fact carries a verification status — workflow states (unverified / in-review / open-disagreement-withheld) and published states (confirmed / contested / stale / wrong) — plus the date it was last (re-)verified
+- [x] **VRFY-04**: Verification-sufficiency gate, enforced at the level of the individual fact: a fact is published only if it has the passes its claim type requires, has no open disagreement, and no pass returned inaccessible / not-found (an inaccessible source never satisfies a pass). A page publishes its verified subset; any unverified or withheld fact is rendered as an explicit "not yet verified — withheld" placeholder, never asserted. A fact whose audit status later becomes `wrong` is automatically withheld (the gate is continuous, not only at publish time)
 - [ ] **VRFY-05**: A reviewer can invoke a re-verification audit command that, for each published fact, outputs its status, the recorded verdicts, and flags facts whose last-verified date exceeds their staleness threshold or whose citation no longer resolves; results are written to a dated audit record in the VRFY-06 format
 - [ ] **VRFY-06**: The audit record lists each fact's status, the recorded verdicts, and disagreements ordered worst-first (wrong → uncertain → stale, then oldest last-verified first); no value changes without human approval
-- [ ] **VRFY-07**: Every recorded citation passes an automated existence/resolves check (URL/DOI) before any verification pass counts; a citation that does not resolve is recorded as not-found and blocks publication
-- [ ] **VRFY-08**: Each verification pass records the exact measure/definition it checked (e.g. "per 100g as sold", "GB legal status 2026"); a measure mismatch between passes auto-raises a disagreement even when the values look close
+- [x] **VRFY-07**: Every recorded citation passes an automated existence/resolves check (URL/DOI) before any verification pass counts; a citation that does not resolve is recorded as not-found and blocks publication
+- [x] **VRFY-08**: Each verification pass records the exact measure/definition it checked (e.g. "per 100g as sold", "GB legal status 2026"); a measure mismatch between passes auto-raises a disagreement even when the values look close
 - [ ] **VRFY-09**: Each published fact carries a staleness threshold (a small set of global classes for v1 — e.g. regulatory vs current vs historical); the VRFY-05 audit flags exceeded thresholds for re-verification
 - [ ] **VRFY-10**: An Open Food Facts revision-diff (or similar import signal) is treated as a lead, not a verified reformulation; a detected change must be human-confirmed as a genuine recipe change (not a record correction) before it can publish as a reformulation
-- [ ] **VRFY-11**: A genuinely contested fact (two credible authorities durably disagree, resolved by a human as contested rather than as a transcription error) is publishable with a visible "contested" treatment showing both positions with their sources — distinct from "unverified — withheld". This is how genuine disputes are shown honestly rather than hidden
+- [x] **VRFY-11**: A genuinely contested fact (two credible authorities durably disagree, resolved by a human as contested rather than as a transcription error) is publishable with a visible "contested" treatment showing both positions with their sources — distinct from "unverified — withheld". This is how genuine disputes are shown honestly rather than hidden
 - [ ] **VRFY-12**: A fact past its staleness threshold renders a visible, reader-facing "last verified {date} — review due" indicator, not only an internal audit flag
 
 ### Data Model & Sourcing
@@ -37,8 +37,8 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **DATA-02**: Each source record carries its licence and rights status so re-use obligations (e.g. ODbL attribution/share-alike) are auditable
 - [x] **DATA-03**: Dates support ranged/uncertain values (e.g. "circa 2015", "between 2012 and 2014") rather than forcing false precision
 - [x] **DATA-04**: Recipe-change records separate documented change, manufacturer's stated reason, and labelled analyst inference — motive is never stored as fact
-- [ ] **DATA-05**: Open Food Facts and other imported data are stored as unverified leads (draft) until verified, never as authority
-- [ ] **DATA-06**: An ingestion process can import product/ingredient data from Open Food Facts into the draft store with provenance tagged at field level
+- [x] **DATA-05**: Open Food Facts and other imported data are stored as unverified leads (draft) until verified, never as authority
+- [x] **DATA-06**: An ingestion process can import product/ingredient data from Open Food Facts into the draft store with provenance tagged at field level
 - [x] **DATA-07**: The product schema includes a structured allergen record — a typed field per GB-regulated major allergen (the 14) — distinct from the free-text ingredients list
 - [x] **DATA-09**: The schema designates each field as fact-bearing (makes an empirical claim; subject to the trust layer) or metadata (structural/administrative; exempt); the designation lives in the schema and is enforced by TRUST-05
 - [x] **DATA-10**: Every image (product packaging, logos, historic labels, packshots) defaults to rights status "not cleared — do not publish"; the build blocks any referenced brand image unless it is an own-photographed artefact, has an explicit cleared licence, or carries a recorded, reviewed fair-dealing-for-criticism justification. Brand names used as identifiers are not images and are not gated here
@@ -193,20 +193,20 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | UX-06 | Phase 1 | Complete |
 | INFRA-01 | Phase 1 | Complete |
 | SPIKE-01 | Phase 1 | Pending |
-| VRFY-01 | Phase 2 | Pending |
-| VRFY-02 | Phase 2 | Pending |
-| VRFY-03 | Phase 2 | Pending |
-| VRFY-04 | Phase 2 | Pending |
+| VRFY-01 | Phase 2 | Complete |
+| VRFY-02 | Phase 2 | Complete |
+| VRFY-03 | Phase 2 | Complete |
+| VRFY-04 | Phase 2 | Complete |
 | VRFY-05 | Phase 2 | Pending |
 | VRFY-06 | Phase 2 | Pending |
-| VRFY-07 | Phase 2 | Pending |
-| VRFY-08 | Phase 2 | Pending |
+| VRFY-07 | Phase 2 | Complete |
+| VRFY-08 | Phase 2 | Complete |
 | VRFY-09 | Phase 2 | Pending |
 | VRFY-10 | Phase 2 | Pending |
-| VRFY-11 | Phase 2 | Pending |
+| VRFY-11 | Phase 2 | Complete |
 | VRFY-12 | Phase 2 | Pending |
-| DATA-05 | Phase 2 | Pending |
-| DATA-06 | Phase 2 | Pending |
+| DATA-05 | Phase 2 | Complete |
+| DATA-06 | Phase 2 | Complete |
 | PROD-01 | Phase 3a | Pending |
 | PROD-02 | Phase 3a | Pending |
 | PROD-03 | Phase 3a | Pending |

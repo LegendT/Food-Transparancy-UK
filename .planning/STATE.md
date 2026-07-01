@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 context gathered
-last_updated: "2026-07-01T08:54:59.587Z"
-last_activity: 2026-07-01 -- Phase 02 planning complete
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-07-01T09:58:39.801Z"
+last_activity: 2026-07-01
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 17
-  completed_plans: 10
+  completed_plans: 11
   percent: 10
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-30)
 
 **Core value:** Every published fact is traceable to a primary source, independently verified to a standard matched to the claim, and honest about its uncertainty — transparency over persuasion.
-**Current focus:** Phase 01 — foundation-trust-primitives-schemas-rights-ci-deploy-sourcin
+**Current focus:** Phase 02 — Claim-Typed Verification, Per-Fact Publication Gate & Ingestion
 
 ## Current Position
 
-Phase: 01 (foundation-trust-primitives-schemas-rights-ci-deploy-sourcin) — EXECUTING
-Plan: 6 of 10
+Phase: 02 (Claim-Typed Verification, Per-Fact Publication Gate & Ingestion) — EXECUTING
+Plan: 2 of 7
 Status: Ready to execute
-Last activity: 2026-07-01 -- Phase 02 planning complete
+Last activity: 2026-07-01
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P01-05 | 14 | 3 tasks | 18 files |
 | Phase 01 P01-06 | 16 | 3 tasks | 13 files |
 | Phase 01 P01-07 | 25 | 3 tasks | 6 files |
+| Phase 02 P02-01 | 6 | 3 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Ajv ESM import must use ajv/dist/2020.js (with .js) under Node 24; extensionless ajv/dist/2020 fails (ajv@8.20.0 has no exports field). Applies to Plan 01-05 lib/validate.mjs
 - [Phase ?]: Plan 01-05: the validation gate is live in prebuild. Ajv structural checks run first, then imperative referential, TRUST-06 and date-order checks; a non-zero-corpus assertion seeded by src/_data/demoFact.json prevents a false-green empty scan, and nine negative fixtures each prove their owning gate rejects bad input.
 - [Phase ?]: Plan 01-06: image-rights gate is default-deny over REFERENCED images (manifest is the non-zero corpus; zero references is a valid pass); editorial lint is scoped (Class A everywhere, Class B analyst-only) with a same-line editorial-allow directive and blockquote suppression so lawful attributed quotation never fails the build.
+- [Phase 02]: Plan 02-01: verificationStatus/publicationStatus constrained to enum [null] at both the SourcedValue and all five entity schemas, so publication status is derived-only every build (D-03/R-06); no author-writable publish flag exists
+- [Phase 02]: Plan 02-01: the verdict-cache entry shape { verdict, resolvedVia, checkedAt, statusCode, snapshotUrl } is SEAM-pinned by citation-verdicts.sample.json and must not diverge across 02-03/02-05/02-06
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-30T22:40:40.930Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-claim-typed-verification-per-fact-publication-gate-ingestion/02-CONTEXT.md
+Last session: 2026-07-01T09:58:29.464Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None

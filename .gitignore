@@ -8,5 +8,8 @@ _site/
 .pa11y/
 pa11y-ci-results.json
 
+# Generated on-demand verification audit records (dated artefacts, VRFY-05)
+docs/DATA-AUDIT-*.md
+
 # Operating system cruft
 .DS_Store

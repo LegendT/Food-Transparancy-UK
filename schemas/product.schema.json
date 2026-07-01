@@ -25,6 +25,12 @@
       "type": "string",
       "description": "Plain reference to a brand record id."
     },
+    "ingredients": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+      "description": "Ordered ingredient-id references into the ingredients corpus, for cross-linking and the INGR-04 reverse index (D-15). Plain metadata, NOT a SourcedValue: it is a navigation and relationship layer, distinct from the sourced free-text ingredientsText which remains the declared-recipe fact of record. It holds no value or sources, so it never trips the render-safety gate and never asserts an unsourced recipe. Optional, so every existing product record validates unchanged (migration-safe)."
+    },
     "categoryId": {
       "type": "string",
       "description": "Plain reference to a category id."

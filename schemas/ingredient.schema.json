@@ -34,6 +34,10 @@
       "$ref": "sourced-value.schema.json",
       "description": "Fact-bearing: a descriptive account of what the ingredient does, sourced."
     },
+    "authorityPosition": {
+      "$ref": "sourced-value.schema.json",
+      "description": "Optional (INGR-02 'may state'): a named authority's published safety opinion (FSA, EFSA or SACN), cited and dated. A fact-bearing SourcedValue, DISTINCT from regulatoryStatus. Deliberately NOT claimDomain regulatory (D-14): an EFSA or SACN opinion is not the GB regulatory status and may not be GB-jurisdiction, so it must not trigger the TRUST-06 GB-source and checkedOn referential rule. Ingredient pages stay descriptive: this cites a position, it does not synthesise studies (EVID-SYNTH-01 deferred). Optional, so existing records validate unchanged."
+    },
     "regulatoryStatus": {
       "description": "Fact-bearing regulatory-position field. Marked claimDomain regulatory so the TRUST-06 referential gate (plan 01-05) can key on it.",
       "allOf": [

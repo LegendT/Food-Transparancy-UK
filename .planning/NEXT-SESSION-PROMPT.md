@@ -19,4 +19,3 @@ Git: don't push without asking (global rule). The blueprint repo /Users/anthonyg
 Honour the global CLAUDE.md rules: British English, conventional commits, WCAG 2.2 AA, minimal deps, no push without asking, no emoji, no em-dashes.
 
 Start in a fresh context window (/clear first).
-</content>

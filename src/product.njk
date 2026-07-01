@@ -1,0 +1,60 @@
+---
+pagination:
+  data: products
+  size: 1
+  alias: product
+  resolve: values
+permalink: "/products/{{ product.slug }}/"
+layout: layouts/base.njk
+eleventyComputed:
+  title: "{{ product.name }}"
+  description: "What {{ product.name }} contains now. Every fact is shown with its source, confidence and evidence level; anything not yet verified is withheld rather than asserted."
+---
+{% from "components/macros.njk" import sourcedValue, sourceNote, caveatBox %}
+
+{#
+  One server-rendered page per product. The src/_data/products/* cascade is an
+  OBJECT keyed by filename, so the front-matter pagination uses resolve: values:
+  default pagination over an object iterates its KEYS (strings), which would break
+  every template (03a-RESEARCH.md Pattern 1 / Pitfall 2). Hyphenated keys
+  (products.spike-01) are also invalid Nunjucks dot access; paginating over values
+  sidesteps that. A1 is smoke-verified by asserting the product NAME (not a
+  filename) renders on a built page.
+#}
+
+<h1>{{ product.name }}</h1>
+
+<p class="lede">The current declared record for {{ product.name }}. Each value is shown through the trust component: a fact appears only once it has met the verification standard its claim type demands, and is otherwise marked "not yet verified; withheld".</p>
+
+{#
+  Sections follow the LOCKED D-05 order: Ingredients, Nutrition, Allergens,
+  Manufacturer, Sources, Recipe history. This plan (03a-03) authors Ingredients,
+  Manufacturer, Sources and Recipe history. Plan 04 inserts the Nutrition and
+  Allergens h2 sections between Ingredients and Manufacturer, in that order; the
+  placeholder comment below marks where they slot in so the outline stays gap-free.
+#}
+
+<section id="ingredients" aria-labelledby="ingredients-heading">
+  <h2 id="ingredients-heading">Ingredients</h2>
+  <p>The current declared ingredients list. This is the sourced recipe of record; it is not broken out into individual ingredient entries here.</p>
+  {%- if product.ingredientsText %}
+  {{ sourcedValue(product.ingredientsText, sources.sources, "Declared ingredients", "", "product") }}
+  {%- else %}
+  <p class="example">No declared ingredients list has been sourced for this product yet.</p>
+  {%- endif %}
+</section>
+
+{# PLAN 04 INSERTS HERE, in D-05 order:
+   <section id="nutrition"> ... </section>  (the nutrition table, D-06)
+   <section id="allergens"> ... </section>  (the allergen fail-safe list, D-12)
+   Do not reorder; Manufacturer, Sources and Recipe history must stay after them. #}
+
+<section id="manufacturer" aria-labelledby="manufacturer-heading">
+  <h2 id="manufacturer-heading">Manufacturer</h2>
+  {%- if product.manufacturer %}
+  {{ sourcedValue(product.manufacturer, sources.sources, "Made by", "", "product") }}
+  {%- else %}
+  <p class="example">No manufacturer has been sourced for this product yet.</p>
+  {%- endif %}
+</section>
+</content>

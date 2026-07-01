@@ -300,6 +300,16 @@ test("VRFY-03 split: the same under-the-bar shape with zero recorded passes is w
   assert.equal(deriveVerificationState(fact, byId, freshBoth, TODAY, "product").state, "withheld-unverified");
 });
 
+test("T7: a SINGLE confirms pass listing two distinct-lineage sources still fails the two-PASS bar (kills <2 -> <1)", () => {
+  // One pass whose sourcesChecked spans both lineages (one primary). Counting
+  // sources would satisfy the standard; counting PASSES must not (D-02/D-05).
+  const onePass = confirmsPass({ sourcesChecked: ["prim-a", "sec-b"] });
+  const fact = corroborableConfirmed();
+  fact.verification.passes = [onePass];
+  assert.equal(meetsCorroborable([onePass], fact, byId), false);
+  assert.equal(deriveVerificationState(fact, byId, freshBoth, TODAY, "product").state, "withheld-in-review");
+});
+
 test("VRFY-01: a corroborable fact with two confirms over two distinct lineages and >=1 primary publishes", () => {
   assert.equal(deriveVerificationState(corroborableConfirmed(), byId, freshBoth, TODAY, "product").state, "published-confirmed");
 });

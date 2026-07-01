@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-07-01T10:10:17.213Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-07-01T10:22:08.428Z"
 last_activity: 2026-07-01
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 17
-  completed_plans: 12
+  completed_plans: 13
   percent: 10
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-30)
 ## Current Position
 
 Phase: 02 (Claim-Typed Verification, Per-Fact Publication Gate & Ingestion) — EXECUTING
-Plan: 3 of 7
+Plan: 4 of 7
 Status: Ready to execute
 Last activity: 2026-07-01
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P01-07 | 25 | 3 tasks | 6 files |
 | Phase 02 P02-01 | 6 | 3 tasks | 21 files |
 | Phase 02 P02-02 | 8min | 2 tasks | 2 files |
+| Phase 02 P02-05 | 6 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Plan 01-06: image-rights gate is default-deny over REFERENCED images (manifest is the non-zero corpus; zero references is a valid pass); editorial lint is scoped (Class A everywhere, Class B analyst-only) with a same-line editorial-allow directive and blockquote suppression so lawful attributed quotation never fails the build.
 - [Phase 02]: Plan 02-01: verificationStatus/publicationStatus constrained to enum [null] at both the SourcedValue and all five entity schemas, so publication status is derived-only every build (D-03/R-06); no author-writable publish flag exists
 - [Phase 02]: Plan 02-01: the verdict-cache entry shape { verdict, resolvedVia, checkedAt, statusCode, snapshotUrl } is SEAM-pinned by citation-verdicts.sample.json and must not diverge across 02-03/02-05/02-06
+- [Phase 02]: Plan 02-05: split the four-verdict citation checker into pure lib/citation-status.mjs helpers (classifier, SSRF host guard, DOI-slash normaliser, closest-snapshot picker, soft-404) and a standalone scripts/check-citations.mjs; a non-RESOLVES verdict never satisfies the gate (D-11), and the checker is never wired into prebuild
 
 ### Pending Todos
 
@@ -117,6 +119,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-01T10:10:17.209Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-07-01T10:21:17.100Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None

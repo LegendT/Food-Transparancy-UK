@@ -103,6 +103,12 @@ None - no external service configuration required. The checker uses Node 24 nati
 - The resolves-verdict cache format is now produced by a real checker for the 02-03 gate and the 02-06 audit to consume.
 - Blocker/none: `.cache/citation-verdicts.json` is written only when the network script is run; until an editor runs `npm run check:citations` and commits the output, every cited citation is treated as UNCHECKED (withheld) by the gate, which is the correct continuous-safety default (R-07).
 
+## Self-Check: PASSED
+
+- All three created files present on disk.
+- All four commits present in git history (b93b5e6, b9dcd12, c2afe86, 3a1c445).
+- Full suite green (111 tests); Task-2 acceptance greps all pass; checker absent from prebuild.
+
 ---
 *Phase: 02-claim-typed-verification-per-fact-publication-gate-ingestion*
 *Completed: 2026-07-01*

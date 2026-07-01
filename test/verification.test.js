@@ -22,7 +22,8 @@ import {
   checkDistinctLineage,
   lineageSimilarityWarnings,
   checkMeasureMismatch,
-  checkValueDivergence
+  checkValueDivergence,
+  checkConfirmsContradictValue
 } from "../lib/verification.mjs";
 
 const dir = dirname(fileURLToPath(import.meta.url));
@@ -236,6 +237,44 @@ test("adjudication.outcome corrected clears the disagreement and substitutes cor
   const result = deriveVerificationState(fact, byId, freshBoth, TODAY, "product");
   assert.equal(result.state, "published-confirmed");
   assert.equal(result.value, "AMENDED");
+});
+
+// --- H3: confirms passes whose checkedValue contradicts fact.value ---
+
+test("H3: two confirms reading X while the fact asserts Y auto-raise withheld-open-disagreement", () => {
+  const fact = corroborableConfirmed();
+  fact.value = "Y";
+  // Both confirms agree on X, but the fact publishes Y.
+  fact.verification.passes = [
+    confirmsPass({ sourcesChecked: ["prim-a"], checkedValue: "X" }),
+    confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], checkedValue: "X" })
+  ];
+  assert.equal(checkConfirmsContradictValue(fact.verification.passes, fact), true);
+  assert.equal(deriveVerificationState(fact, byId, freshBoth, TODAY, "product").state, "withheld-open-disagreement");
+});
+
+test("H3: two confirms reading Y matching the fact publish as published-confirmed (unaffected)", () => {
+  const fact = corroborableConfirmed();
+  fact.value = "Y";
+  fact.verification.passes = [
+    confirmsPass({ sourcesChecked: ["prim-a"], checkedValue: "Y" }),
+    confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], checkedValue: "Y" })
+  ];
+  assert.equal(checkConfirmsContradictValue(fact.verification.passes, fact), false);
+  assert.equal(deriveVerificationState(fact, byId, freshBoth, TODAY, "product").state, "published-confirmed");
+});
+
+test("H3: a confirms pass with no checkedValue does not over-fire (auxiliary-optional case)", () => {
+  const fact = corroborableConfirmed();
+  fact.value = "Y";
+  fact.verification.passes = [
+    confirmsPass({ sourcesChecked: ["prim-a"], checkedValue: undefined }),
+    confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], checkedValue: undefined })
+  ];
+  // Delete the key entirely (confirmsPass spread would otherwise set it undefined explicitly).
+  for (const p of fact.verification.passes) delete p.checkedValue;
+  assert.equal(checkConfirmsContradictValue(fact.verification.passes, fact), false);
+  assert.equal(deriveVerificationState(fact, byId, freshBoth, TODAY, "product").state, "published-confirmed");
 });
 
 // --- claim-typed sufficiency + the VRFY-03 in-review vs unverified split ---

@@ -42,12 +42,13 @@ const VERDICTS = {
   "stale-cite": cache("RESOLVES", daysAgoISO(200)) // 200 days > CITATION_TTL_DAYS (180)
 };
 
-// A confirming pass; measure and checkedValue are shared so no divergence/mismatch.
+// A confirming pass; the measure is shared so no divergence/mismatch. No default
+// checkedValue is recorded, so these synthetic facts (whose values differ) do not
+// trip the H3 confirms-contradict-value check; a case needing one passes it via `over`.
 const cpass = (sourcesChecked, checkedOn, over = {}) => ({
   reviewerKind: "human",
   sourcesChecked,
   measure: { basis: "per-100g", state: "as-sold", unit: "g" },
-  checkedValue: "56",
   verdict: "confirms",
   checkedOn,
   ...over

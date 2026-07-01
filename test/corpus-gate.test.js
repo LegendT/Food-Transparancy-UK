@@ -229,6 +229,34 @@ test("build fails: a contested block without a matching contested adjudication",
   }
 });
 
+test("build fails: a contested position citing a source id absent from the registry (DATA-01, D-14)", () => {
+  const dir = tempDir();
+  try {
+    writeFileSync(join(dir, "sources.json"), JSON.stringify({ sources: [src("src-a"), src("src-b")] }));
+    // A well-formed contested fact (null value, matching adjudication, positions)
+    // whose SECOND position cites a source id not in the registry. That id lives
+    // ONLY inside the position, never in the fact's top-level sources[], so it is
+    // exactly the WARNING-01 gap: it must still fail the reference gate.
+    writeFileSync(join(dir, "demoFact.json"), JSON.stringify({
+      value: null, sources: ["src-a", "src-b"], confidence: "low", evidence: "low",
+      updated: "2026-06-30", claimType: "corroborable",
+      verification: {
+        passes: [],
+        adjudication: { outcome: "contested", date: "2026-06-30", note: "genuine disagreement" },
+        contested: { positions: [
+          { value: "a", sources: ["src-a"], note: "position a" },
+          { value: "b", sources: ["ghost-registry-id"], note: "position b cites a dangling id" },
+        ] },
+      },
+    }));
+    const r = runGate(dir);
+    assert.notEqual(r.status, 0);
+    assert.match(r.stderr, /unknown source id "ghost-registry-id"/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("build fails: a contested adjudication whose singular value is non-null (R-05)", () => {
   const dir = tempDir();
   try {

@@ -53,6 +53,33 @@ test("a fact citing an unknown source id is rejected by checkReferences (DATA-01
   assert.ok(checkReferences(facts, registry).errors.length > 0);
 });
 
+// WARNING-01(a): a source cited only inside a contested position must resolve to
+// a registry record like any other reference. A dangling position source would
+// otherwise pass DATA-01 undetected (D-14).
+test("a contested position citing an unknown source id is rejected by checkReferences (DATA-01, D-14)", () => {
+  const fact = {
+    value: null, sources: ["lucozade-grocer-2017"], confidence: "low", evidence: "low",
+    updated: "2026-07-01", claimType: "corroborable",
+    verification: {
+      adjudication: { outcome: "contested", date: "2026-07-01", note: "n/a" },
+      contested: { positions: [
+        { value: "a", sources: ["lucozade-grocer-2017"], note: "known position source" },
+        { value: "b", sources: ["totally-bogus-id-not-in-registry"], note: "dangling position source" },
+      ] },
+    },
+  };
+  const { errors } = checkReferences([{ path: "/x", fact }], registry);
+  assert.ok(errors.some((e) => /totally-bogus-id-not-in-registry/.test(e)),
+    "a dangling contested-position source must be flagged");
+});
+
+// No regression: the real Lucozade contested fact's position sources are genuine
+// registry ids, so it must still clear the reference gate with zero errors.
+test("the real Lucozade contested timeline fact clears checkReferences (no false positive)", () => {
+  const facts = collectFacts(load("../src/_data/timeline/spike-lucozade-2017-sugar-cut.json"));
+  assert.equal(checkReferences(facts, registry).errors.length, 0);
+});
+
 test("a regulatory fact citing only a non-GB source with no checkedOn is rejected (TRUST-06, both halves)", () => {
   const facts = collectFacts(load("fixtures/invalid/regulatory-non-gb.json"));
   assert.ok(checkRegulatoryJurisdiction(facts, registry).errors.length > 0);

@@ -1,0 +1,35 @@
+{
+  "value": 4.16,
+  "sources": ["off", "lucozade-grocer-2017"],
+  "confidence": "moderate",
+  "evidence": "low",
+  "updated": "2026-06-30",
+  "claimType": "corroborable",
+  "claimDomain": "nutrition",
+  "note": "Two confirms passes with a measure mismatch, then a 'corrected' adjudication that omits correctedValue. Without the key, deriveVerificationState would substitute an undefined value and publish it, so the 02-03 gate must build-fail on the missing key (R-03/D-04).",
+  "verification": {
+    "passes": [
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["off"],
+        "measure": { "basis": "per-100g", "state": "as-sold", "unit": "g" },
+        "checkedValue": 4.16,
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      },
+      {
+        "reviewerKind": "ai",
+        "sourcesChecked": ["lucozade-grocer-2017"],
+        "measure": { "basis": "per-100ml", "state": "as-sold", "unit": "g" },
+        "checkedValue": 4.5,
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      }
+    ],
+    "adjudication": {
+      "outcome": "corrected",
+      "note": "Editor resolved the mismatch but the correctedValue key is missing.",
+      "date": "2026-07-01"
+    }
+  }
+}

@@ -288,6 +288,15 @@ for (const { path, fact } of facts) {
       `${path}: adjudication.outcome is "contested" but the singular value is non-null; a contested fact must withhold value (null) and carry positions (R-05/D-14)`
     );
   }
+  // R-03/D-04: a "corrected" adjudication MUST carry a correctedValue key, else
+  // deriveVerificationState substitutes an undefined value and publishes it. A
+  // deliberate null is a legitimate corrected value (use the `in` operator, so
+  // only a MISSING key fails, never a present null).
+  if (adjOutcome === "corrected" && !("correctedValue" in v.adjudication)) {
+    consistencyErrors.push(
+      `${path}: adjudication.outcome is "corrected" but no correctedValue key is present; a corrected fact must carry its human-approved corrected value, a deliberate null included (R-03/D-04)`
+    );
+  }
   // A pass may only check sources the fact actually rests on: every sourcesChecked
   // id must appear in the fact's sources[], else a pass "confirms" a citation the
   // fact never claims to stand on (D-02).

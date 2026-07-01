@@ -310,6 +310,37 @@ test("build fails: a non-null derivedFrom that does not resolve to a registry id
   }
 });
 
+test("C1 build fails: a 'corrected' adjudication with no correctedValue key (would publish undefined, R-03/D-04)", () => {
+  const dir = tempDir();
+  try {
+    writeFileSync(join(dir, "sources.json"), JSON.stringify({
+      sources: [MINIMAL_SOURCES.sources[0], src("lucozade-grocer-2017")],
+    }));
+    writeFileSync(join(dir, "demoFact.json"), JSON.stringify(loadFix("corrected-without-value.json")));
+    const r = runGate(dir);
+    assert.notEqual(r.status, 0);
+    assert.match(r.stderr, /correctedValue/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("C1: a 'corrected' adjudication WITH a correctedValue (even null) still passes the build", () => {
+  const dir = tempDir();
+  try {
+    writeFileSync(join(dir, "sources.json"), JSON.stringify({
+      sources: [MINIMAL_SOURCES.sources[0], src("lucozade-grocer-2017")],
+    }));
+    const fact = loadFix("corrected-without-value.json");
+    fact.verification.adjudication.correctedValue = null; // a deliberate null is legitimate
+    writeFileSync(join(dir, "demoFact.json"), JSON.stringify(fact));
+    const r = runGate(dir);
+    assert.equal(r.status, 0, r.stderr);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("build fails: a SourcedValue-shaped lead under src/_data trips the corpus-escape guard (D-19/C4)", () => {
   const dir = tempDir();
   try {

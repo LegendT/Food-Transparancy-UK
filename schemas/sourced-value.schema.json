@@ -101,6 +101,14 @@
             "correctedValue": {
               "description": "The human-approved corrected value (R-03/D-04); present when outcome is corrected. Any type, and nullable."
             }
+          },
+          "if": {
+            "properties": { "outcome": { "const": "corrected" } },
+            "required": ["outcome"]
+          },
+          "then": {
+            "properties": { "correctedValue": true },
+            "required": ["correctedValue"]
           }
         },
         "contested": {

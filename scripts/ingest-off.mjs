@@ -69,11 +69,20 @@ function nutrimentFields(nutriments, dataPer, rev) {
   };
   for (const [key, value] of Object.entries(nutriments)) {
     if (NUTRIMENT_META_SUFFIX.test(key)) continue; // *_unit/_label/_modifier are metadata
-    if (typeof value !== "number") continue; // only numeric measurements become fields
-    if (key.endsWith("_100g")) ensure(key.slice(0, -"_100g".length)).per100g = value;
-    else if (key.endsWith("_serving")) ensure(key.slice(0, -"_serving".length)).perServing = value;
+    // OFF often serves numeric nutriments as stringified numbers ("4.16"); coerce
+    // them so they are not silently dropped, but keep only finite results (L9). A
+    // non-numeric string, an empty string, null or an object is discarded.
+    const n =
+      typeof value === "number"
+        ? value
+        : typeof value === "string" && value.trim() !== ""
+          ? Number(value)
+          : NaN;
+    if (!Number.isFinite(n)) continue;
+    if (key.endsWith("_100g")) ensure(key.slice(0, -"_100g".length)).per100g = n;
+    else if (key.endsWith("_serving")) ensure(key.slice(0, -"_serving".length)).perServing = n;
     else if (key.endsWith("_value")) continue; // a duplicate of the base number; skip
-    else ensure(key).bare = value;
+    else ensure(key).bare = n;
   }
 
   const servingConfirmed = dataPer === "serving";

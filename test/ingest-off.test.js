@@ -58,6 +58,22 @@ test("a per-serving-only OFF product yields the per-serving basis (R-24)", () =>
   assert.equal(hasSourcesKey(lead), false);
 });
 
+test("L9: a stringified-number nutriment is coerced and kept, not silently dropped", () => {
+  const product = {
+    rev: 7,
+    nutrition_data_per: "100g",
+    nutriments: { sugars_100g: "4.16", salt_100g: "", fat_100g: "not-a-number" },
+  };
+  const lead = offProductToLead(product, "3333333333333", "z", new Date("2026-07-01T09:00:00Z"));
+  const sugars = lead.fields.find((f) => f.offField === "sugars_100g");
+  assert.ok(sugars, "a stringified-number nutriment becomes a field");
+  assert.equal(sugars.value, 4.16, "the string is coerced to a finite number");
+  assert.equal(sugars.measure.basis, "per-100g");
+  // An empty string and a non-numeric string are dropped, never coerced to 0/NaN.
+  assert.equal(lead.fields.find((f) => f.path === "nutrition.salt"), undefined);
+  assert.equal(lead.fields.find((f) => f.path === "nutrition.fat"), undefined);
+});
+
 test("a suffix-less nutriment is recorded with no measure (R-24)", () => {
   const product = {
     rev: 6,

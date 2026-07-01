@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-07-01T10:56:15.182Z"
+status: verifying
+stopped_at: Completed 02-07-PLAN.md
+last_updated: "2026-07-01T11:42:59.377Z"
 last_activity: 2026-07-01
 progress:
   total_phases: 10
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 17
-  completed_plans: 16
-  percent: 10
+  completed_plans: 17
+  percent: 20
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-06-30)
 
 Phase: 02 (Claim-Typed Verification, Per-Fact Publication Gate & Ingestion) — EXECUTING
 Plan: 7 of 7
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-01
 
 Progress: [░░░░░░░░░░] 0%
@@ -64,6 +64,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02 P02-04 | 14 | 2 tasks | 6 files |
 | Phase 02 P02-03 | 11 | 2 tasks | 2 files |
 | Phase 02 P02-06 | 12 | 2 tasks | 3 files |
+| Phase 02 P02-07 | 18 | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Plan 02-01: verificationStatus/publicationStatus constrained to enum [null] at both the SourcedValue and all five entity schemas, so publication status is derived-only every build (D-03/R-06); no author-writable publish flag exists
 - [Phase 02]: Plan 02-01: the verdict-cache entry shape { verdict, resolvedVia, checkedAt, statusCode, snapshotUrl } is SEAM-pinned by citation-verdicts.sample.json and must not diverge across 02-03/02-05/02-06
 - [Phase 02]: Plan 02-05: split the four-verdict citation checker into pure lib/citation-status.mjs helpers (classifier, SSRF host guard, DOI-slash normaliser, closest-snapshot picker, soft-404) and a standalone scripts/check-citations.mjs; a non-RESOLVES verdict never satisfies the gate (D-11), and the checker is never wired into prebuild
+- [Phase 02]: Plan 02-07: the corroborable standard is demonstrated on live corpus data (Companies House statutory register + Suntory corporate site, distinct null-derivedFrom roots, both resolving) deriving published-confirmed - R-27 satisfied by a real worked example, not a no-pair rationale
+- [Phase 02]: Plan 02-07: the Lucozade pre-2017 sugar figure is the worked published-contested example - singular value withheld (null), two positions carried, human adjudication.outcome contested (VRFY-11)
 
 ### Pending Todos
 
@@ -122,6 +125,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-01T10:55:51.462Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-07-01T11:42:10.634Z
+Stopped at: Completed 02-07-PLAN.md
 Resume file: None

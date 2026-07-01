@@ -46,7 +46,7 @@ Two editorial tracks run in parallel underneath the phase sequence. They are lab
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike** - The two-axis trust layer, the entity/TimelineEvent schemas, the source/rights registry, the image-rights default-deny gate, the open-data licence, the corpus selection rubric, the British-English + neutral-editorial CI lint, and the Netlify/CI substrate that runs the gates — as build-failing invariants before any content exists — plus the SPIKE-01 spike that re-derives the corpus scope (completed 2026-06-30)
-- [ ] **Phase 2: Claim-Typed Verification, Per-Fact Publication Gate & Ingestion** - No fact publishes without the passes its claim type demands; unverified facts render as withheld placeholders; stale facts show a reader-facing review-due indicator; contested facts publish with a both-sides treatment; OFF data enters only as draft leads
+- [x] **Phase 2: Claim-Typed Verification, Per-Fact Publication Gate & Ingestion** - No fact publishes without the passes its claim type demands; unverified facts render as withheld placeholders; stale facts show a reader-facing review-due indicator; contested facts publish with a both-sides treatment; OFF data enters only as draft leads (completed 2026-07-01)
 - [ ] **Phase 3a: Core Entity Pages & Trust Rendering** - Server-rendered current-state product and ingredient pages over a seed corpus, every claim through the trust component, every unverified fact as an explicit withheld placeholder, ingredient pages descriptive and authoritatively cited
 - [ ] **Phase 3b: Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface** - The site chrome, the pa11y-ci WCAG 2.2 AA floor across every route, crawlability (sitemap/robots/JSON-LD), plain-English UX with inline glossary and chart-to-table fallbacks, and the credibility surface (disclaimer, About/independence, citation+export, RSS, report-an-error)
 - [ ] **Phase 4: Then-vs-Now Flagship Layer & Corpus Scale** - The tiered then-vs-now flagship layer (never fabricated), the curated collection, the motive gate, the coverage figure, and the SPIKE-01-sized corpus — entry gate: the re-derived Tier A threshold met; early GATE-01 legal review and GATE-02 AT check on the diff
@@ -107,7 +107,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 02-04-PLAN.md - OFF ingestion into the isolated lead store (DATA-05/06, VRFY-10)
 - [x] 02-05-PLAN.md - Four-verdict citation-existence checker: pure classifier plus network script (VRFY-07)
 - [x] 02-06-PLAN.md - Read-only worst-first audit command, staleness queue and review-due data (VRFY-05/06/09/12)
-- [ ] 02-07-PLAN.md - Worked verification data, contested Lucozade example and lineage tags on the corpus (VRFY-01/02/11)
+- [x] 02-07-PLAN.md - Worked verification data, contested Lucozade example and lineage tags on the corpus (VRFY-01/02/11)
 
 ### Phase 3a: Core Entity Pages & Trust Rendering
 
@@ -239,7 +239,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
-| 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 6/7 | In Progress|  |
+| 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 7/7 | Complete   | 2026-07-01 |
 | 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |
 | 4. Then-vs-Now Flagship Layer & Corpus Scale | 0/TBD | Not started | - |

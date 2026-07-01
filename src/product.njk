@@ -57,4 +57,85 @@ eleventyComputed:
   <p class="example">No manufacturer has been sourced for this product yet.</p>
   {%- endif %}
 </section>
+
+{#
+  Sources roll-up (PROD-04, D-07): the page-level list of the distinct source
+  records cited by this page's facts. The per-fact "Source and date" disclosure
+  still lives on each fact above; this is the consolidated view. Collect the ids
+  cited by the facts this plan renders (manufacturer, ingredientsText); plan 04's
+  Nutrition and Allergens sections extend the collection below when they land.
+  Dedup is stateless: an id renders only at its FIRST occurrence in the list
+  (citedIds.indexOf(id) == loop.index0), because Nunjucks {% set %} inside a for
+  loop does not persist across iterations. Source names and urls are ingested and
+  external, so they are never piped through | safe; external links carry
+  rel="noopener" (threat T-03a-03-02).
+#}
+{%- set citedIds = [] %}
+{%- if product.manufacturer and product.manufacturer.sources %}{% set citedIds = citedIds.concat(product.manufacturer.sources) %}{% endif %}
+{%- if product.ingredientsText and product.ingredientsText.sources %}{% set citedIds = citedIds.concat(product.ingredientsText.sources) %}{% endif %}
+<section id="sources" aria-labelledby="sources-heading">
+  <h2 id="sources-heading">Sources</h2>
+  {%- if citedIds.length %}
+  <p>The sources cited by the facts on this page. Each fact above also shows its own source and date behind its "Source and date" disclosure.</p>
+  <ul class="source-roll">
+    {%- for id in citedIds %}
+    {%- if citedIds.indexOf(id) == loop.index0 %}
+    {%- set s = sources.sources | findBy("id", id) %}
+    <li>
+      {%- if s %}
+      {% if s.url %}<a href="{{ s.url }}" rel="noopener">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}{% if s.jurisdiction %} ({{ s.jurisdiction }}){% endif %}.
+      {%- else %}
+      Unresolved source reference: {{ id }}.
+      {%- endif %}
+    </li>
+    {%- endif %}
+    {%- endfor %}
+  </ul>
+  {%- else %}
+  <p class="example">No sources have been cited on this page yet.</p>
+  {%- endif %}
+</section>
+
+{#
+  Recipe history (PROD-02/03, SC3). Events are joined by the timelineByProduct
+  reverse index (global from 03a-01). Each event's documentedChange and
+  statedReason are sourced facts, rendered through the trust component with
+  entityType "timeline" (historical facts, never stale). labelledInference is NOT
+  a fact (it has no sources or claimType) and is rendered as a labelled
+  illustration paragraph ONLY, never through the trust component (threat
+  T-03a-03-03). Where a product has no sourced change events, the honest empty
+  state renders (SC3, "absent, not a broken stub"), never a withheld or error
+  card. The conditional "full timeline" link renders only where a Phase 8 timeline
+  page exists (none do yet, so it is omitted).
+#}
+<section id="recipe-history" aria-labelledby="recipe-history-heading">
+  <h2 id="recipe-history-heading">Recipe history</h2>
+  {%- set events = timelineByProduct[product.id] %}
+  {%- if events and events.length %}
+  <p>Sourced, dated changes to this product's formulation. Each change shows its source, date and confidence; a value that its sources genuinely disagree on is shown as contested, with both positions.</p>
+  {%- for e in events %}
+  <article class="change-event">
+    <h3>
+      {%- if e.date.from or e.date.to %}
+      Changed {{ e.date.from }} to {{ e.date.to }}{% if e.date.basis %} ({{ e.date.basis }}){% endif %}
+      {%- else %}
+      Changed {{ e.date | readableDate }}
+      {%- endif %}
+    </h3>
+    {%- for c in e.changes %}
+    {%- if c.documentedChange %}{{ sourcedValue(c.documentedChange, sources.sources, "Documented change", "", "timeline") }}{% endif %}
+    {%- if c.statedReason %}{{ sourcedValue(c.statedReason, sources.sources, "Stated reason", "", "timeline") }}{% endif %}
+    {%- if c.labelledInference %}
+    <p class="example"><strong>Labelled inference:</strong> {{ c.labelledInference.text }}</p>
+    {%- endif %}
+    {%- endfor %}
+  </article>
+  {%- endfor %}
+  {%- else %}
+  <div class="example">
+    <h3>No recipe changes recorded yet</h3>
+    <p>We have not yet sourced and verified any formulation changes for this product. When we do, they will appear here, each with its source and date.</p>
+  </div>
+  {%- endif %}
+</section>
 </content>

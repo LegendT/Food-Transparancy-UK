@@ -75,7 +75,14 @@
     <span class="fact__contested">Contested; sources disagree:</span>
     <ul class="fact__positions">
       {%- for p in d.positions %}
-      <li>{{ p.value }}{% if unit %}{{ unit }}{% endif %}{% if p.note %} ({{ p.note }}){% endif %}</li>
+      <li class="fact__position">
+        {{ p.value }}{% if unit %}{{ unit }}{% endif %} -
+        {%- for id in p.sources %}
+        {%- set s = sources | findBy("id", id) %}
+        {% if s %}{% if s.url %}<a href="{{ s.url }}" rel="noopener">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}{% else %}Unresolved source {{ id }}{% endif %}{% if not loop.last %}; {% endif %}
+        {%- endfor %}
+        {%- if p.note %} ({{ p.note }}){% endif %}
+      </li>
       {%- endfor %}
     </ul>
     {%- else %}
@@ -102,4 +109,33 @@
     {%- endif %}
   </details>
 </div>
+{% endmacro %}
+
+{#
+  factCell (D-06 / F4): the inline value-or-status renderer for a table cell.
+
+  Contract: factCell(fact, sources, unit, entityType)
+
+  The block sourcedValue macro cannot be dropped into a <td> (it emits a
+  <details>, invalid inside a table cell). This macro is the table-cell renderer:
+  it gates on the SAME derived factState projection (R-31), emits ONLY spans, and
+  never opens a <details>. Because it lives INSIDE this file (the sole path
+  allowlisted by check-render-safety.mjs), its d.value is exempt from the raw
+  ".value" default-deny; it is NOT a second render path.
+
+  It shows d.value ONLY when the fact publishes; a withheld or contested value is
+  never emitted. The reader is pointed at the full per-figure provenance block
+  below the table (the id="nutrition-{key}" anchors) for sources; this cell is the
+  scannable status only. British English, no em-dashes; the state copy is the
+  verbatim UI-SPEC Copywriting Contract wording.
+#}
+{% macro factCell(fact, sources, unit, entityType) %}
+{%- set d = fact | factState(sources, entityType) -%}
+{%- if d.publishable -%}
+<span class="fact__value">{{ d.value }}{% if unit %}{{ unit }}{% endif %}</span>{% if d.stale %} <span class="fact__review-due">review due</span>{% endif %}
+{%- elif d.contested -%}
+<span class="fact__contested-inline">Contested</span>
+{%- else -%}
+<span class="fact__withheld">Not yet verified</span>
+{%- endif -%}
 {% endmacro %}

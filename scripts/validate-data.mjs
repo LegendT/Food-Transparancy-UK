@@ -165,7 +165,11 @@ if (isDir(target)) {
     join(target, "images.json"),
   ]);
   for (const path of jsonFilesIn(target)) {
-    if (validated.has(path) || VOCAB_FILES.has(basename(path))) continue;
+    // Vocab/config files are skipped ONLY at the top level of the data dir; a
+    // fact-shaped file NAMED meta.json/allergens.json/site.json in a subdirectory
+    // must not inherit the skip and escape both the guard and validation (M4).
+    if (validated.has(path)) continue;
+    if (VOCAB_FILES.has(basename(path)) && dirname(path) === target) continue;
     if (hasSourcedShape(readJson(path))) {
       console.error(
         `Validation failed: ${path} carries a fact-shaped value (a "sources" array) but sits outside the ` +

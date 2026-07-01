@@ -92,6 +92,24 @@ test("a stray fact missing claimType still fails (the escape guard is looser tha
   }
 });
 
+test("M4: a fact-shaped file NAMED site.json in a subdirectory does not inherit the top-level vocab skip", () => {
+  const dir = tempDir();
+  try {
+    writeFileSync(join(dir, "sources.json"), JSON.stringify(MINIMAL_SOURCES));
+    writeFileSync(join(dir, "demoFact.json"), JSON.stringify(VALID_FACT));
+    // A top-level site.json vocab file is legitimately skipped...
+    writeFileSync(join(dir, "site.json"), JSON.stringify({ title: "X" }));
+    // ...but a fact-shaped file named site.json in a subdir must NOT be skipped.
+    mkdirSync(join(dir, "featured"));
+    writeFileSync(join(dir, "featured", "site.json"), JSON.stringify({ ...VALID_FACT, claimType: "corroborable", sources: ["off", "off"] }));
+    const r = runGate(dir);
+    assert.notEqual(r.status, 0);
+    assert.match(r.stderr, /outside the validated corpus|fact-shaped/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("a corpus with files but zero facts fails (metadata-only false green)", () => {
   const dir = tempDir();
   try {

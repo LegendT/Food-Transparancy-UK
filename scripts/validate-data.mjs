@@ -24,11 +24,25 @@ import {
   listOffDerived,
   findOrphanSources
 } from "../lib/referential.mjs";
+import {
+  deriveVerificationState,
+  lineageSimilarityWarnings,
+  CITATION_TTL_DAYS
+} from "../lib/verification.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SCHEMA_DIR = resolve(here, "../schemas");
 const DEFAULT_DATA_DIR = resolve(here, "../src/_data");
 const DEFAULT_SOURCES = resolve(DEFAULT_DATA_DIR, "sources.json");
+
+// The OFFLINE citation-existence verdict cache (D-07/Pitfall 3): the network
+// existence check runs SEPARATELY (the citation-checker script) and COMMITS this
+// diffable file; the build gate only READS it, never fetches. Default is repo-root
+// .cache; CITATION_VERDICTS_CACHE overrides it so tests can pin a fixture cache
+// per temp corpus. An absent file reads as {} = every citation UNCHECKED.
+const CACHE_FILE = process.env.CITATION_VERDICTS_CACHE
+  ? resolve(process.env.CITATION_VERDICTS_CACHE)
+  : resolve(here, "../.cache/citation-verdicts.json");
 
 const schemaId = (name) => `https://foodtransparency.uk/schemas/${name}.schema.json`;
 const SOURCED_VALUE = schemaId("sourced-value");
@@ -83,7 +97,9 @@ function gather(target) {
     const subDir = join(target, sub);
     if (!isDir(subDir)) continue;
     for (const path of jsonFilesIn(subDir)) {
-      factBearing.push({ path, schemaId: schemaId(name), data: readJson(path) });
+      // Carry the entity type so the verification gate can thread it into
+      // classifyStaleness (a timeline-event fact is historical, D-16/R-17).
+      factBearing.push({ path, schemaId: schemaId(name), data: readJson(path), entityType: name });
     }
   }
 
@@ -198,8 +214,8 @@ if (structural.errors.length > 0) {
 // Mine facts and ranged dates from every fact-bearing file.
 const facts = [];
 const ranges = [];
-for (const { path, data } of factBearing) {
-  facts.push(...collectFacts(data, path));
+for (const { path, data, entityType } of factBearing) {
+  facts.push(...collectFacts(data, path).map((f) => ({ ...f, entityType })));
   ranges.push(...collectDateRanges(data, path));
 }
 
@@ -222,6 +238,130 @@ if (errors.length > 0) {
   console.error("Referential validation failed:");
   for (const error of errors) console.error(`  ${error}`);
   process.exit(1);
+}
+
+// ---------------------------------------------------------------------------
+// Gate 5: the Phase 2 per-fact verification gate (D-15), run OFFLINE. It reads
+// the committed .cache/citation-verdicts.json (absent = every citation UNCHECKED,
+// never a fetch: Pitfall 3), derives each fact's publication state, and asserts
+// the internal-consistency invariants JSON Schema cannot express.
+//
+// R-02 (load-bearing): a WITHHELD fact is the NORMAL, correct outcome and does
+// NOT fail the build. Distinct-lineage failure, measure mismatch and value
+// divergence are per-fact WITHHOLD reasons computed INSIDE deriveVerificationState,
+// never entries in the error array below. One insufficient fact withholds itself
+// and lets the rest of the corpus publish. The DERIVED state (NOT the raw stored
+// value) is the authoritative render signal Phase 3a consumes (R-31): a withheld
+// or contested record keeps its stored value populated by design, so 3a must gate
+// rendering on this derived state, never on value !== null.
+//
+// Offline verdict-cache read: the 02-01 SEAM shape keyed by source id
+// { verdict, resolvedVia, checkedAt, statusCode, snapshotUrl }. An absent file,
+// an absent entry, or a RESOLVES older than CITATION_TTL_DAYS all read as
+// UNCHECKED -> withheld-unverified (fail-safe, R-07/R-08). No network here.
+const verdictCache = existsSync(CACHE_FILE) ? readJson(CACHE_FILE) : {};
+const existenceBySourceId = new Map(Object.entries(verdictCache));
+const sourcesById = new Map(sourceRecords.map((source) => [source.id, source]));
+const today = new Date().toISOString().slice(0, 10);
+
+// Internal-consistency assertions (build-FAILING, per 02-RESEARCH Pattern 2 and
+// the D-15 amendment). These catch genuine authoring CONTRADICTIONS, not
+// verification insufficiency: a withheld fact is fine, a self-contradictory
+// record is not. Distinct-lineage/measure/value are NOT here (they withhold).
+const consistencyErrors = [];
+for (const { path, fact } of facts) {
+  const v = fact.verification;
+  if (!v) continue;
+  const adjOutcome = v.adjudication?.outcome;
+
+  // A contested block must be backed by a contested adjudication carrying positions.
+  if (v.contested && (adjOutcome !== "contested" || !v.contested.positions?.length)) {
+    consistencyErrors.push(
+      `${path}: has a verification.contested block but no matching adjudication.outcome "contested" with positions (D-14)`
+    );
+  }
+  // R-05/D-14: a contested fact must WITHHOLD its singular value (value must be
+  // null); the positions carry the content. A non-null value asserts one figure
+  // the human adjudication has ruled genuinely contested.
+  if (adjOutcome === "contested" && fact.value !== null) {
+    consistencyErrors.push(
+      `${path}: adjudication.outcome is "contested" but the singular value is non-null; a contested fact must withhold value (null) and carry positions (R-05/D-14)`
+    );
+  }
+  // A pass may only check sources the fact actually rests on: every sourcesChecked
+  // id must appear in the fact's sources[], else a pass "confirms" a citation the
+  // fact never claims to stand on (D-02).
+  for (const pass of v.passes ?? []) {
+    for (const id of pass.sourcesChecked ?? []) {
+      if (!fact.sources.includes(id)) {
+        consistencyErrors.push(
+          `${path}: verification pass checks source "${id}" absent from the fact's sources[] (D-02)`
+        );
+      }
+    }
+  }
+  // markedWrong cross-field tie (Ajv already requires the shape; defence in depth
+  // so a marked-wrong fact always carries its audit note and date).
+  if (v.markedWrong && (!v.markedWrong.note || !v.markedWrong.date)) {
+    consistencyErrors.push(`${path}: markedWrong must carry both a note and a date`);
+  }
+}
+
+// R-16 referential integrity over the source registry: every non-null derivedFrom
+// lineage pointer must resolve to a real registry id, else a dangling pointer
+// could silently fake a distinct lineage root and defeat the corroborable standard.
+for (const source of sourceRecords) {
+  if (source.derivedFrom != null && !sourcesById.has(source.derivedFrom)) {
+    consistencyErrors.push(
+      `source "${source.id}": derivedFrom "${source.derivedFrom}" does not resolve to a registry source id (R-16)`
+    );
+  }
+}
+
+if (consistencyErrors.length > 0) {
+  console.error("Verification internal-consistency validation failed:");
+  for (const error of consistencyErrors) console.error(`  ${error}`);
+  process.exit(1);
+}
+
+// Derived-state build REPORT (a report, NOT a gate): count each fact's D-15 state
+// and surface every withhold reason. This is exactly where lineage/measure/value/
+// non-RESOLVES withholds land (R-02) - they inform the reader of the build, they
+// never fail it.
+const STATE_ORDER = [
+  "published-confirmed", "published-contested", "published-stale",
+  "withheld-unverified", "withheld-in-review", "withheld-open-disagreement", "withheld-wrong"
+];
+const stateCounts = Object.fromEntries(STATE_ORDER.map((state) => [state, 0]));
+const withheldLines = [];
+for (const { path, fact, entityType } of facts) {
+  const { state, reasons } = deriveVerificationState(
+    fact, sourcesById, existenceBySourceId, today, entityType
+  );
+  stateCounts[state] = (stateCounts[state] ?? 0) + 1;
+  if (state.startsWith("withheld")) {
+    withheldLines.push(`  WITHHELD [${state}] ${path}: ${reasons.join("; ")}`);
+  }
+}
+console.log(
+  `Derived publication states (TTL ${CITATION_TTL_DAYS}d): ` +
+  STATE_ORDER.map((state) => `${state}=${stateCounts[state]}`).join(" ")
+);
+for (const line of withheldLines) console.log(line);
+
+// Non-failing verification diagnostics: undeclared co-derivation (the lineage
+// similarity heuristic, D-12) and any cited source that no pass ever checked
+// (R-15) - a citation that renders yet is never existence-checked.
+const { warnings: lineageWarnings } = lineageSimilarityWarnings(facts, sourceRecords);
+for (const warning of lineageWarnings) console.warn(`Warning: ${warning}`);
+for (const { path, fact } of facts) {
+  if (!fact.verification?.passes?.length) continue;
+  const checkedIds = new Set(fact.verification.passes.flatMap((pass) => pass.sourcesChecked ?? []));
+  for (const id of fact.sources) {
+    if (!checkedIds.has(id)) {
+      console.warn(`Warning: ${path}: cited source "${id}" is checked by no verification pass (renders but is never existence-checked, R-15)`);
+    }
+  }
 }
 
 // Non-failing diagnostics.

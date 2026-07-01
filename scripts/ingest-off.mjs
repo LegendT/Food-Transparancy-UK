@@ -25,6 +25,7 @@
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPublicHttpsUrl } from "../lib/citation-status.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(here, "..");
@@ -32,10 +33,12 @@ const WORKLIST = resolve(ROOT, "ingestion/barcodes.json");
 const LEADS_DIR = resolve(ROOT, "ingestion/leads");
 
 const OFF_HOST = "https://world.openfoodfacts.org";
+const OFF_HOSTNAME = "world.openfoodfacts.org";
 const OFF_FIELDS = "code,product_name,ingredients_text,nutriments,nutrition_data_per,rev,last_modified_t";
 const USER_AGENT = "FoodTransparencyUK/0.1 (mailto:legendarytone@gmail.com)";
 const BYTE_CEILING = 512 * 1024; // R-23: bound bytes, not just time.
 const FETCH_TIMEOUT_MS = 8000;
+const MAX_REDIRECTS = 5; // https-only, OFF-host-only hop cap (WR-02, SSRF).
 const REQ_DELAY_MS = 700; // ~1.4 req/s cap (D-10 politeness).
 
 // Nutriment keys ending in one of these are metadata, not a measured value.
@@ -83,7 +86,6 @@ function nutrimentFields(nutriments, dataPer, rev) {
       // Only per-serving data exists; nutrition_data_per corroborates the basis.
       // The actual suffix is authoritative either way (never assume per-100g).
       const measure = { basis: "per-serving", state: "as-sold" };
-      if (!servingConfirmed && dataPer) measure.state = "as-sold"; // basis stays per-serving; suffix wins
       out.push(field(path, `${base}_serving`, seen.perServing, rev, measure));
     } else if (seen.bare !== undefined) {
       out.push(field(path, base, seen.bare, rev)); // no measure (R-24)
@@ -148,18 +150,46 @@ async function readCapped(res, ceiling) {
   return Buffer.concat(chunks).toString("utf8");
 }
 
-async function fetchOffProduct(barcode) {
-  const url = `${OFF_HOST}/api/v2/product/${encodeURIComponent(barcode)}.json?fields=${encodeURIComponent(OFF_FIELDS)}`;
-  // Belt-and-braces host guard (T-02-04-02): the URL is built from a constant
-  // host, but refuse anything that is not the OFF host anyway.
-  if (!url.startsWith(`${OFF_HOST}/`)) {
-    throw new Error(`Refusing to fetch a non-OFF host: ${url}`);
+// Validate a hop is https, not an SSRF target, AND the single permitted OFF host.
+// assertPublicHttpsUrl enforces the scheme + private/loopback/link-local block
+// (reused, T-02-04-02); the host is then narrowed to world.openfoodfacts.org so a
+// redirect can never escape to another origin (WR-02).
+function assertOffUrl(rawUrl) {
+  const parsed = assertPublicHttpsUrl(rawUrl);
+  if (parsed.hostname.toLowerCase() !== OFF_HOSTNAME) {
+    throw new Error(`Refusing to fetch a non-OFF host: ${parsed.hostname}`);
   }
-  const res = await fetch(url, {
-    method: "GET",
-    headers: { "user-agent": USER_AGENT },
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-  });
+  return parsed;
+}
+
+async function fetchOffProduct(barcode) {
+  const startUrl =
+    `${OFF_HOST}/api/v2/product/${encodeURIComponent(barcode)}.json?fields=${encodeURIComponent(OFF_FIELDS)}`;
+
+  // Follow redirects MANUALLY, re-running the https + SSRF + OFF-host guard on
+  // EVERY hop (not just the first), capped at MAX_REDIRECTS. Node's default
+  // redirect: "follow" would let an unexpected 3xx escape the stated host
+  // constraint with no per-hop re-guard (WR-02).
+  let current = startUrl;
+  let res;
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
+    const parsed = assertOffUrl(current);
+    res = await fetch(parsed, {
+      method: "GET",
+      redirect: "manual",
+      headers: { "user-agent": USER_AGENT },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    const location = res.headers.get("location");
+    if (res.status >= 300 && res.status < 400 && location) {
+      current = new URL(location, parsed).toString();
+      continue; // re-guard on the next iteration
+    }
+    break;
+  }
+  if (res.status >= 300 && res.status < 400) {
+    throw new Error(`OFF ${barcode}: redirect cap (${MAX_REDIRECTS}) exceeded`);
+  }
   if (res.status === 404) return { found: false };
   if (!res.ok) throw new Error(`OFF ${barcode}: HTTP ${res.status}`);
   const body = JSON.parse(await readCapped(res, BYTE_CEILING));

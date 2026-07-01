@@ -423,6 +423,30 @@ test("a derivedFrom cycle canonicalises to one lineage and never fabricates two 
   assert.ok(checkDistinctLineage(wrap(fact), cyclic).errors.length >= 1);
 });
 
+test("a tail feeding into a derivedFrom cycle still collapses to the cycle's lineage, never a second one (CR-01/R-16)", () => {
+  // a-tail is NOT in the cycle; it derives INTO the b<->c cycle. The canonical
+  // root must be the cycle's, so a-tail and b-node share one lineage. The pre-fix
+  // reducer included the tail in the min and let a-tail resolve to itself, faking
+  // a distinct lineage and publishing a co-derived fact as corroborated.
+  const tailIntoCycle = [
+    { id: "a-tail", sourceType: "primary", derivedFrom: "b-node" },
+    { id: "b-node", sourceType: "secondary", derivedFrom: "c-node" },
+    { id: "c-node", sourceType: "secondary", derivedFrom: "b-node" }
+  ];
+  const fact = {
+    value: "x",
+    sources: ["a-tail", "b-node"],
+    claimType: "corroborable",
+    verification: {
+      passes: [
+        { reviewerKind: "human", sourcesChecked: ["a-tail"], measure: { basis: "n/a", state: "n/a" }, verdict: "confirms", checkedOn: "2026-06-30" },
+        { reviewerKind: "ai", sourcesChecked: ["b-node"], measure: { basis: "n/a", state: "n/a" }, verdict: "confirms", checkedOn: "2026-06-30" }
+      ]
+    }
+  };
+  assert.ok(checkDistinctLineage(wrap(fact), tailIntoCycle).errors.length >= 1);
+});
+
 test("checkMeasureMismatch is true for per-100g vs per-100ml passes and false for equal measures", () => {
   const mismatch = load("fixtures/invalid/measure-mismatch.json");
   assert.equal(checkMeasureMismatch(mismatch.verification.passes), true);

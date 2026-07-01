@@ -346,8 +346,21 @@ async function checkCitation(source) {
     verdict = classifyStatus(undefined, head.errorClass);
   } else {
     verdict = classifyStatus(head.status);
-    // Some CDNs refuse HEAD only: retry once as GET Range on 403/405/429.
-    if ([403, 405, 429].includes(head.status)) {
+    // A HEAD 200 carries no body, so a soft-404 (a removed page served as 200)
+    // would score RESOLVES on the primary path without any inspection. Confirm
+    // with one cheap byte-capped GET Range and downgrade to INDETERMINATE only if
+    // the body reads as a not-found page; a transient GET error or a 206 (range
+    // honoured, no full body) never overturns a genuine HEAD 200 (WR-01/R-22).
+    if (verdict === "RESOLVES" && head.status === 200) {
+      const get = await probe(head.finalUrl ?? url, "GET", { range: "bytes=0-0" });
+      if (get.status === 200) {
+        const body = await readCapped(get.res);
+        if (isSoftNotFound(200, body)) {
+          verdict = "INDETERMINATE";
+          statusCode = 200;
+        }
+      }
+    } else if ([403, 405, 429].includes(head.status)) {
       const retryAfter = Number(head.res.headers.get("retry-after"));
       if (Number.isFinite(retryAfter) && retryAfter > 0) await sleep(Math.min(retryAfter, 5) * 1000);
 

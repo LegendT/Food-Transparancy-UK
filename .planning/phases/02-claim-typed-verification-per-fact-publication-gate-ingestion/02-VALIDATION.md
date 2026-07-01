@@ -3,7 +3,7 @@ phase: 02
 slug: claim-typed-verification-per-fact-publication-gate-ingestion
 status: approved
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: 2026-07-01
 ---
 
@@ -40,13 +40,13 @@ Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` provi
 
 | Plan | Wave | Requirements | Test Type | Automated Command | Status |
 |------|------|--------------|-----------|-------------------|--------|
-| 02-01 schema contracts + fixtures | 0 | VRFY-01/02/03/04/07/08/11, DATA-05/06 | unit | `node --test test/verification-schema.test.js` | ⬜ pending |
-| 02-02 verification derivation library | 1 | VRFY-01/03/04/08/09/11/12 | unit (tdd) | `node --test test/verification.test.js` | ⬜ pending |
-| 02-04 OFF ingestion + lead store | 1 | DATA-05/06, VRFY-10 | unit | `node --test test/ingest-off.test.js test/lead.test.js` | ⬜ pending |
-| 02-05 four-verdict citation checker | 1 | VRFY-07 | unit (tdd) | `node --test test/citation-status.test.js` | ⬜ pending |
-| 02-03 per-fact gate wiring | 2 | VRFY-01/04/07/08, DATA-05 | unit + build | `node --test test/corpus-gate.test.js` | ⬜ pending |
-| 02-06 worst-first audit command | 2 | VRFY-03/05/06/09/12 | unit | `node --test test/audit.test.js` | ⬜ pending |
-| 02-07 worked verification data | 3 | VRFY-01/02/11 | build + manual checkpoint | `npm run prebuild` (green) | ⬜ pending |
+| 02-01 schema contracts + fixtures | 0 | VRFY-01/02/03/04/07/08/11, DATA-05/06 | unit | `node --test test/verification-schema.test.js` | ✅ green |
+| 02-02 verification derivation library | 1 | VRFY-01/03/04/08/09/11/12 | unit (tdd) | `node --test test/verification.test.js` | ✅ green |
+| 02-04 OFF ingestion + lead store | 1 | DATA-05/06, VRFY-10 | unit | `node --test test/ingest-off.test.js test/lead.test.js` | ✅ green |
+| 02-05 four-verdict citation checker | 1 | VRFY-07 | unit (tdd) | `node --test test/citation-status.test.js` | ✅ green |
+| 02-03 per-fact gate wiring | 2 | VRFY-01/04/07/08, DATA-05 | unit + build | `node --test test/corpus-gate.test.js` | ✅ green |
+| 02-06 worst-first audit command | 2 | VRFY-03/05/06/09/12 | unit | `node --test test/audit.test.js` | ✅ green |
+| 02-07 worked verification data | 3 | VRFY-01/02/11 | build + manual checkpoint | `npm run prebuild` (green) | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -54,8 +54,8 @@ Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` provi
 
 ## Wave 0 Requirements
 
-- [ ] `test/verification-schema.test.js` - schema-validity + status-null-constraint proof (02-01)
-- [ ] `test/fixtures/valid/*` and `test/fixtures/invalid/*` - surgical positive/negative fixtures for each gate failure path (02-01)
+- [x] `test/verification-schema.test.js` - schema-validity + status-null-constraint proof (02-01)
+- [x] `test/fixtures/valid/*` and `test/fixtures/invalid/*` - surgical positive/negative fixtures for each gate failure path (02-01)
 
 *node:test is a Node 24 built-in - no framework install task. No shared `conftest`-style fixture module; fixtures are JSON files under `test/fixtures/`.*
 
@@ -79,3 +79,15 @@ Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` provi
 - [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** approved 2026-07-01
+
+---
+
+## Validation Audit 2026-07-01
+
+Retroactive audit against the completed phase. All seven per-plan test files exist and the full suite runs green (`node --test 'test/**/*.test.js'` → 162 pass / 0 fail). Every phase requirement (VRFY-01..12, DATA-05/06) maps to at least one green automated test; the sole manual item (VRFY-02/VRFY-11 human adjudication authoring) remains correctly documented as Manual-Only. No MISSING or PARTIAL gaps — no auditor spawn required.
+
+| Metric | Count |
+|--------|-------|
+| Gaps found | 0 |
+| Resolved | 0 |
+| Escalated | 0 |

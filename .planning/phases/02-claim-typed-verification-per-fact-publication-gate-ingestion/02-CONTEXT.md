@@ -39,13 +39,13 @@ Three separable capabilities the planner can wave cleanly, in dependency order:
 
 - **D-06:** Authoritative fact (what a named authority states, e.g. current GB regulatory status, the current official label): publishable only with 1 authority pass plus an independent RE-READ pass for transcription fidelity. Both passes cite the SAME authority by design, so distinct-lineage does NOT apply to authoritative facts; instead the two passes must have distinct `reviewerKind` reader-independence (human then a different human, human then blinded-reread, or human then ai). The honesty model (per SPIKE-01 and SITE-02) is stated plainly: this is not two independent human reviewers, it is source-axis independence for corroborable facts and reader-axis independence for authoritative facts. (Fixes the rule asymmetry, C2.)
 
-### Citation-existence check (VRFY-07) — a four-verdict model, not a boolean
+### Citation-existence check (VRFY-07) - a four-verdict model, not a boolean
 
 - **D-07:** Every cited URL/DOI is checked for existence before any pass counts, using a FOUR-value verdict, because a boolean is exactly what produces the false-block failure mode SPIKE-01 exposed (our real citations are bot-hostile: retailers 403, Wayback unreachable from the agent tool). The enum:
-  - `RESOLVES` — live 2xx/206/304, or a DOI confirmed, or a valid Wayback `200` snapshot. The ONLY value that satisfies the existence precondition.
-  - `DOES_NOT_RESOLVE` — 404 / 410 / DNS NXDOMAIN / hard connection-refused with no archive. Withholds the fact and flags it for correction / link-repair.
-  - `ACCESS_BLOCKED` — 401 / 403 / 407 / 429 / 451 / 999 / CDN challenge / timeout. A positive signal the host is UP and refused the bot, so it is neither a pass nor a dead link.
-  - `INDETERMINATE` — 5xx / transient network / ambiguous soft-404. Handled like `ACCESS_BLOCKED` for gating.
+  - `RESOLVES` - live 2xx/206/304, or a DOI confirmed, or a valid Wayback `200` snapshot. The ONLY value that satisfies the existence precondition.
+  - `DOES_NOT_RESOLVE` - 404 / 410 / DNS NXDOMAIN / hard connection-refused with no archive. Withholds the fact and flags it for correction / link-repair.
+  - `ACCESS_BLOCKED` - 401 / 403 / 407 / 429 / 451 / 999 / CDN challenge / timeout. A positive signal the host is UP and refused the bot, so it is neither a pass nor a dead link.
+  - `INDETERMINATE` - 5xx / transient network / ambiguous soft-404. Handled like `ACCESS_BLOCKED` for gating.
   - Only 404 / 410 / NXDOMAIN (and hard refused with nothing behind it) are affirmative non-existence. Everything in the refusal / challenge / transient family is never scored as dead.
 
 - **D-08:** Existence-check mitigation and escalation order: (1) live check with a realistic browser `User-Agent`, `HEAD` then retry once with `GET` `Range: bytes=0-0` on 403/405/429, follow redirects (cap ~10) and judge the final status, honour `Retry-After` with one bounded retry; (2) on `ACCESS_BLOCKED`/`INDETERMINATE`, AUTO-QUERY Wayback (availability API `https://archive.org/wayback/available?url=...&timestamp=...`, or the CDX server for history) and, if a `200` snapshot exists, promote the citation to `RESOLVES` using the archival snapshot URL + timestamp as the stored resolvable source (an archival snapshot is itself a valid primary/archival citation and directly serves the two-pass model); (3) only if the live URL is blocked AND no usable snapshot exists does it reach a human as `ACCESS_BLOCKED - needs-human-check`. Store per citation: `statusCode`/errorClass -> `verdict` -> `resolvedVia` (`live` | `wayback:<timestamp>` | `crossref` | `handle`) -> `checkedAt`.
@@ -110,29 +110,29 @@ Three separable capabilities the planner can wave cleanly, in dependency order:
 **Downstream agents MUST read these before planning or implementing.**
 
 ### Phase scope and requirements
-- `.planning/ROADMAP.md` §"Phase 2" — goal, the six success criteria, the verification editorial track targets
-- `.planning/REQUIREMENTS.md` §Verification (VRFY-01 to VRFY-12) and §Data Model & Sourcing (DATA-05, DATA-06) — the 14 phase requirement texts
-- `CLAUDE.md` §Constraints "Two-pass verification (highest priority)" — the load-bearing trust-model statement this phase implements
+- `.planning/ROADMAP.md` §"Phase 2" - goal, the six success criteria, the verification editorial track targets
+- `.planning/REQUIREMENTS.md` §Verification (VRFY-01 to VRFY-12) and §Data Model & Sourcing (DATA-05, DATA-06) - the 14 phase requirement texts
+- `CLAUDE.md` §Constraints "Two-pass verification (highest priority)" - the load-bearing trust-model statement this phase implements
 
 ### SPIKE-01 (the named gate requirements and the honesty model)
-- `docs/SPIKE-01-FINDINGS.md` — the five requirements the Phase 2 gate must enforce; the honesty note that passes are not two independent human reviewers
-- `docs/spike-findings.json` §`phase2GateRequirements`, §`toolingBlockers` — machine-readable gate requirements and the fetch blockers behind D-07 and D-11
+- `docs/SPIKE-01-FINDINGS.md` - the five requirements the Phase 2 gate must enforce; the honesty note that passes are not two independent human reviewers
+- `docs/spike-findings.json` §`phase2GateRequirements`, §`toolingBlockers` - machine-readable gate requirements and the fetch blockers behind D-07 and D-11
 
 ### The harness Phase 2 extends
-- `lib/validate.mjs` — the Ajv structural gate (`compile`, `validateDataset`); pure functions shared by script and tests
-- `lib/referential.mjs` — the cross-file gates and `collectFacts` / `collectDateRanges` walkers; the `isSourcedValue` signature the per-fact gate keys on
-- `scripts/validate-data.mjs` — the prebuild orchestration and the corpus-escape guard the draft store relies on (D-19)
-- `schemas/sourced-value.schema.json` — the envelope reserving nullable `verificationStatus` / `publicationStatus`; the corroborable >=2-source `allOf` rule; `claimType` and `claimDomain` enums
-- `schemas/source.schema.json` and `src/_data/sources.json` — the registry the lineage tag (D-12) and `sourceType` (primary, for D-05) build on
-- `src/_data/products/spike-01.json` (and spike-02/03, `src/_data/timeline/*`) — the real records the gate operates on and that D-02/D-03 must reconcile to per-fact derived status
+- `lib/validate.mjs` - the Ajv structural gate (`compile`, `validateDataset`); pure functions shared by script and tests
+- `lib/referential.mjs` - the cross-file gates and `collectFacts` / `collectDateRanges` walkers; the `isSourcedValue` signature the per-fact gate keys on
+- `scripts/validate-data.mjs` - the prebuild orchestration and the corpus-escape guard the draft store relies on (D-19)
+- `schemas/sourced-value.schema.json` - the envelope reserving nullable `verificationStatus` / `publicationStatus`; the corroborable >=2-source `allOf` rule; `claimType` and `claimDomain` enums
+- `schemas/source.schema.json` and `src/_data/sources.json` - the registry the lineage tag (D-12) and `sourceType` (primary, for D-05) build on
+- `src/_data/products/spike-01.json` (and spike-02/03, `src/_data/timeline/*`) - the real records the gate operates on and that D-02/D-03 must reconcile to per-fact derived status
 
 ### Blueprint pattern (read-only, do not modify)
-- `/Users/anthonygeorge/Projects/DEBT/docs/DATA-AUDIT.md` — the dual-reviewer audit this gate strengthens: status vocabulary (Confirmed / Stale / Wrong / Uncertain), worst-first ordering, per-figure measure definition, independent re-check, reviewer-disagreement flagging (the model for D-17)
+- `/Users/anthonygeorge/Projects/DEBT/docs/DATA-AUDIT.md` - the dual-reviewer audit this gate strengthens: status vocabulary (Confirmed / Stale / Wrong / Uncertain), worst-first ordering, per-figure measure definition, independent re-check, reviewer-disagreement flagging (the model for D-17)
 
 ### Citation-existence check (external APIs, from the 2026-07-01 research pass)
-- Wayback availability API `https://archive.org/wayback/available?url=...&timestamp=...` and CDX server `https://web.archive.org/cdx/search/cdx?url=...&output=json` — snapshot existence + closest-to-date; empty result = no capture; reachable server-side (D-08)
-- Crossref REST `https://api.crossref.org/works/{doi}` (200/404) and Handle proxy `https://doi.org/api/handles/{doi}` (responseCode 1/100) — DOI existence without scraping the publisher (D-09)
-- lychee link checker (`--accept`, `--user-agent`, HEAD->GET fallback, 429 handling) — the status taxonomy and false-dead-link tactics behind D-07/D-08
+- Wayback availability API `https://archive.org/wayback/available?url=...&timestamp=...` and CDX server `https://web.archive.org/cdx/search/cdx?url=...&output=json` - snapshot existence + closest-to-date; empty result = no capture; reachable server-side (D-08)
+- Crossref REST `https://api.crossref.org/works/{doi}` (200/404) and Handle proxy `https://doi.org/api/handles/{doi}` (responseCode 1/100) - DOI existence without scraping the publisher (D-09)
+- lychee link checker (`--accept`, `--user-agent`, HEAD->GET fallback, 429 handling) - the status taxonomy and false-dead-link tactics behind D-07/D-08
 
 </canonical_refs>
 

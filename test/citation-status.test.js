@@ -133,6 +133,26 @@ test("C2: isBlockedHost refuses name-based loopback aliases but not a public hos
   assert.equal(isBlockedHost("www.food.gov.uk"), false);
 });
 
+test("C1: isBlockedHost strips the FQDN trailing dot so localhost. / metadata. cannot bypass the name block", () => {
+  assert.equal(isBlockedHost("localhost."), true);
+  assert.equal(isBlockedHost("foo.localhost."), true);
+  assert.equal(isBlockedHost("metadata.google.internal."), true);
+  assert.equal(isBlockedHost("ip6-localhost."), true);
+  // A public host with a trailing dot is still fine (dot stripped, then allowed).
+  assert.equal(isBlockedHost("www.food.gov.uk."), false);
+});
+
+test("M3: isBlockedHost refuses Alibaba/Oracle metadata and CGNAT ranges", () => {
+  assert.equal(isBlockedHost("100.100.100.200"), true); // Alibaba Cloud metadata
+  assert.equal(isBlockedHost("192.0.0.192"), true); // Oracle Cloud metadata
+  assert.equal(isBlockedHost("100.64.0.1"), true); // RFC 6598 CGNAT
+  assert.equal(isBlockedHost("100.127.255.255"), true); // CGNAT upper bound
+  // Neighbouring public addresses stay allowed (no over-block).
+  assert.equal(isBlockedHost("100.63.255.255"), false);
+  assert.equal(isBlockedHost("100.128.0.1"), false);
+  assert.equal(isBlockedHost("192.0.1.1"), false);
+});
+
 // ---- assertPublicHttpsUrl: scheme + host policy ----
 
 test("assertPublicHttpsUrl accepts a public https url and returns a URL", () => {

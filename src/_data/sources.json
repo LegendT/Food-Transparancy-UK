@@ -65,7 +65,7 @@
       "id": "lucozade-grocer-2017",
       "name": "The Grocer: Lucozade sales after the sugar reduction",
       "publisher": "The Grocer (William Reed)",
-      "url": "https://www.thegrocer.co.uk/",
+      "url": "https://www.thegrocer.co.uk/news/lucozade-sales-bomb-after-backlash-over-lower-sugar/559663.article",
       "covers": "Trade-press reporting on the 2017 Lucozade Energy reformulation, citing a pre-reformulation figure of about 13g sugar per 100ml falling to 4.5g.",
       "updateFrequency": "As published",
       "retrievedDate": "2026-06-30",
@@ -83,7 +83,7 @@
       "id": "diabetes-couk-2017",
       "name": "diabetes.co.uk: Lucozade reformulation coverage",
       "publisher": "Diabetes Digital Media",
-      "url": "https://www.diabetes.co.uk/",
+      "url": "https://www.diabetes.co.uk/blog/2017/03/how-will-decreased-sugar-in-lucozade-affect-people-with-diabetes/",
       "covers": "Health-community reporting on Lucozade carbohydrate content before and after the 2017 reformulation, citing about 17g carbohydrate per 100ml falling to 8.9g.",
       "updateFrequency": "As published",
       "retrievedDate": "2026-06-30",
@@ -290,6 +290,24 @@
       "licence": {
         "id": "all-rights-reserved",
         "url": "https://suntorybeverageandfood-europe.com/",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "derivedFrom": null
+    },
+    {
+      "id": "companies-house-lrs-08603549",
+      "name": "Companies House register: Lucozade Ribena Suntory Limited (08603549)",
+      "publisher": "Companies House (UK)",
+      "url": "https://find-and-update.company-information.service.gov.uk/company/08603549",
+      "covers": "UK statutory company register entry for Lucozade Ribena Suntory Limited (company number 08603549), the registered legal entity that makes Lucozade; active, incorporated 10 July 2013; trades publicly as Suntory Beverage & Food GB&I.",
+      "updateFrequency": "As filed",
+      "retrievedDate": "2026-07-01",
+      "sourceType": "primary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
         "attributionRequired": true,
         "shareAlike": false
       },

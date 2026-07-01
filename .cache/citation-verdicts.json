@@ -1,0 +1,30 @@
+{
+  "companies-house-lrs-08603549": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "direct",
+    "checkedAt": "2026-07-01",
+    "statusCode": 200,
+    "snapshotUrl": null
+  },
+  "sbf-gbi-2020": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "direct",
+    "checkedAt": "2026-07-01",
+    "statusCode": 200,
+    "snapshotUrl": null
+  },
+  "lucozade-grocer-2017": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "direct",
+    "checkedAt": "2026-07-01",
+    "statusCode": 200,
+    "snapshotUrl": null
+  },
+  "diabetes-couk-2017": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "direct",
+    "checkedAt": "2026-07-01",
+    "statusCode": 200,
+    "snapshotUrl": null
+  }
+}

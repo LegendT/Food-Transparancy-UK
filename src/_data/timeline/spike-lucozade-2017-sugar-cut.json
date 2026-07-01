@@ -9,13 +9,35 @@
   "changes": [
     {
       "documentedChange": {
-        "value": "Sugar reduced by roughly half to 4.5g per 100ml, with high-intensity sweeteners added to the glucose-syrup base.",
+        "value": null,
         "sources": ["lucozade-grocer-2017", "diabetes-couk-2017"],
         "confidence": "low",
         "evidence": "low",
-        "updated": "2026-06-30",
+        "updated": "2026-07-01",
         "claimType": "corroborable",
-        "note": "The exact pre-reformulation figure is contested across the cited distinct sources: about 13g sugar per 100ml (The Grocer, Energy Orange) and about 17g carbohydrate per 100ml (diabetes.co.uk, Original); other national press reports gave about 12.4g sugar per 100ml but are not yet entered in the source registry. Published as an approximation; the exact figure is withheld pending adjudication. No pre-2017 primary nutrition panel could be obtained, as the archival route was unavailable."
+        "note": "The exact pre-reformulation figure is contested across the cited distinct sources: about 13g sugar per 100ml (The Grocer, Energy Orange) and about 17g carbohydrate per 100ml (diabetes.co.uk, Original); other national press reports gave about 12.4g sugar per 100ml but are not yet entered in the source registry. The singular figure is withheld while contested; both positions are carried below. No pre-2017 primary nutrition panel could be obtained, as the archival route was unavailable.",
+        "verification": {
+          "passes": [],
+          "adjudication": {
+            "outcome": "contested",
+            "date": "2026-07-01",
+            "note": "Genuine, durable disagreement: the cited sources measure different quantities on different variants - about 13 g sugar per 100ml for Energy Orange (The Grocer) versus about 17 g carbohydrate per 100ml for Original (diabetes.co.uk) - not a transcription error; the single figure is withheld."
+          },
+          "contested": {
+            "positions": [
+              {
+                "value": "About 13 g sugar per 100ml (Lucozade Energy Orange, pre-2017; reduced to 4.5 g)",
+                "sources": ["lucozade-grocer-2017"],
+                "note": "The Grocer trade-press figure for Energy Orange sugar."
+              },
+              {
+                "value": "About 17 g carbohydrate per 100ml (Lucozade Original, pre-2017; reduced to 8.9 g)",
+                "sources": ["diabetes-couk-2017"],
+                "note": "diabetes.co.uk figure for Original carbohydrate."
+              }
+            ]
+          }
+        }
       },
       "statedReason": {
         "value": "The world has changed with consumers now wanting healthier drinks and more action from the brands they regularly enjoy. (Peter Harding, Chief Operating Officer, Lucozade Ribena Suntory, November 2016)",

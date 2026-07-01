@@ -5,13 +5,33 @@
   "brandId": "lucozade",
   "categoryId": "soft-drinks",
   "manufacturer": {
-    "value": "Suntory Beverage and Food GB and Ireland (Lucozade Ribena Suntory until 2020)",
-    "sources": ["sbf-gbi-2020"],
+    "value": "Lucozade Ribena Suntory Limited (UK registered company 08603549), trading as Suntory Beverage & Food GB&I.",
+    "sources": ["companies-house-lrs-08603549", "sbf-gbi-2020"],
     "confidence": "high",
-    "evidence": "moderate",
-    "updated": "2026-06-30",
-    "claimType": "authoritative",
-    "note": "The maker was renamed from Lucozade Ribena Suntory to Suntory Beverage and Food GB and Ireland in September 2020; Open Food Facts still records the legacy name."
+    "evidence": "high",
+    "updated": "2026-07-01",
+    "claimType": "corroborable",
+    "note": "The registered legal entity is Lucozade Ribena Suntory Limited (Companies House 08603549, incorporated 2013, active); 'Suntory Beverage & Food GB&I' is the public trading identity adopted in 2020. Verified against the statutory register (primary) and the company's corporate site (distinct lineage). Open Food Facts records the legacy brand name. Reclassified from authoritative to corroborable after a re-read found the original single-source pass had not been cross-checked against an independent primary.",
+    "verification": {
+      "passes": [
+        {
+          "reviewerKind": "human",
+          "sourcesChecked": ["companies-house-lrs-08603549"],
+          "measure": { "basis": "n/a", "state": "n/a" },
+          "checkedValue": "Lucozade Ribena Suntory Limited (UK registered company 08603549), trading as Suntory Beverage & Food GB&I.",
+          "verdict": "confirms",
+          "checkedOn": "2026-07-01"
+        },
+        {
+          "reviewerKind": "human",
+          "sourcesChecked": ["sbf-gbi-2020"],
+          "measure": { "basis": "n/a", "state": "n/a" },
+          "checkedValue": "Lucozade Ribena Suntory Limited (UK registered company 08603549), trading as Suntory Beverage & Food GB&I.",
+          "verdict": "confirms",
+          "checkedOn": "2026-07-01"
+        }
+      ]
+    }
   },
   "ingredientsText": {
     "value": "Carbonated Water, Glucose Syrup (13%), Acids (Citric Acid, Lactic Acid), Flavourings, Acidity Regulator (Sodium Citrate), Preservative (Potassium Sorbate), Caffeine, Sweeteners (Sucralose, Acesulfame K), Antioxidant (Ascorbic Acid), Colours (Sunset Yellow, Ponceau 4R), Niacin (B3)",

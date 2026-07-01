@@ -17,6 +17,7 @@
         "attributionRequired": true,
         "shareAlike": true
       },
+      "derivedFrom": null,
       "driver": null
     },
     {
@@ -35,6 +36,7 @@
         "attributionRequired": true,
         "shareAlike": false
       },
+      "derivedFrom": null,
       "driver": null
     },
     {
@@ -53,6 +55,7 @@
         "attributionRequired": true,
         "shareAlike": false
       },
+      "derivedFrom": null,
       "driver": {
         "type": "incentive",
         "name": "Soft Drinks Industry Levy 2018"
@@ -73,7 +76,8 @@
         "url": "https://www.thegrocer.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "diabetes-couk-2017",
@@ -90,7 +94,8 @@
         "url": "https://www.diabetes.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "lrs-beveragedaily-2016",
@@ -107,7 +112,26 @@
         "url": "https://www.beveragedaily.com/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
+    },
+    {
+      "id": "mondelez-cdm-2019-pressrelease",
+      "name": "Mondelez: Cadbury Dairy Milk 30% Less Sugar launch statement",
+      "publisher": "Mondelez International",
+      "url": "https://www.mondelezinternational.com/newsroom/",
+      "covers": "Mondelez's July 2019 corporate statement announcing the launch of Cadbury Dairy Milk 30% Less Sugar; the shared origin the trade-press reports reproduce. Recorded as the lineage root so its co-derived trade reports count as one lineage, not two (D-12).",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "grey",
+      "jurisdiction": "international",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.mondelezinternational.com/",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "derivedFrom": null
     },
     {
       "id": "cdm-grocer-2019",
@@ -124,7 +148,8 @@
         "url": "https://www.thegrocer.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": "mondelez-cdm-2019-pressrelease"
     },
     {
       "id": "cdm-confectionerynews-2019",
@@ -141,7 +166,8 @@
         "url": "https://www.confectionerynews.com/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": "mondelez-cdm-2019-pressrelease"
     },
     {
       "id": "cdm-justfood-2023",
@@ -158,7 +184,8 @@
         "url": "https://www.just-food.com/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "walls-onestop-2026",
@@ -175,7 +202,8 @@
         "url": "https://www.onestop.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "walls-archive-2026",
@@ -192,7 +220,8 @@
         "url": "https://www.wallsicecream.com/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "icecream-foodlaw-reading",
@@ -209,7 +238,8 @@
         "url": "https://bryantresearch.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "icecream-foodlabelling-services",
@@ -226,7 +256,8 @@
         "url": "https://www.foodlabellingservices.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "cadbury-uk-2026",
@@ -243,7 +274,8 @@
         "url": "https://www.cadbury.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "sbf-gbi-2020",
@@ -260,7 +292,8 @@
         "url": "https://suntorybeverageandfood-europe.com/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     },
     {
       "id": "walls-which-2018",
@@ -277,7 +310,8 @@
         "url": "https://www.huffingtonpost.co.uk/",
         "attributionRequired": true,
         "shareAlike": false
-      }
+      },
+      "derivedFrom": null
     }
   ]
 }

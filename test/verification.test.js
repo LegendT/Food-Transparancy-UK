@@ -18,7 +18,11 @@ import {
   meetsAuthoritative,
   classifyStaleness,
   isPastStaleness,
-  lastVerified
+  lastVerified,
+  checkDistinctLineage,
+  lineageSimilarityWarnings,
+  checkMeasureMismatch,
+  checkValueDivergence
 } from "../lib/verification.mjs";
 
 const dir = dirname(fileURLToPath(import.meta.url));
@@ -362,4 +366,104 @@ test("lastVerified returns the maximum checkedOn among confirms passes", () => {
     { verdict: "confirms", checkedOn: "2026-06-30" }
   ];
   assert.equal(lastVerified(passes), "2026-06-30");
+});
+
+// ============================================================================
+// Task 2: distinct-lineage gate, similarity warning, measure-mismatch, value-divergence
+// ============================================================================
+
+const wrap = (fact, path = "/fact") => [{ path, fact }];
+
+// The Cadbury co-derived pair (two William Reed titles from one Mondelez release).
+const CADBURY_SHARED = [
+  { id: "mondelez-pr-2019", sourceType: "primary", derivedFrom: null, publisher: "Mondelez", url: "https://www.mondelezinternational.com/pr" },
+  { id: "cdm-grocer-2019", sourceType: "secondary", derivedFrom: "mondelez-pr-2019", publisher: "The Grocer (William Reed)", url: "https://www.thegrocer.co.uk/a" },
+  { id: "cdm-confectionerynews-2019", sourceType: "secondary", derivedFrom: "mondelez-pr-2019", publisher: "ConfectioneryNews (William Reed)", url: "https://www.confectionerynews.com/b" }
+];
+const DISTINCT_SOURCES = [
+  { id: "prim-a", sourceType: "primary", derivedFrom: null, publisher: "Authority A", url: "https://a.example.gov.uk/x" },
+  { id: "sec-b", sourceType: "secondary", derivedFrom: null, publisher: "Publisher B", url: "https://b.example.com/y" }
+];
+
+test("checkDistinctLineage flags a corroborable fact whose confirms passes collapse to one lineage, but not a genuinely distinct one", () => {
+  const shared = load("fixtures/invalid/shared-lineage.json");
+  assert.ok(checkDistinctLineage(wrap(shared), CADBURY_SHARED).errors.length >= 1);
+
+  const distinct = corroborableConfirmed(); // cites prim-a (primary root) and sec-b (distinct root)
+  assert.equal(checkDistinctLineage(wrap(distinct), DISTINCT_SOURCES).errors.length, 0);
+});
+
+test("checkDistinctLineage does not apply to an authoritative fact (rule scoped to corroborable, D-06)", () => {
+  const authoritative = load("fixtures/valid/verification-confirmed.json");
+  const sources = [{ id: "sbf-gbi-2020", sourceType: "primary", derivedFrom: null }];
+  assert.equal(checkDistinctLineage(wrap(authoritative), sources).errors.length, 0);
+});
+
+test("two co-derived sources over a missing/typo derivedFrom root count as ONE lineage, not two (R-16)", () => {
+  const { sources, fact } = load("fixtures/invalid/dangling-derivedfrom.json");
+  assert.ok(checkDistinctLineage(wrap(fact), sources).errors.length >= 1);
+});
+
+test("a derivedFrom cycle canonicalises to one lineage and never fabricates two (R-16)", () => {
+  const cyclic = [
+    { id: "src-x", sourceType: "secondary", derivedFrom: "src-y" },
+    { id: "src-y", sourceType: "secondary", derivedFrom: "src-x" }
+  ];
+  const fact = {
+    value: "x",
+    sources: ["src-x", "src-y"],
+    claimType: "corroborable",
+    verification: {
+      passes: [
+        { reviewerKind: "human", sourcesChecked: ["src-x"], measure: { basis: "n/a", state: "n/a" }, verdict: "confirms", checkedOn: "2026-06-30" },
+        { reviewerKind: "ai", sourcesChecked: ["src-y"], measure: { basis: "n/a", state: "n/a" }, verdict: "confirms", checkedOn: "2026-06-30" }
+      ]
+    }
+  };
+  assert.ok(checkDistinctLineage(wrap(fact), cyclic).errors.length >= 1);
+});
+
+test("checkMeasureMismatch is true for per-100g vs per-100ml passes and false for equal measures", () => {
+  const mismatch = load("fixtures/invalid/measure-mismatch.json");
+  assert.equal(checkMeasureMismatch(mismatch.verification.passes), true);
+
+  const equal = [
+    { verdict: "confirms", measure: { basis: "per-100g", state: "as-sold", unit: "g" }, checkedValue: 4.16 },
+    { verdict: "confirms", measure: { basis: "per-100g", state: "as-sold", unit: "g" }, checkedValue: 4.16 }
+  ];
+  assert.equal(checkMeasureMismatch(equal), false);
+});
+
+test("checkValueDivergence is true for equal-measure passes reading 4.16 vs 17 and false for identical (R-04)", () => {
+  const diverge = [
+    { verdict: "confirms", measure: { basis: "per-100ml", state: "as-sold", unit: "g" }, checkedValue: 4.16 },
+    { verdict: "confirms", measure: { basis: "per-100ml", state: "as-sold", unit: "g" }, checkedValue: 17 }
+  ];
+  assert.equal(checkValueDivergence(diverge), true);
+
+  const identical = [
+    { verdict: "confirms", measure: { basis: "per-100ml", state: "as-sold", unit: "g" }, checkedValue: 4.16 },
+    { verdict: "confirms", measure: { basis: "per-100ml", state: "as-sold", unit: "g" }, checkedValue: 4.16 }
+  ];
+  assert.equal(checkValueDivergence(identical), false);
+});
+
+test("lineageSimilarityWarnings warns (does not error) on same-publisher sources lacking a declared derivedFrom link", () => {
+  const twoWilliamReed = [
+    { id: "cdm-grocer-2019", sourceType: "secondary", derivedFrom: null, publisher: "The Grocer (William Reed)", url: "https://www.thegrocer.co.uk/a" },
+    { id: "lucozade-grocer-2017", sourceType: "secondary", derivedFrom: null, publisher: "The Grocer (William Reed)", url: "https://www.thegrocer.co.uk/b" }
+  ];
+  const fact = {
+    value: "x",
+    sources: ["cdm-grocer-2019", "lucozade-grocer-2017"],
+    claimType: "corroborable",
+    verification: {
+      passes: [
+        { reviewerKind: "human", sourcesChecked: ["cdm-grocer-2019"], measure: { basis: "n/a", state: "n/a" }, verdict: "confirms", checkedOn: "2026-06-30" },
+        { reviewerKind: "ai", sourcesChecked: ["lucozade-grocer-2017"], measure: { basis: "n/a", state: "n/a" }, verdict: "confirms", checkedOn: "2026-06-30" }
+      ]
+    }
+  };
+  const { warnings } = lineageSimilarityWarnings(wrap(fact), twoWilliamReed);
+  assert.ok(warnings.length >= 1);
 });

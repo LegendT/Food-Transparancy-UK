@@ -49,7 +49,7 @@ created: 2026-07-01
 | T-02-04-02 | Information Disclosure | SSRF via a malformed barcode/host | mitigate | `assertOffUrl` narrows host to `world.openfoodfacts.org` (`ingest-off.mjs:166-172`); barcode `encodeURIComponent`'d (176); per-hop re-guard cap 5 (184-199). Test: `test/ingest-off.test.js` | closed |
 | T-02-04-03 | Denial of Service | Oversized/decompression-bombed OFF response | mitigate | `AbortSignal.timeout(8000)` + 512 KB `readCapped` before `JSON.parse` (`ingest-off.mjs:39-40,141-160,208`); field-select query; 700ms gap | closed |
 | T-02-04-04 | Tampering | Malicious OFF text interpolated into code | mitigate | Fields stored as data only, never eval'd (`ingest-off.mjs:109-137`); `lead.schema.json` `additionalProperties:false`. Test: `test/ingest-off.test.js:45` | closed |
-| T-02-05-01 | Information Disclosure / EoP | SSRF via crafted source URL or redirect to an internal host | mitigate | `redirect:"manual"` + per-hop `assertPublicHttpsUrl`+`isBlockedHost`, cap 5, https-only (`check-citations.mjs:173-207`); `isBlockedHost` canonicalises all IPv4/IPv6 + metadata names (`citation-status.mjs:184-221`). Test: `test/citation-status.test.js:79-132` | closed |
+| T-02-05-01 | Information Disclosure / EoP | SSRF via crafted source URL or redirect to an internal host | mitigate | `redirect:"manual"` + per-hop `assertPublicHttpsUrl`+`isBlockedHost`, cap 5, https-only (`check-citations.mjs:173-207`); `isBlockedHost` canonicalises all IPv4/IPv6 + metadata names, strips the FQDN trailing dot (C1) and blocks Alibaba/Oracle/CGNAT ranges (M3) (`citation-status.mjs:184-227`). Tests: `test/citation-status.test.js`. Hardened again in Review 3 (`5adfb07`). | closed |
 | T-02-05-02 | Denial of Service | Oversized/slow response, redirect loop, decompression bomb | mitigate | `AbortSignal.timeout(8000)`, redirect cap 5, 512 KB `readCapped` aborting on every body path incl. redirect-hop `body.cancel()` (`check-citations.mjs:50-53,141-157,200`); Range not relied on | closed |
 | T-02-05-03 | Spoofing | Live-but-refused / transient / soft-404 mis-scored as dead | mitigate | `classifyStatus` maps refusals→ACCESS_BLOCKED, transient/TLS/timeout→INDETERMINATE (`citation-status.mjs:44-59`); soft-404 200/206→INDETERMINATE (311-317); Wayback fallback | closed |
 | T-02-05-04 | Tampering | Cache poisoning of the verdict cache | mitigate | Cache committed, sorted keys for reviewable diff (`check-citations.mjs:458-462`); gate re-derives from it | closed |
@@ -83,6 +83,16 @@ created: 2026-07-01
 | Audit Date | Threats Total | Closed | Open | Run By |
 |------------|---------------|--------|------|--------|
 | 2026-07-01 | 34 | 34 | 0 | gsd-security-auditor (opus), verify-mitigations mode |
+| 2026-07-01 | +2 new | 2 | 0 | Review 3 deep adversarial pass (see `02-REVIEW-3.md`) |
+
+### Review 3 additions (2026-07-01)
+
+Two security-relevant defects the plan-time register did not anticipate, both fixed with regression tests:
+
+- **T-02-05-06 (new) - Information Disclosure / SSRF, trailing-dot FQDN bypass.** `isBlockedHost` did not strip the FQDN root-label dot, so `localhost.` / `metadata.google.internal.` escaped the name-based block while resolving to loopback/metadata. Also folded in Alibaba/Oracle/CGNAT metadata ranges. Fixed `5adfb07`. **closed.**
+- **T-02-01-03 (new) - Information Disclosure at the render boundary (R-31).** The `sourcedValue` macro rendered `fact.value` with no verification-state gate, so any withheld/contested value (whose raw value is retained in JSON by design) could reach a reader. Walled by a derived-state render path plus a `check-render-safety.mjs` build gate. Fixed `52f1d58`. **closed.**
+
+Accepted residual added: **AR-02-CACHE** - the committed verdict cache is the single load-bearing offline trust choke-point (D-07, diff-reviewed); fail-safe on absent/malformed/expired/future-dated entries. Accepted by LegendT, 2026-07-01.
 
 ---
 

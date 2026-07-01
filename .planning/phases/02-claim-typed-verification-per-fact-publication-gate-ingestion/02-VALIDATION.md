@@ -84,7 +84,7 @@ Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` provi
 
 ## Validation Audit 2026-07-01
 
-Retroactive audit against the completed phase. All seven per-plan test files exist and the full suite runs green (`node --test 'test/**/*.test.js'` → 162 pass / 0 fail). Every phase requirement (VRFY-01..12, DATA-05/06) maps to at least one green automated test; the sole manual item (VRFY-02/VRFY-11 human adjudication authoring) remains correctly documented as Manual-Only. No MISSING or PARTIAL gaps — no auditor spawn required.
+Retroactive audit against the completed phase. All seven per-plan test files exist and the full suite runs green (`node --test 'test/**/*.test.js'` → 162 pass / 0 fail; later 175 after the Review 3 regression tests, see `02-REVIEW-3.md`). Every phase requirement (VRFY-01..12, DATA-05/06) maps to at least one green automated test; the sole manual item (VRFY-02/VRFY-11 human adjudication authoring) remains correctly documented as Manual-Only. No MISSING or PARTIAL gaps — no auditor spawn required.
 
 | Metric | Count |
 |--------|-------|

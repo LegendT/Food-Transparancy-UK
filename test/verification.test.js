@@ -549,3 +549,97 @@ test("lineageSimilarityWarnings warns (does not error) on same-publisher sources
   const { warnings } = lineageSimilarityWarnings(wrap(fact), twoWilliamReed);
   assert.ok(warnings.length >= 1);
 });
+
+// --- H1: "confirmed" must not clear a VALUE disagreement ---
+
+test("H1: adjudication.outcome 'confirmed' cannot clear a value divergence - the unsupported value is withheld, not published", () => {
+  const fact = corroborableConfirmed({
+    passes: [
+      confirmsPass({ sourcesChecked: ["prim-a"], measure: { basis: "per-100g", state: "as-sold" }, checkedValue: 4.16 }),
+      confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], measure: { basis: "per-100g", state: "as-sold" }, checkedValue: 17 })
+    ],
+    adjudication: { outcome: "confirmed", date: "2026-07-01" }
+  });
+  fact.value = 999; // a value NEITHER pass read
+  const { state } = deriveVerificationState(fact, byId, freshBoth, TODAY, "product");
+  assert.equal(state, "withheld-open-disagreement");
+});
+
+test("H1: 'confirmed' STILL clears a pure measure mismatch (fact.value stands, no value divergence)", () => {
+  const fact = corroborableConfirmed({
+    passes: [
+      confirmsPass({ sourcesChecked: ["prim-a"], measure: { basis: "per-100g", state: "as-sold" }, checkedValue: "x" }),
+      confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], measure: { basis: "per-100ml", state: "as-sold" }, checkedValue: "x" })
+    ],
+    adjudication: { outcome: "confirmed", date: "2026-07-01" }
+  });
+  const { state } = deriveVerificationState(fact, byId, freshBoth, TODAY, "product");
+  assert.equal(state, "published-confirmed");
+});
+
+// --- M1: corroborable ">=1 primary" must be a lineage ORIGIN ---
+
+test("M1: a primary that derivesFrom a cited secondary cannot satisfy the corroborable primary requirement", () => {
+  const sources = toMap([
+    { id: "sec-b", sourceType: "secondary", derivedFrom: null },
+    { id: "sec-c", sourceType: "secondary", derivedFrom: null },
+    { id: "prim-d", sourceType: "primary", derivedFrom: "sec-b" } // co-derived, not an origin
+  ]);
+  const passes = [
+    confirmsPass({ sourcesChecked: ["sec-b", "prim-d"] }),
+    confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-c"] })
+  ];
+  assert.equal(meetsCorroborable(passes, {}, sources), false);
+  // A genuine primary origin still passes.
+  const sources2 = toMap([
+    { id: "sec-c", sourceType: "secondary", derivedFrom: null },
+    { id: "prim-e", sourceType: "primary", derivedFrom: null }
+  ]);
+  const passes2 = [
+    confirmsPass({ sourcesChecked: ["prim-e"] }),
+    confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-c"] })
+  ];
+  assert.equal(meetsCorroborable(passes2, {}, sources2), true);
+});
+
+// --- M2: authoritative re-read must be of the SAME source ---
+
+test("M2: authoritative requires two distinct reviewerKinds to re-read the SAME source, not two different ones", () => {
+  const twoDifferentSources = [
+    confirmsPass({ reviewerKind: "human", sourcesChecked: ["prim-a"] }),
+    confirmsPass({ reviewerKind: "blinded-reread", sourcesChecked: ["sec-b"] })
+  ];
+  assert.equal(meetsAuthoritative(twoDifferentSources), false);
+  const sameSourceReread = [
+    confirmsPass({ reviewerKind: "human", sourcesChecked: ["prim-a"] }),
+    confirmsPass({ reviewerKind: "blinded-reread", sourcesChecked: ["prim-a"] })
+  ];
+  assert.equal(meetsAuthoritative(sameSourceReread), true);
+});
+
+// --- L1: object/array checkedValues compared by content, not reference ---
+
+test("L1: two independently-read equal arrays are NOT a value divergence (deep equality)", () => {
+  const passes = [
+    confirmsPass({ sourcesChecked: ["prim-a"], measure: { basis: "n/a", state: "n/a" }, checkedValue: [1, 2, 3] }),
+    confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], measure: { basis: "n/a", state: "n/a" }, checkedValue: [1, 2, 3] })
+  ];
+  assert.equal(checkValueDivergence(passes), false);
+  const fact = { value: [1, 2, 3], sources: ["prim-a", "sec-b"], claimType: "corroborable", verification: { passes } };
+  assert.equal(checkConfirmsContradictValue(passes, fact), false);
+  assert.equal(deriveVerificationState(fact, byId, freshBoth, TODAY, "product").state, "published-confirmed");
+});
+
+// --- L2: corrected-to-null withholds rather than publishing a blank confirmed ---
+
+test("L2: a 'corrected' adjudication with correctedValue null withholds, never published-confirmed with a null value", () => {
+  const fact = corroborableConfirmed({
+    passes: [
+      confirmsPass({ sourcesChecked: ["prim-a"], measure: { basis: "per-100g", state: "as-sold" }, checkedValue: 4.16 }),
+      confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], measure: { basis: "per-100g", state: "as-sold" }, checkedValue: 17 })
+    ],
+    adjudication: { outcome: "corrected", correctedValue: null, date: "2026-07-01" }
+  });
+  const { state } = deriveVerificationState(fact, byId, freshBoth, TODAY, "product");
+  assert.equal(state, "withheld-in-review");
+});

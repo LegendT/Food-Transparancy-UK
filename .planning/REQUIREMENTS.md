@@ -63,9 +63,9 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 ### Ingredient Explorer
 
-- [ ] **INGR-01**: An ingredient page explains what it is and why it is used — name, common synonyms, function in food (at least one sentence), and E-number where applicable
+- [x] **INGR-01**: An ingredient page explains what it is and why it is used — name, common synonyms, function in food (at least one sentence), and E-number where applicable
 - [x] **INGR-02**: An ingredient page may state an authoritative body's published position on the ingredient (e.g. an FSA/EFSA/SACN safety opinion or regulatory status), cited and dated. It does NOT synthesise primary scientific studies into health-effect claims — health-effect evidence synthesis is deferred to v1.x (see deferred list). Any single study may appear only as labelled illustration, never as an evidence statement
-- [ ] **INGR-03**: An ingredient page states the current UK/GB regulatory position, with source and checked-on date
+- [x] **INGR-03**: An ingredient page states the current UK/GB regulatory position, with source and checked-on date
 - [x] **INGR-04**: An ingredient page lists products that contain the ingredient
 - [ ] **INGR-05**: The MVP covers the ingredients that appear in the 100-product launch corpus (approximately 200), each fully verified; the long tail of ingredients is deferred to v1.x (deep before broad)
 
@@ -212,9 +212,9 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | PROD-03 | Phase 3a | Complete |
 | PROD-04 | Phase 3a | Complete |
 | PROD-09 | Phase 3a | Pending |
-| INGR-01 | Phase 3a | Pending |
+| INGR-01 | Phase 3a | Complete |
 | INGR-02 | Phase 3a | Complete |
-| INGR-03 | Phase 3a | Pending |
+| INGR-03 | Phase 3a | Complete |
 | INGR-04 | Phase 3a | Complete |
 | SITE-04 | Phase 3b | Pending |
 | SITE-05 | Phase 3b | Pending |

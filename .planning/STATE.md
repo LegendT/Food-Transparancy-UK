@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 03a-01-PLAN.md
-last_updated: "2026-07-01T20:44:31.536Z"
+last_updated: "2026-07-01T20:53:36.530Z"
 last_activity: 2026-07-01
 progress:
   total_phases: 10
   completed_phases: 2
   total_plans: 23
-  completed_plans: 20
+  completed_plans: 21
   percent: 20
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-30)
 ## Current Position
 
 Phase: 03a (Core Entity Pages & Trust Rendering) — EXECUTING
-Plan: 4 of 6
+Plan: 5 of 6
 Status: Ready to execute
 Last activity: 2026-07-01
 
@@ -68,6 +68,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03a P01 | 20 | 3 tasks | 12 files |
 | Phase 03a P02 | 12 | 2 tasks | 3 files |
 | Phase 03a P03 | 22 | 2 tasks | 1 files |
+| Phase 03a P05 | 14 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,7 @@ Recent decisions affecting current work:
 - [Phase 03a]: Plan 03a-01: authorityPosition is a bare SourcedValue $ref, deliberately NOT claimDomain regulatory, so the INGR-02 authority opinion never trips checkRegulatoryJurisdiction / the TRUST-06 gate and stays distinct from regulatoryStatus
 - [Phase 03a]: Plan 03a-01: reverse indices (productsByIngredient, timelineByProduct) are pure lib functions returning bracket-accessible plain objects, exposed via addGlobalData read from disk at config load, never a forbidden _data/*.js file; a dangling product->ingredient OR timeline->product reference fails the build via the symmetric checkIngredientRefs/checkTimelineRefs gates
 - [Phase ?]: [Phase 03a]: Plan 03a-03: src/product.njk paginates the filename-keyed products object with resolve: values (A1 confirmed by a real build); every product and timeline fact renders through sourcedValue(fact, sources.sources) with no raw .value; the SC3 recipe-history empty state renders only where a product genuinely has no timeline events (walls-soft-scoop-vanilla), while cadbury correctly renders its real 2019 event
+- [Phase ?]: [Phase 03a]: Plan 03a-05: src/ingredient.njk paginates the ingredients object with resolve: values; INGR-02 authority block is gated on {% if ingredient.authorityPosition %} (no empty stub, distinct from regulatoryStatus, D-08), INGR-04 lists from the productsByIngredient reverse index with an honest empty state; the first record (sucralose) renders withheld by default (no fabricated passes, D-11/D-13)
 
 ### Pending Todos
 
@@ -131,6 +133,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-01T20:43:53.924Z
+Last session: 2026-07-01T20:52:46.357Z
 Stopped at: Completed 03a-01-PLAN.md
 Resume file: None

@@ -1,0 +1,30 @@
+{
+  "value": 4.16,
+  "sources": ["off", "lucozade-grocer-2017"],
+  "confidence": "moderate",
+  "evidence": "low",
+  "updated": "2026-06-30",
+  "claimType": "corroborable",
+  "claimDomain": "nutrition",
+  "note": "Two confirms passes whose structured measures differ (per-100g versus per-100ml), mirroring the Lucozade 4.16g/4.5g case; the 02-03 gate auto-raises a disagreement (D-13/VRFY-08).",
+  "verification": {
+    "passes": [
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["off"],
+        "measure": { "basis": "per-100g", "state": "as-sold", "unit": "g" },
+        "checkedValue": 4.16,
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      },
+      {
+        "reviewerKind": "ai",
+        "sourcesChecked": ["lucozade-grocer-2017"],
+        "measure": { "basis": "per-100ml", "state": "as-sold", "unit": "g" },
+        "checkedValue": 4.5,
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      }
+    ]
+  }
+}

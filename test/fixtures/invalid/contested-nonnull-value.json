@@ -1,0 +1,48 @@
+{
+  "value": "13g sugar per 100ml",
+  "sources": ["lucozade-grocer-2017", "diabetes-couk-2017"],
+  "confidence": "low",
+  "evidence": "low",
+  "updated": "2026-06-30",
+  "claimType": "corroborable",
+  "note": "An internal-consistency violation (R-05): the adjudication outcome is contested but the singular value is non-null. Per D-14 the singular value must be withheld while contested; the 02-03 gate fails the build on this.",
+  "verification": {
+    "passes": [
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["lucozade-grocer-2017"],
+        "measure": { "basis": "per-100ml", "state": "as-sold", "unit": "g" },
+        "checkedValue": 13,
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      },
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["diabetes-couk-2017"],
+        "measure": { "basis": "per-100ml", "state": "as-sold", "unit": "g" },
+        "checkedValue": 17,
+        "verdict": "disputes",
+        "checkedOn": "2026-06-30"
+      }
+    ],
+    "adjudication": {
+      "outcome": "contested",
+      "note": "The pre-2017 figure is genuinely disputed between the two trade reports.",
+      "date": "2026-06-30"
+    },
+    "contested": {
+      "positions": [
+        {
+          "value": "about 13g per 100ml",
+          "sources": ["lucozade-grocer-2017"],
+          "note": "The Grocer's pre-reformulation figure."
+        },
+        {
+          "value": "about 17g per 100ml",
+          "sources": ["diabetes-couk-2017"],
+          "note": "diabetes.co.uk's pre-reformulation figure."
+        }
+      ]
+    }
+  }
+}

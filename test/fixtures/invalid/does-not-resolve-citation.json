@@ -1,0 +1,20 @@
+{
+  "value": "A claim resting on a citation whose cached existence verdict is DOES_NOT_RESOLVE.",
+  "sources": ["diabetes-couk-2017"],
+  "confidence": "low",
+  "evidence": "low",
+  "updated": "2026-06-30",
+  "claimType": "authoritative",
+  "note": "The single pass cites diabetes-couk-2017, whose entry in citation-verdicts.sample.json is DOES_NOT_RESOLVE; the existence precondition fails so the 02-03 gate withholds the fact (VRFY-07).",
+  "verification": {
+    "passes": [
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["diabetes-couk-2017"],
+        "measure": { "basis": "n/a", "state": "n/a" },
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      }
+    ]
+  }
+}

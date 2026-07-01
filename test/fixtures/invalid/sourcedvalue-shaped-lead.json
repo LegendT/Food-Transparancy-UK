@@ -1,0 +1,10 @@
+{
+  "leadId": "off-3017620422003-r30",
+  "value": "A draft imported value wrongly shaped as a fact.",
+  "sources": ["off"],
+  "confidence": "low",
+  "evidence": "low",
+  "updated": "2026-07-01",
+  "claimType": "authoritative",
+  "note": "The anti-example for D-19/C4: a lead must NOT be SourcedValue-shaped. Because this object carries a sources array it WOULD trip the corpus-escape guard's hasSourcedShape if placed under src/_data; the real lead schema avoids the sources key entirely so a misplaced lead never can."
+}

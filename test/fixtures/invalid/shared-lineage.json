@@ -1,0 +1,29 @@
+{
+  "value": "Cadbury Dairy Milk 30% Less Sugar launched in July 2019.",
+  "sources": ["cdm-grocer-2019", "cdm-confectionerynews-2019"],
+  "confidence": "moderate",
+  "evidence": "moderate",
+  "updated": "2026-06-30",
+  "claimType": "corroborable",
+  "note": "Two confirms passes citing two William Reed trade titles co-derived from one Mondelez press release; once the registry marks them with a shared derivedFrom root they resolve to a single lineage, so the corroborable distinct-lineage standard is not met (D-05/D-12).",
+  "verification": {
+    "passes": [
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["cdm-grocer-2019"],
+        "measure": { "basis": "n/a", "state": "n/a" },
+        "checkedValue": "launched July 2019",
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      },
+      {
+        "reviewerKind": "ai",
+        "sourcesChecked": ["cdm-confectionerynews-2019"],
+        "measure": { "basis": "n/a", "state": "n/a" },
+        "checkedValue": "launched July 2019",
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      }
+    ]
+  }
+}

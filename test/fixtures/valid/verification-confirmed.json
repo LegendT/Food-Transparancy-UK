@@ -1,0 +1,28 @@
+{
+  "value": "Suntory Beverage and Food GB and Ireland",
+  "sources": ["sbf-gbi-2020"],
+  "confidence": "high",
+  "evidence": "moderate",
+  "updated": "2026-06-30",
+  "claimType": "authoritative",
+  "verification": {
+    "passes": [
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["sbf-gbi-2020"],
+        "measure": { "basis": "n/a", "state": "n/a" },
+        "checkedValue": "Suntory Beverage and Food GB and Ireland",
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      },
+      {
+        "reviewerKind": "blinded-reread",
+        "sourcesChecked": ["sbf-gbi-2020"],
+        "measure": { "basis": "n/a", "state": "n/a" },
+        "checkedValue": "Suntory Beverage and Food GB and Ireland",
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      }
+    ]
+  }
+}

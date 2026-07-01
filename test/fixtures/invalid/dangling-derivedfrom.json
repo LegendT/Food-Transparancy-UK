@@ -1,0 +1,67 @@
+{
+  "note": "A source-registry fragment plus a corroborable fact. Both cited sources point their derivedFrom at press-release-missing, an id absent from the registry. This proves two things the 02-03 gate must catch: the dangling derivedFrom fails the build, and two co-derived sources over one (missing) shared root count as ONE lineage, not two, so the corroborable distinct-lineage standard is not met (R-16).",
+  "sources": [
+    {
+      "id": "src-a",
+      "name": "Trade report A",
+      "publisher": "William Reed",
+      "url": "https://www.example-a.co.uk/report-a",
+      "covers": "Trade-press reporting co-derived from a manufacturer press release.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.example-a.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "derivedFrom": "press-release-missing"
+    },
+    {
+      "id": "src-b",
+      "name": "Trade report B",
+      "publisher": "William Reed",
+      "url": "https://www.example-b.co.uk/report-b",
+      "covers": "Trade-press reporting co-derived from the same manufacturer press release.",
+      "updateFrequency": "As published",
+      "retrievedDate": "2026-06-30",
+      "sourceType": "secondary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "all-rights-reserved",
+        "url": "https://www.example-b.co.uk/",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "derivedFrom": "press-release-missing"
+    }
+  ],
+  "fact": {
+    "value": "A reformulation claim resting on two co-derived reports over one missing root.",
+    "sources": ["src-a", "src-b"],
+    "confidence": "moderate",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "claimType": "corroborable",
+    "verification": {
+      "passes": [
+        {
+          "reviewerKind": "human",
+          "sourcesChecked": ["src-a"],
+          "measure": { "basis": "n/a", "state": "n/a" },
+          "verdict": "confirms",
+          "checkedOn": "2026-06-30"
+        },
+        {
+          "reviewerKind": "ai",
+          "sourcesChecked": ["src-b"],
+          "measure": { "basis": "n/a", "state": "n/a" },
+          "verdict": "confirms",
+          "checkedOn": "2026-06-30"
+        }
+      ]
+    }
+  }
+}

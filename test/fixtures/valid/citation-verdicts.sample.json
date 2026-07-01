@@ -1,0 +1,37 @@
+{
+  "sbf-gbi-2020": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "live",
+    "checkedAt": "2026-07-01T09:00:00Z",
+    "statusCode": 200,
+    "snapshotUrl": null
+  },
+  "off": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "live",
+    "checkedAt": "2026-07-01T09:00:00Z",
+    "statusCode": 200,
+    "snapshotUrl": null
+  },
+  "walls-archive-2026": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "wayback:20260121211831",
+    "checkedAt": "2026-07-01T09:00:00Z",
+    "statusCode": 200,
+    "snapshotUrl": "https://web.archive.org/web/20260121211831/https://www.wallsicecream.com/uk/p/wall%27s-soft-scoop-vanilla-1800ml.html"
+  },
+  "lucozade-grocer-2017": {
+    "verdict": "ACCESS_BLOCKED",
+    "resolvedVia": "live",
+    "checkedAt": "2026-07-01T09:00:00Z",
+    "statusCode": 403,
+    "snapshotUrl": null
+  },
+  "diabetes-couk-2017": {
+    "verdict": "DOES_NOT_RESOLVE",
+    "resolvedVia": "live",
+    "checkedAt": "2026-07-01T09:00:00Z",
+    "statusCode": 404,
+    "snapshotUrl": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "value": "About 13g sugar per 100ml before the 2017 reformulation.",
+  "sources": ["lucozade-grocer-2017", "diabetes-couk-2017"],
+  "confidence": "moderate",
+  "evidence": "moderate",
+  "updated": "2026-06-30",
+  "claimType": "corroborable",
+  "note": "A corroborable fact with a single confirms pass; below the two-confirms standard, so the 02-03 gate withholds it.",
+  "verification": {
+    "passes": [
+      {
+        "reviewerKind": "human",
+        "sourcesChecked": ["lucozade-grocer-2017"],
+        "measure": { "basis": "per-100ml", "state": "as-sold", "unit": "g" },
+        "checkedValue": 13,
+        "verdict": "confirms",
+        "checkedOn": "2026-06-30"
+      }
+    ]
+  }
+}

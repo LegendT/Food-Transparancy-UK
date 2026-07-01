@@ -1,8 +1,8 @@
 ---
 phase: 03a
 slug: core-entity-pages-trust-rendering
-status: draft
-nyquist_compliant: false
+status: approved
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-07-01
 ---
@@ -82,4 +82,4 @@ Populated after planning (each plan maps its tasks -> requirement -> automated c
 - [ ] Feedback latency < 15s
 - [ ] `nyquist_compliant: true` set in frontmatter (set once plans map every requirement to a check)
 
-**Approval:** pending
+**Approval:** approved 2026-07-01 (plans map every phase requirement to an automated check; wave-0 schema work precedes templates; sampling continuity holds). `wave_0_complete` flips true once the wave-0 schema tests run green during execution.

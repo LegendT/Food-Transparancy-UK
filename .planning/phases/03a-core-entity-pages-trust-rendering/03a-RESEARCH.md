@@ -418,8 +418,8 @@ Note: `entityType: "timeline"` threads historical-staleness (never-stale) into t
 
 ## Open Questions
 
-1. **Timeline data exposure key.** `src/_data/timeline/*.json` namespaces to a `timeline` object; the recipe-history join needs `Object.values(timeline)`. Confirm whether to expose it via a `filterBy` filter + a `dictValues`/`values` filter, or via an `addGlobalData` `timelineByProduct` map (recommended for symmetry with the ingredient reverse index). Either is a small, testable addition.
-2. **pa11y route selection (3a vs 3b boundary).** 3b owns the full route floor; 3a should register a *representative* set (one mostly-withheld product, one with published + contested + allergens, one ingredient with `authorityPosition`, one `published-stale` proof page). Confirm the exact URLs once proof slugs are authored.
+1. **(RESOLVED - plan 03a-01)** Timeline data exposure key. `src/_data/timeline/*.json` namespaces to a `timeline` object; the recipe-history join needs `Object.values(timeline)`. Resolved to the `addGlobalData` map approach (symmetry with the ingredient reverse index).
+2. **(RESOLVED - plan 03a-06 Task 3)** pa11y route selection (3a vs 3b boundary). 3b owns the full route floor; 3a registers a representative set (one mostly-withheld product, one with published + contested + allergens, one ingredient with `authorityPosition`, one `published-stale` proof page). Exact URLs fixed once proof slugs are authored at the checkpoint.
 
 ## Environment Availability
 

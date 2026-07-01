@@ -379,33 +379,34 @@ async function checkCitation(source) {
     // A HEAD 200 carries no body, so a soft-404 (a removed page served as 200)
     // would score RESOLVES on the primary path without any inspection. Confirm
     // with one cheap byte-capped GET Range and downgrade to INDETERMINATE only if
-    // the body reads as a not-found page; a transient GET error or a 206 (range
-    // honoured, no full body) never overturns a genuine HEAD 200 (WR-01/R-22).
+    // the body reads as a not-found page. A ranged 206 still returns inspectable
+    // bytes, so it is examined too (M5); a transient GET error never overturns a
+    // genuine HEAD 200 (WR-01/R-22).
     if (verdict === "RESOLVES" && head.status === 200) {
-      const get = await probe(head.finalUrl ?? url, "GET", { range: "bytes=0-0" });
-      if (get.status === 200) {
+      const get = await probe(head.finalUrl ?? url, "GET", { range: "bytes=0-511" });
+      if (get.status === 200 || get.status === 206) {
         const body = await readCapped(get.res);
-        if (isSoftNotFound(200, body)) {
+        if (isSoftNotFound(get.status, body)) {
           verdict = "INDETERMINATE";
           statusCode = 200;
         }
       } else {
-        await get.res?.body?.cancel(); // a non-200 GET body is never read - discard it (WR-02)
+        await get.res?.body?.cancel(); // a non-200/206 GET body is never read - discard it (WR-02)
       }
     } else if ([403, 405, 429].includes(head.status)) {
       const retryAfter = Number(head.res.headers.get("retry-after"));
       if (Number.isFinite(retryAfter) && retryAfter > 0) await sleep(Math.min(retryAfter, 5) * 1000);
 
-      const get = await probe(head.finalUrl ?? url, "GET", { range: "bytes=0-0" });
+      const get = await probe(head.finalUrl ?? url, "GET", { range: "bytes=0-511" });
       if (get.status != null) {
         statusCode = get.status;
         verdict = classifyStatus(get.status);
-        // Soft-404: a 200 that is really a not-found page downgrades (R-22).
-        if (verdict === "RESOLVES" && get.status === 200) {
+        // Soft-404: a 200 or a ranged 206 that is really a not-found page downgrades (R-22/M5).
+        if (verdict === "RESOLVES" && (get.status === 200 || get.status === 206)) {
           const body = await readCapped(get.res);
-          if (isSoftNotFound(200, body)) verdict = "INDETERMINATE";
+          if (isSoftNotFound(get.status, body)) verdict = "INDETERMINATE";
         } else {
-          await get.res?.body?.cancel(); // a non-200 GET body is never read - discard it (WR-02)
+          await get.res?.body?.cancel(); // a non-200/206 GET body is never read - discard it (WR-02)
         }
       } else if (get.errorClass) {
         verdict = classifyStatus(undefined, get.errorClass);

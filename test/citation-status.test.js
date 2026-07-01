@@ -190,6 +190,15 @@ test("isSoftNotFound flags a tiny or not-found-marker 200 body but not a real pa
   assert.equal(isSoftNotFound(200, REAL_BODY), false);
 });
 
-test("isSoftNotFound only fires on a 200 (a 404 is already handled by classifyStatus)", () => {
+test("isSoftNotFound only fires on a 200/206 (a 404 is already handled by classifyStatus)", () => {
   assert.equal(isSoftNotFound(404, "Page not found"), false);
+  assert.equal(isSoftNotFound(500, "Page not found"), false);
+});
+
+test("M5: a ranged 206 soft-404 body is flagged so it downgrades to INDETERMINATE", () => {
+  // A ranged GET (bytes=0-511) can answer 206; its bytes are still inspectable.
+  assert.equal(isSoftNotFound(206, "<title>Page not found</title>"), true);
+  assert.equal(isSoftNotFound(206, "This page is no longer available"), true);
+  // A real 206 page (>= the soft-404 byte floor, no marker) is NOT flagged.
+  assert.equal(isSoftNotFound(206, REAL_BODY), false);
 });

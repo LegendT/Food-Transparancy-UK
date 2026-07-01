@@ -22,8 +22,8 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [x] **VRFY-02**: When the recorded verifications disagree, the fact is withheld from publication and routed to human adjudication, which resolves to exactly one of: confirmed, corrected (value amended then re-verified), or contested (see VRFY-11); AI may never adjudicate a disagreement, and no value changes without human approval
 - [x] **VRFY-03**: Every fact carries a verification status — workflow states (unverified / in-review / open-disagreement-withheld) and published states (confirmed / contested / stale / wrong) — plus the date it was last (re-)verified
 - [x] **VRFY-04**: Verification-sufficiency gate, enforced at the level of the individual fact: a fact is published only if it has the passes its claim type requires, has no open disagreement, and no pass returned inaccessible / not-found (an inaccessible source never satisfies a pass). A page publishes its verified subset; any unverified or withheld fact is rendered as an explicit "not yet verified — withheld" placeholder, never asserted. A fact whose audit status later becomes `wrong` is automatically withheld (the gate is continuous, not only at publish time)
-- [ ] **VRFY-05**: A reviewer can invoke a re-verification audit command that, for each published fact, outputs its status, the recorded verdicts, and flags facts whose last-verified date exceeds their staleness threshold or whose citation no longer resolves; results are written to a dated audit record in the VRFY-06 format
-- [ ] **VRFY-06**: The audit record lists each fact's status, the recorded verdicts, and disagreements ordered worst-first (wrong → uncertain → stale, then oldest last-verified first); no value changes without human approval
+- [x] **VRFY-05**: A reviewer can invoke a re-verification audit command that, for each published fact, outputs its status, the recorded verdicts, and flags facts whose last-verified date exceeds their staleness threshold or whose citation no longer resolves; results are written to a dated audit record in the VRFY-06 format
+- [x] **VRFY-06**: The audit record lists each fact's status, the recorded verdicts, and disagreements ordered worst-first (wrong → uncertain → stale, then oldest last-verified first); no value changes without human approval
 - [x] **VRFY-07**: Every recorded citation passes an automated existence/resolves check (URL/DOI) before any verification pass counts; a citation that does not resolve is recorded as not-found and blocks publication
 - [x] **VRFY-08**: Each verification pass records the exact measure/definition it checked (e.g. "per 100g as sold", "GB legal status 2026"); a measure mismatch between passes auto-raises a disagreement even when the values look close
 - [x] **VRFY-09**: Each published fact carries a staleness threshold (a small set of global classes for v1 — e.g. regulatory vs current vs historical); the VRFY-05 audit flags exceeded thresholds for re-verification
@@ -197,8 +197,8 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | VRFY-02 | Phase 2 | Complete |
 | VRFY-03 | Phase 2 | Complete |
 | VRFY-04 | Phase 2 | Complete |
-| VRFY-05 | Phase 2 | Pending |
-| VRFY-06 | Phase 2 | Pending |
+| VRFY-05 | Phase 2 | Complete |
+| VRFY-06 | Phase 2 | Complete |
 | VRFY-07 | Phase 2 | Complete |
 | VRFY-08 | Phase 2 | Complete |
 | VRFY-09 | Phase 2 | Complete |

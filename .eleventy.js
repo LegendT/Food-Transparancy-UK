@@ -8,10 +8,11 @@
  *
  * Mirrors the DEBT blueprint conventions, trimmed to the Phase 1 data shape.
  */
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { factForRenderFromData } from "./lib/render-state.mjs";
 
 // Resolve the gate scripts ABSOLUTELY against this config file's directory, not
 // the current working directory. A cwd-relative path would let an `eleventy`
@@ -22,6 +23,7 @@ const GATE_SCRIPTS = [
   "scripts/validate-data.mjs",
   "scripts/check-editorial.mjs",
   "scripts/check-images.mjs",
+  "scripts/check-render-safety.mjs",
 ].map((s) => resolve(HERE, s));
 
 export default function (eleventyConfig) {
@@ -35,6 +37,28 @@ export default function (eleventyConfig) {
     if (!Array.isArray(arr)) return undefined;
     return arr.find((item) => item && item[key] === value);
   });
+
+  // The committed citation-existence verdict cache, read once at config load.
+  // Absent = {} (every citation UNCHECKED -> the derivation withholds), matching
+  // the offline gate. The network checker (scripts/check-citations.mjs) writes it;
+  // the render path only ever READS it, exactly like the gate.
+  const VERDICTS = (() => {
+    try {
+      return JSON.parse(readFileSync(resolve(HERE, ".cache/citation-verdicts.json"), "utf8"));
+    } catch {
+      return {};
+    }
+  })();
+  const RENDER_TODAY = new Date().toISOString().slice(0, 10);
+
+  // factState: the SANCTIONED render boundary (R-31). Templates derive a fact's
+  // publishable projection through this filter and NEVER read fact.value directly;
+  // check-render-safety.mjs fails the build on any raw fact-value render. Returns
+  // { state, publishable, stale, contested, value?, positions } - value present
+  // ONLY when the fact genuinely publishes.
+  eleventyConfig.addFilter("factState", (fact, sourcesArray, entityType) =>
+    factForRenderFromData(fact, sourcesArray, VERDICTS, RENDER_TODAY, entityType || null)
+  );
 
   // JSON for embedding inside a <script> tag — escapes "<" so a value can never
   // break out of the script element (defensive; the data is trusted).

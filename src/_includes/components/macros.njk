@@ -31,7 +31,7 @@
   SourcedValue (TRUST-03 / TRUST-04): render one fact with progressive
   disclosure of its provenance.
 
-  Contract: sourcedValue(fact, sources, label, unit)
+  Contract: sourcedValue(fact, sources, label, unit, entityType)
     fact    a SourcedValue object (value, sources[], confidence, evidence,
             updated, claimType, optional checkedOn, optional note).
     sources the registry ARRAY (pass sources.sources, NOT the wrapper object;
@@ -39,6 +39,15 @@
             render an empty source list and break TRUST-03).
     label   optional inline label shown before the value.
     unit    optional unit appended to the value.
+    entityType optional staleness hint threaded to the derivation (D-16).
+
+  R-31 (load-bearing): this macro renders off the DERIVED verification state via
+  the factState filter, NEVER off fact.value. Every withheld/contested record
+  still carries its raw `value` in JSON by design, so this is the single point the
+  whole trust model could be silently defeated - the raw value is shown ONLY when
+  the fact genuinely publishes. check-render-safety.mjs fails the build on any raw
+  `.value` render outside this file. Phase 3a owns the richer contested/review-due
+  visuals (VRFY-11/12); this is the safe floor.
 
   The two trust tokens are TEXT, never colour alone (WCAG 1.4.1, SITE-04). Each
   reads "confidence {grade}" / "evidence {grade}", links to the Methodology
@@ -48,15 +57,30 @@
   The wrapper is a block <div>, not a <span>, because a <span> cannot validly
   contain the <details>/<ul> disclosure, and every later page inherits this macro.
 #}
-{% macro sourcedValue(fact, sources, label, unit) %}
-<div class="fact">
+{% macro sourcedValue(fact, sources, label, unit, entityType) %}
+{% set d = fact | factState(sources, entityType) %}
+<div class="fact" data-state="{{ d.state }}">
   <p class="fact__head">
     {% if label %}<span class="fact__label">{{ label }}:</span> {% endif %}
-    <span class="fact__value">{{ fact.value }}{% if unit %}{{ unit }}{% endif %}</span>
+    {%- if d.publishable %}
+    <span class="fact__value">{{ d.value }}{% if unit %}{{ unit }}{% endif %}</span>
     <span class="fact__trust">
       <a class="fact__token" href="/methodology/#confidence">confidence {{ fact.confidence }}<span class="visually-hidden"> (curator certainty)</span></a>
       <a class="fact__token" href="/methodology/#evidence">evidence {{ fact.evidence }}<span class="visually-hidden"> (evidence strength)</span></a>
     </span>
+    {%- if d.stale %}
+    <span class="fact__review-due">Last verified {{ fact.updated | readableDate }}; review due.</span>
+    {%- endif %}
+    {%- elif d.contested %}
+    <span class="fact__contested">Contested; sources disagree:</span>
+    <ul class="fact__positions">
+      {%- for p in d.positions %}
+      <li>{{ p.value }}{% if unit %}{{ unit }}{% endif %}{% if p.note %} ({{ p.note }}){% endif %}</li>
+      {%- endfor %}
+    </ul>
+    {%- else %}
+    <span class="fact__withheld">Not yet verified; withheld.</span>
+    {%- endif %}
   </p>
   <details class="fact__detail">
     <summary>Source and date</summary>
@@ -73,7 +97,7 @@
       {%- endfor %}
     </ul>
     <p class="fact__dates">Last updated {{ fact.updated | readableDate }}.{% if fact.checkedOn %} Checked on {{ fact.checkedOn | readableDate }}.{% endif %}</p>
-    {%- if fact.note %}
+    {%- if fact.note and d.publishable %}
     <p class="fact__note">{{ fact.note }}</p>
     {%- endif %}
   </details>

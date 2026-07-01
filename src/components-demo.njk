@@ -9,9 +9,9 @@ eleventyExcludeFromCollections: true
 
 <h1>Trust component demonstration</h1>
 
-<p class="lede">This is a component demonstration, not content. It exists to prove the trust component renders a fact correctly and to serve as an accessibility target. The fact below is a fixture: its grades are illustrative and are not a verified record.</p>
+<p class="lede">This is a component demonstration, not content. It exists to prove the trust component renders a fact correctly and to serve as an accessibility target. The fact below is a fixture with no verification passes, so the component withholds its value rather than asserting it.</p>
 
-<p>The component shows the value, two inline text tokens for confidence and evidence (each a link to the part of the methodology that defines it), and the source, date and any note behind a disclosure you can open.</p>
+<p>For a withheld fact the component shows a plain "not yet verified" state and, behind a disclosure you can open, the sources being checked and the last-updated date. Once a fact meets the standard its claim type demands, the same component instead shows the value with two inline text tokens for confidence and evidence, each a link to the part of the methodology that defines it.</p>
 
 {{ sourcedValue(demoFact, sources.sources, "Demonstration fact") }}
 

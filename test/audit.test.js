@@ -147,6 +147,24 @@ test("a non-RESOLVES cached verdict surfaces its fact in 'Citations no longer re
   assert.ok(rot.includes("rotted-src") && rot.includes("DOES_NOT_RESOLVE"), "the source id and its verdict are named");
 });
 
+test("M6: a contested fact's position-only source with a non-RESOLVES verdict surfaces in the rot section", () => {
+  // rotted-src is cited ONLY inside a contested position, never in fact.sources[].
+  const facts = [{ path: "/products/contested/value", entityType: "product", fact: {
+    ...base, value: null, sources: ["prim-a"], claimType: "corroborable",
+    verification: {
+      passes: [],
+      adjudication: { outcome: "contested", note: "genuine dispute", date: "2026-06-01" },
+      contested: { positions: [
+        { value: "a", sources: ["prim-a"], note: "position a" },
+        { value: "b", sources: ["rotted-src"], note: "position b cites a rotted source" }
+      ] }
+    }
+  } }];
+  const rot = section(buildAuditReport(facts, VERDICTS, SOURCES, TODAY).markdown, "Citations no longer resolving");
+  assert.ok(rot.includes("rotted-src") && rot.includes("DOES_NOT_RESOLVE"),
+    "a position-only rotted citation must appear in the rot section");
+});
+
 test("a checkedAt older than CITATION_TTL_DAYS is due for re-check, a fresh one is not (R-07)", () => {
   const due = section(report().markdown, "Citations due for re-check");
   assert.ok(due.includes("stale-cite"), "the TTL-stale citation is queued for re-check");

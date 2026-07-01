@@ -60,6 +60,18 @@ const STATE_ORDER = [
 
 const confirmsOf = (fact) => (fact.verification?.passes ?? []).filter((p) => p.verdict === "confirms");
 
+// Every source id a fact rests on: its top-level sources[] PLUS every source
+// cited only inside a contested position (mirrors the checker's sourceIdsForFact,
+// M6/WARNING-01). A position-only source must be scanned for rot and staleness
+// too, else a rotted contested citation would silently escape the audit.
+const sourceIdsForFact = (fact) => {
+  const ids = [...(fact.sources ?? [])];
+  for (const position of fact.verification?.contested?.positions ?? []) {
+    for (const id of position.sources ?? []) ids.push(id);
+  }
+  return ids;
+};
+
 // Whole-day age of a cached verdict's checkedAt relative to `today`. A negative
 // age (checkedAt after today) counts as fresh, never due. A missing/unparseable
 // date is treated as infinitely old so it surfaces rather than hides.
@@ -178,7 +190,7 @@ export function buildAuditReport(facts, verdictMap, sourceRecords, today) {
   const rotted = [];
   const dueForRecheck = [];
   for (const { path, fact } of facts) {
-    for (const id of fact.sources ?? []) {
+    for (const id of new Set(sourceIdsForFact(fact))) {
       const entry = existence.get(id);
       if (!entry) continue;
       if (entry.verdict && entry.verdict !== "RESOLVES") {

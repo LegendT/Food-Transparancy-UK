@@ -123,7 +123,14 @@ Decimal phases appear between their surrounding integers in numeric order.
 
   5. The reader-facing half of the Phase 2 trust states renders (Phase 2 derives the status and date; Phase 3a is the phase contracted to show them): a fact derived `published-contested` renders a visible both-sides treatment showing each position and its sources, distinct from a withheld placeholder (VRFY-11 rendering half); and a fact derived `published-stale` renders a reader-facing "last verified {date} - review due" indicator, not only an internal audit flag (VRFY-12 rendering half). Both consume the state and last-verified date produced by the Phase 2 gate; neither re-derives status in the template.
 
-**Plans**: TBD
+**Plans**: 6 plans (4 waves)
+
+- [ ] 03a-01-PLAN.md — Schema fields (D-15 product ingredients array, D-14 ingredient authorityPosition), pure reverse index, checkIngredientRefs gate, Eleventy wiring (INGR-02, INGR-04)
+- [ ] 03a-02-PLAN.md — Render primitives: factCell inline macro + contested-branch per-position sources + state accent-bar / nutrition-table / allergen CSS (VRFY-11, VRFY-12, PROD-01)
+- [ ] 03a-03-PLAN.md — Product page base: pagination, Ingredients, Manufacturer, Sources roll-up, recipe-history + empty state (PROD-01, PROD-02, PROD-03, PROD-04)
+- [ ] 03a-04-PLAN.md — Product data-dense: accessible nutrition table + allergen fail-safe with the pure allergenLine invariant (PROD-01, PROD-09)
+- [ ] 03a-05-PLAN.md — Ingredient page: explainer, GB regulatory block, optional authority block, products-containing list (INGR-01, INGR-02, INGR-03, INGR-04)
+- [ ] 03a-06-PLAN.md — Proof-set human checkpoint (published-confirmed / published-stale / authorityPosition), verdict-cache seed, D-15 cross-link, representative pa11y routes (VRFY-11, VRFY-12, INGR-01/02/03, PROD-01, PROD-09)
 **UI hint**: yes
 
 ### Phase 3b: Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface
@@ -240,7 +247,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 |-------|----------------|--------|-----------|
 | 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 7/7 | Complete    | 2026-07-01 |
-| 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
+| 3a. Core Entity Pages & Trust Rendering | 0/6 | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |
 | 4. Then-vs-Now Flagship Layer & Corpus Scale | 0/TBD | Not started | - |
 | 5. Search, Navigation & Information Architecture | 0/TBD | Not started | - |

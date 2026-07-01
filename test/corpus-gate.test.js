@@ -229,6 +229,19 @@ test("build fails: a contested block without a matching contested adjudication",
   }
 });
 
+test("L8 build fails: a contested adjudication with no contested.positions block (D-14)", () => {
+  const dir = tempDir();
+  try {
+    writeFileSync(join(dir, "sources.json"), JSON.stringify({ sources: [src("src-a")] }));
+    writeFileSync(join(dir, "demoFact.json"), JSON.stringify(loadFix("contested-missing-positions.json")));
+    const r = runGate(dir);
+    assert.notEqual(r.status, 0);
+    assert.match(r.stderr, /positions is absent or has fewer than two positions/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("build fails: a contested position citing a source id absent from the registry (DATA-01, D-14)", () => {
   const dir = tempDir();
   try {

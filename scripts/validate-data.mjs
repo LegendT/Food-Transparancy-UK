@@ -280,6 +280,14 @@ for (const { path, fact } of facts) {
       `${path}: has a verification.contested block but no matching adjudication.outcome "contested" with positions (D-14)`
     );
   }
+  // The reverse (L8/D-14): a contested adjudication must be backed by a
+  // verification.contested block carrying at least two positions, else the fact
+  // withholds a singular value with nothing to publish in its place.
+  if (adjOutcome === "contested" && !(v.contested?.positions?.length >= 2)) {
+    consistencyErrors.push(
+      `${path}: adjudication.outcome is "contested" but verification.contested.positions is absent or has fewer than two positions (D-14)`
+    );
+  }
   // R-05/D-14: a contested fact must WITHHOLD its singular value (value must be
   // null); the positions carry the content. A non-null value asserts one figure
   // the human adjudication has ruled genuinely contested.

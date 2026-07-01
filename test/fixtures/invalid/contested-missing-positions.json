@@ -1,0 +1,17 @@
+{
+  "value": null,
+  "sources": ["src-a"],
+  "confidence": "low",
+  "evidence": "low",
+  "updated": "2026-06-30",
+  "claimType": "authoritative",
+  "note": "A 'contested' adjudication with no verification.contested block. The singular value is withheld (null) but there are no positions to publish in its place, so the 02-03 gate must build-fail (L8/D-14).",
+  "verification": {
+    "passes": [],
+    "adjudication": {
+      "outcome": "contested",
+      "note": "Marked contested but the positions block was never authored.",
+      "date": "2026-06-30"
+    }
+  }
+}

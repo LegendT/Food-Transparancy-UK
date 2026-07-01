@@ -1,0 +1,73 @@
+---
+pagination:
+  data: ingredients
+  size: 1
+  alias: ingredient
+  resolve: values
+permalink: "/ingredients/{{ ingredient.slug }}/"
+layout: layouts/base.njk
+eleventyComputed:
+  title: "{{ ingredient.name }}"
+  description: "What {{ ingredient.name }} is, why it is used, its current Great Britain regulatory position and the products that list it. Every fact is shown with its source, confidence and evidence level; anything not yet verified is withheld rather than asserted."
+---
+{% from "components/macros.njk" import sourcedValue, caveatBox %}
+
+{#
+  One server-rendered page per ingredient. The src/_data/ingredients/* cascade is
+  an OBJECT keyed by filename, so the front-matter pagination uses resolve: values:
+  default pagination over an object iterates its KEYS (strings), which would break
+  the template (03a-RESEARCH.md Pattern 1). This mirrors src/product.njk from plan
+  03. Ingredient pages are descriptive in v1 (INGR-02): they cite an authority's
+  position, they never synthesise primary studies.
+
+  Heading outline (G4): one h1 (ingredient name); h2 sections in the locked order:
+  the explainer, Current GB regulatory position, the optional Named authority's
+  safety opinion, Products that list this ingredient. Every fact renders through
+  sourcedValue with entityType "ingredient"; no raw .value (R-31,
+  check-render-safety). The regulatory block (INGR-03) and the authority block
+  (INGR-02) stay two distinct, clearly-headed, cited and dated blocks so a safety
+  opinion is never misread as the GB regulatory status (D-08).
+#}
+
+<h1>{{ ingredient.name }}</h1>
+
+<section id="explainer" aria-labelledby="explainer-heading">
+  <h2 id="explainer-heading">What it is and why it is used</h2>
+  <dl class="ingredient-meta">
+    {%- if ingredient.synonyms and ingredient.synonyms.length %}
+    <dt>Also known as</dt>
+    <dd>
+      {%- for synonym in ingredient.synonyms %}{{ synonym }}{% if not loop.last %}, {% endif %}{% endfor %}.
+    </dd>
+    {%- endif %}
+    {%- if ingredient.eNumber %}
+    <dt>E number</dt>
+    <dd>{{ ingredient.eNumber }}</dd>
+    {%- endif %}
+  </dl>
+  {%- if ingredient.functionDescription %}
+  {{ sourcedValue(ingredient.functionDescription, sources.sources, "Function", "", "ingredient") }}
+  {%- else %}
+  <p class="example">No sourced description of this ingredient's function has been published yet.</p>
+  {%- endif %}
+</section>
+
+{#
+  Current GB regulatory position (INGR-03, D-08). regulatoryStatus is a
+  claimDomain "regulatory" SourcedValue that must cite a GB-jurisdiction source
+  and carry a checkedOn date (TRUST-06, checkRegulatoryJurisdiction). This block is
+  visually and structurally separate from the plain-English explainer above and
+  from the optional authority opinion below, so the regulatory status is never
+  conflated with a safety opinion. The standing not-advice note is localised here;
+  the site-wide SITE-09 disclaimer arrives in Phase 3b (complementary, not a
+  duplicate).
+#}
+<section id="regulatory" aria-labelledby="regulatory-heading">
+  <h2 id="regulatory-heading">Current GB regulatory position</h2>
+  {%- if ingredient.regulatoryStatus %}
+  {{ sourcedValue(ingredient.regulatoryStatus, sources.sources, "Regulatory status", "", "ingredient") }}
+  {{ caveatBox("This describes a regulatory or authority position. It is not medical or dietary advice.", "Note") }}
+  {%- else %}
+  <p class="example">No Great Britain regulatory position has been sourced for this ingredient yet.</p>
+  {%- endif %}
+</section>

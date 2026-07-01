@@ -1,0 +1,30 @@
+{
+  "id": "sucralose",
+  "slug": "sucralose",
+  "name": "Sucralose",
+  "synonyms": ["Trichlorogalactosucrose", "E955"],
+  "eNumber": "E955",
+  "functionDescription": {
+    "value": "Sucralose is a high-intensity artificial sweetener, roughly several hundred times sweeter than table sugar. It is used to give products a sweet taste while contributing little or no energy, so manufacturers reach for it when reformulating to cut sugar, for example in reduced-sugar soft drinks.",
+    "sources": ["off"],
+    "confidence": "low",
+    "evidence": "low",
+    "updated": "2026-07-01",
+    "claimType": "authoritative",
+    "claimDomain": "ingredient-function",
+    "note": "Descriptive scaffold record (plan 03a-05). The plain-English function is transcribed from a single tertiary registry entry pending the proof set. The corroborating passes that would publish this fact are authored by the human checkpoint in plan 03a-06, so it correctly renders withheld here (D-11/D-13)."
+  },
+  "regulatoryStatus": {
+    "value": "Sucralose (E955) is an authorised sweetener for use in Great Britain, permitted in defined food categories under assimilated food additives law.",
+    "sources": ["fsa-allergen-guidance"],
+    "confidence": "low",
+    "evidence": "low",
+    "updated": "2026-07-01",
+    "checkedOn": "2026-07-01",
+    "claimType": "authoritative",
+    "claimDomain": "regulatory",
+    "note": "Descriptive scaffold record (plan 03a-05). The GB regulatory position is a placeholder citing the Food Standards Agency as the GB authority; the specific authoritative additives-law citation and the verification pass that would publish this fact are authored by the human checkpoint in plan 03a-06, so it correctly renders withheld here (D-11/D-13). It is deliberately not fabricated as verified."
+  },
+  "verificationStatus": null,
+  "publicationStatus": null
+}

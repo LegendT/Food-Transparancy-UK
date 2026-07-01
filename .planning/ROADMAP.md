@@ -99,7 +99,15 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. Every fact carries a workflow state (unverified / in-review / open-disagreement-withheld) or published state (confirmed / contested / stale / wrong) plus a last-(re-)verified date (VRFY-03); running the audit command produces a dated, worst-first audit record flagging facts past their per-class staleness threshold or whose citation no longer resolves (VRFY-05/06/09); and a fact past its staleness threshold renders a reader-facing "last verified {date} — review due" indicator, not only an internal audit flag (VRFY-12).
   6. Running ingestion imports OFF product/ingredient data into the draft store with field-level provenance (DATA-05/06); an OFF revision-diff is recorded as a lead and cannot publish as a reformulation until a human confirms a genuine recipe change (VRFY-10); draft data cannot reach a published page until it passes the gate.
 
-**Plans**: TBD
+**Plans**: 7 plans (4 waves)
+
+- [ ] 02-01-PLAN.md - Verification and lead schema contracts, negative fixtures, npm script registration (VRFY-01/02/03/04/07/08/11, DATA-05/06)
+- [ ] 02-02-PLAN.md - Verification derivation and mechanical-check library: deriveVerificationState, lineage, measure-mismatch, staleness (VRFY-01/02/03/04/08/09/11/12)
+- [ ] 02-03-PLAN.md - Wire the per-fact verification gate into the offline validation harness (VRFY-01/04/07/08, DATA-05)
+- [ ] 02-04-PLAN.md - OFF ingestion into the isolated lead store (DATA-05/06, VRFY-10)
+- [ ] 02-05-PLAN.md - Four-verdict citation-existence checker: pure classifier plus network script (VRFY-07)
+- [ ] 02-06-PLAN.md - Read-only worst-first audit command, staleness queue and review-due data (VRFY-05/06/09/12)
+- [ ] 02-07-PLAN.md - Worked verification data, contested Lucozade example and lineage tags on the corpus (VRFY-01/02/11)
 
 ### Phase 3a: Core Entity Pages & Trust Rendering
 
@@ -229,7 +237,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
-| 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 0/TBD | Not started | - |
+| 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 0/7 | Not started | - |
 | 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |
 | 4. Then-vs-Now Flagship Layer & Corpus Scale | 0/TBD | Not started | - |

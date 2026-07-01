@@ -102,7 +102,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 7 plans (4 waves)
 
 - [x] 02-01-PLAN.md - Verification and lead schema contracts, negative fixtures, npm script registration (VRFY-01/02/03/04/07/08/11, DATA-05/06)
-- [ ] 02-02-PLAN.md - Verification derivation and mechanical-check library: deriveVerificationState, lineage, measure-mismatch, staleness (VRFY-01/02/03/04/08/09/11/12)
+- [x] 02-02-PLAN.md - Verification derivation and mechanical-check library: deriveVerificationState, lineage, measure-mismatch, staleness (VRFY-01/02/03/04/08/09/11/12)
 - [ ] 02-03-PLAN.md - Wire the per-fact verification gate into the offline validation harness (VRFY-01/04/07/08, DATA-05)
 - [ ] 02-04-PLAN.md - OFF ingestion into the isolated lead store (DATA-05/06, VRFY-10)
 - [ ] 02-05-PLAN.md - Four-verdict citation-existence checker: pure classifier plus network script (VRFY-07)
@@ -239,7 +239,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
-| 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 1/7 | In Progress|  |
+| 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 2/7 | In Progress|  |
 | 3a. Core Entity Pages & Trust Rendering | 0/TBD | Not started | - |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |
 | 4. Then-vs-Now Flagship Layer & Corpus Scale | 0/TBD | Not started | - |

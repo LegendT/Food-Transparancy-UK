@@ -26,10 +26,10 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **VRFY-06**: The audit record lists each fact's status, the recorded verdicts, and disagreements ordered worst-first (wrong → uncertain → stale, then oldest last-verified first); no value changes without human approval
 - [x] **VRFY-07**: Every recorded citation passes an automated existence/resolves check (URL/DOI) before any verification pass counts; a citation that does not resolve is recorded as not-found and blocks publication
 - [x] **VRFY-08**: Each verification pass records the exact measure/definition it checked (e.g. "per 100g as sold", "GB legal status 2026"); a measure mismatch between passes auto-raises a disagreement even when the values look close
-- [ ] **VRFY-09**: Each published fact carries a staleness threshold (a small set of global classes for v1 — e.g. regulatory vs current vs historical); the VRFY-05 audit flags exceeded thresholds for re-verification
+- [x] **VRFY-09**: Each published fact carries a staleness threshold (a small set of global classes for v1 — e.g. regulatory vs current vs historical); the VRFY-05 audit flags exceeded thresholds for re-verification
 - [ ] **VRFY-10**: An Open Food Facts revision-diff (or similar import signal) is treated as a lead, not a verified reformulation; a detected change must be human-confirmed as a genuine recipe change (not a record correction) before it can publish as a reformulation
 - [x] **VRFY-11**: A genuinely contested fact (two credible authorities durably disagree, resolved by a human as contested rather than as a transcription error) is publishable with a visible "contested" treatment showing both positions with their sources — distinct from "unverified — withheld". This is how genuine disputes are shown honestly rather than hidden
-- [ ] **VRFY-12**: A fact past its staleness threshold renders a visible, reader-facing "last verified {date} — review due" indicator, not only an internal audit flag
+- [x] **VRFY-12**: A fact past its staleness threshold renders a visible, reader-facing "last verified {date} — review due" indicator, not only an internal audit flag
 
 ### Data Model & Sourcing
 
@@ -201,10 +201,10 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | VRFY-06 | Phase 2 | Pending |
 | VRFY-07 | Phase 2 | Complete |
 | VRFY-08 | Phase 2 | Complete |
-| VRFY-09 | Phase 2 | Pending |
+| VRFY-09 | Phase 2 | Complete |
 | VRFY-10 | Phase 2 | Pending |
 | VRFY-11 | Phase 2 | Complete |
-| VRFY-12 | Phase 2 | Pending |
+| VRFY-12 | Phase 2 | Complete |
 | DATA-05 | Phase 2 | Complete |
 | DATA-06 | Phase 2 | Complete |
 | PROD-01 | Phase 3a | Pending |

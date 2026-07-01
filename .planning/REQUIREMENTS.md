@@ -47,9 +47,9 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 ### Product Pages
 
 - [x] **PROD-01**: A user can view a product page showing current ingredients, nutrition, and manufacturer; each fact is rendered through the trust component, and any unverified fact appears as an explicit "not yet verified — withheld" placeholder rather than an asserted value
-- [ ] **PROD-02**: A product page includes an embedded recipe-history section showing recent sourced change events and linking to the full timeline page where one exists
-- [ ] **PROD-03**: Each change event displays its description, source citation, (possibly ranged) date and confidence level
-- [ ] **PROD-04**: A product page lists the references/sources behind its claims
+- [x] **PROD-02**: A product page includes an embedded recipe-history section showing recent sourced change events and linking to the full timeline page where one exists
+- [x] **PROD-03**: Each change event displays its description, source citation, (possibly ranged) date and confidence level
+- [x] **PROD-04**: A product page lists the references/sources behind its claims
 - [ ] **PROD-05**: For a product with a sourced historical formulation (Tier A), the product page presents a "traditional vs current formulation" view as a primary section near the top
 - [ ] **PROD-06**: The traditional-vs-current view conveys additions, removals and substitutions by leading text labels ("Removed:", "Added:", "Replaced X with Y"), never by colour, position or strikethrough alone; a linearised change list is the server-rendered no-JS baseline and the aligned two-column view is progressive enhancement
 - [ ] **PROD-07**: Each ingredient difference in the traditional-vs-current view carries at least one cited source
@@ -208,9 +208,9 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | DATA-05 | Phase 2 | Complete |
 | DATA-06 | Phase 2 | Complete |
 | PROD-01 | Phase 3a | Complete |
-| PROD-02 | Phase 3a | Pending |
-| PROD-03 | Phase 3a | Pending |
-| PROD-04 | Phase 3a | Pending |
+| PROD-02 | Phase 3a | Complete |
+| PROD-03 | Phase 3a | Complete |
+| PROD-04 | Phase 3a | Complete |
 | PROD-09 | Phase 3a | Pending |
 | INGR-01 | Phase 3a | Pending |
 | INGR-02 | Phase 3a | Complete |

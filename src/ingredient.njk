@@ -71,3 +71,43 @@ eleventyComputed:
   <p class="example">No Great Britain regulatory position has been sourced for this ingredient yet.</p>
   {%- endif %}
 </section>
+
+{#
+  Named authority's safety opinion (INGR-02, D-14). authorityPosition is an
+  OPTIONAL SourcedValue, deliberately NOT claimDomain regulatory: an FSA, EFSA or
+  SACN safety opinion is not the GB regulatory status and must never be misread as
+  it (D-08). This whole section renders ONLY when the field is present, so an
+  absent field produces no empty stub. It stays a separate, clearly-headed block
+  from the regulatory position above. A single study is a labelled illustration
+  only, never an evidence statement (the no-synthesis boundary); ingredient pages
+  cite a position, they do not synthesise primary studies.
+#}
+{%- if ingredient.authorityPosition %}
+<section id="authority" aria-labelledby="authority-heading">
+  <h2 id="authority-heading">Named authority's safety opinion</h2>
+  {{ sourcedValue(ingredient.authorityPosition, sources.sources, "Authority opinion", "", "ingredient") }}
+  {{ caveatBox("This describes a regulatory or authority position. It is not medical or dietary advice.", "Note") }}
+</section>
+{%- endif %}
+
+{#
+  Products that list this ingredient (INGR-04, D-15). matches comes from the
+  productsByIngredient global (the structured reverse index wired in plan 01),
+  keyed by ingredient id to [{ id, name, slug }]. Because D-15 resolved to
+  structured references (not free-text name matching), the best-effort caveat is
+  NOT used. Internal links need no rel="noopener". When no product references the
+  ingredient the honest empty state renders, never a broken stub.
+#}
+<section id="products" aria-labelledby="products-heading">
+  <h2 id="products-heading">Products that list this ingredient</h2>
+  {%- set matches = productsByIngredient[ingredient.id] %}
+  {%- if matches and matches.length %}
+  <ul class="products-containing">
+    {%- for m in matches %}
+    <li><a href="/products/{{ m.slug }}/">{{ m.name }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- else %}
+  <p class="example">No published products list this ingredient yet.</p>
+  {%- endif %}
+</section>

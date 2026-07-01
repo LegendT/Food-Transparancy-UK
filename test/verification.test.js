@@ -154,6 +154,15 @@ test("a RESOLVES verdict older than CITATION_TTL_DAYS is treated as UNCHECKED ->
   assert.equal(deriveVerificationState(fact, byId, existence, TODAY, "product").state, "withheld-unverified");
 });
 
+test("M4: a RESOLVES cache entry dated in the FUTURE is not fresh -> withheld-unverified (fails open guard)", () => {
+  const fact = corroborableConfirmed();
+  const existence = new Map([
+    ["prim-a", entry({ checkedAt: "2027-01-01T09:00:00Z" })], // a future checkedAt
+    ["sec-b", entry()]
+  ]);
+  assert.equal(deriveVerificationState(fact, byId, existence, TODAY, "product").state, "withheld-unverified");
+});
+
 for (const verdict of ["DOES_NOT_RESOLVE", "ACCESS_BLOCKED", "INDETERMINATE"]) {
   test(`a ${verdict} cited by a confirms pass derives to withheld-unverified (fail-safe, R-08)`, () => {
     const fact = corroborableConfirmed();

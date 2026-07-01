@@ -64,7 +64,7 @@ Exceptions: the existing `.lede` at 18px (1.125rem) may remain on the foundation
 
 ---
 
-## Color
+## Colour
 
 Palette is derived from the GOV.UK Design System colours already present in `styles.css` (near-black text, yellow focus, grey borders, light-grey panels). Every value below that carries TEXT meets 4.5:1 on white. The state colours are a functional (semantic) palette that sits outside the 60/30/10 brand split; they signal meaning and are always paired with a text label.
 
@@ -262,7 +262,7 @@ When a product has no sourced change events, the recipe-history section renders 
 
 - [ ] Dimension 1 Copywriting: PASS
 - [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
+- [ ] Dimension 3 Colour: PASS
 - [ ] Dimension 4 Typography: PASS
 - [ ] Dimension 5 Spacing: PASS
 - [ ] Dimension 6 Registry Safety: PASS

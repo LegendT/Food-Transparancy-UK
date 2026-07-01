@@ -16,6 +16,7 @@ files_modified:
   - test/referential.test.js
   - test/fixtures/valid/ingredient-authority.json
   - test/fixtures/invalid/product-dangling-ingredient-ref.json
+  - test/fixtures/invalid/timeline-dangling-product-ref.json
 autonomous: true
 requirements: [INGR-02, INGR-04]
 must_haves:
@@ -23,6 +24,7 @@ must_haves:
     - "An optional plain-scalar `ingredients: [ingredientId]` array on the product schema validates; every existing product record (spike-01/02/03) still validates unchanged (migration-safe)"
     - "An optional fact-bearing `authorityPosition` SourcedValue on the ingredient schema validates and is auto-discovered by collectFacts, so it derives and gates with no other code change"
     - "A product citing an ingredient id that resolves to no ingredient record fails the build (checkIngredientRefs), and a resolvable id passes"
+    - "A timeline event whose productId resolves to no product fails the build (checkTimelineRefs), so a mis-linked change event can never silently render as 'no recipe changes recorded yet' - symmetric with checkIngredientRefs, upholding the never-silently-drop-a-provenance-link promise"
     - "The pure productsByIngredient / timelineByProduct reverse indices are exposed to templates as plain objects keyed by id (Nunjucks bracket-accessible), returning an honest empty result for an id with no matches"
   artifacts:
     - path: "lib/reverse-index.mjs"
@@ -157,8 +159,8 @@ products = factBearing.filter(f => f.entityType === "product").map(f => f.data) 
 </task>
 
 <task type="auto">
-  <name>Task 3: Wire the checkIngredientRefs build gate and expose the reverse indices to templates via .eleventy.js</name>
-  <files>lib/referential.mjs, scripts/validate-data.mjs, .eleventy.js, test/referential.test.js</files>
+  <name>Task 3: Wire the checkIngredientRefs and checkTimelineRefs build gates and expose the reverse indices to templates via .eleventy.js</name>
+  <files>lib/referential.mjs, scripts/validate-data.mjs, .eleventy.js, test/referential.test.js, test/fixtures/invalid/timeline-dangling-product-ref.json</files>
   <read_first>
     - lib/referential.mjs (checkReferences L66-80, the exact { errors } shape to mirror)
     - scripts/validate-data.mjs (the imports L18-26, the factBearing gather carrying entityType L96-104, and the Gate 2-4 errors array L236-240)
@@ -168,7 +170,7 @@ products = factBearing.filter(f => f.entityType === "product").map(f => f.data) 
     - 03a-RESEARCH.md D-15 "New referential-integrity check" and 03a-PATTERNS.md "checkIngredientRefs" + "The data-JS gate" (why the index must be a lib module surfaced via addGlobalData, never a _data/*.js file)
   </read_first>
   <action>
-    Add checkIngredientRefs(products, ingredients) to lib/referential.mjs mirroring checkReferences: build a Set of ingredient ids, iterate each product's (ingredients ?? []), push a readable error for any id not in the set, return { errors }. Import it into scripts/validate-data.mjs and, in the Gate 2-4 error array, derive products and ingredients from factBearing by entityType and spread ...checkIngredientRefs(products, ingredients).errors alongside the existing checks; a dangling reference must fail the build (process.exit(1) via the existing errors path). In .eleventy.js, at config load, read src/_data/products/*.json and src/_data/timeline/*.json from disk into filename-keyed objects using the same readFileSync/resolve(HERE, ...) pattern as the VERDICTS cache (absent dir tolerated), pass them through the pure reverse-index functions, and expose the results via eleventyConfig.addGlobalData("productsByIngredient", obj) and addGlobalData("timelineByProduct", obj); do NOT create any _data/*.js file (forbidden by validate-data.mjs L187-204). Extend test/referential.test.js with a test that checkIngredientRefs returns a non-empty errors array for the dangling-ref fixture and an empty array when the id resolves, plus a spawn test that running validate-data.mjs over a temp corpus containing the dangling reference exits non-zero. Keep British English, no em-dashes.
+    Add checkIngredientRefs(products, ingredients) to lib/referential.mjs mirroring checkReferences: build a Set of ingredient ids, iterate each product's (ingredients ?? []), push a readable error for any id not in the set, return { errors }. Add the SYMMETRIC checkTimelineRefs(events, products) to the same module: build a Set of product ids, iterate each timeline event, push a readable error for any event whose productId resolves to no product, return { errors }. This is load-bearing for the trust promise: the recipe-history join (timelineByProduct[product.id], plan 03) silently drops a mis-keyed event, so a product would render "no recipe changes recorded yet" while a change actually exists but is mis-linked - a page asserting a falsehood. The build must fail loud on a dangling timeline->product ref exactly as it does on a dangling ingredient ref (the project never silently drops a provenance link). Import BOTH into scripts/validate-data.mjs and, in the Gate 2-4 error array, derive products, ingredients and timeline events from factBearing/the corpus by entityType and spread ...checkIngredientRefs(products, ingredients).errors and ...checkTimelineRefs(events, products).errors alongside the existing checks; either dangling reference must fail the build (process.exit(1) via the existing errors path). In .eleventy.js, at config load, read src/_data/products/*.json and src/_data/timeline/*.json from disk into filename-keyed objects using the same readFileSync/resolve(HERE, ...) pattern as the VERDICTS cache (absent dir tolerated), pass them through the pure reverse-index functions, and expose the results via eleventyConfig.addGlobalData("productsByIngredient", obj) and addGlobalData("timelineByProduct", obj); do NOT create any _data/*.js file (forbidden by validate-data.mjs L187-204). Author test/fixtures/invalid/timeline-dangling-product-ref.json (a timeline event whose productId matches no product). Extend test/referential.test.js with tests that checkIngredientRefs AND checkTimelineRefs each return a non-empty errors array for their dangling-ref fixture and an empty array when the id resolves, plus a spawn test that running validate-data.mjs over a temp corpus containing each dangling reference exits non-zero. Keep British English, no em-dashes.
   </action>
   <verify>
     <automated>node --test test/referential.test.js && npm run prebuild</automated>
@@ -177,10 +179,11 @@ products = factBearing.filter(f => f.entityType === "product").map(f => f.data) 
     - `node --test test/referential.test.js` exits 0 including the dangling-ref and resolvable-ref cases
     - `npm run prebuild` exits 0 over the real corpus (no product yet cites a dangling ingredient id)
     - a dangling product->ingredient reference fails the build: the spawn test asserts validate-data.mjs exits non-zero on the fixture corpus
+    - a dangling timeline->product reference (mistyped productId) ALSO fails the build: the spawn test asserts validate-data.mjs exits non-zero on the timeline-dangling fixture corpus, so a mis-linked change event can never silently render as "no recipe changes recorded yet"
     - the reverse index is exposed as global data, not a _data JS file: `grep -c 'addGlobalData' .eleventy.js` is >= 2 and `npm run validate` does not report a non-JSON data file
-    - `node -e "import('./lib/referential.mjs').then(m=>{if(!m.checkIngredientRefs)process.exit(1);console.log('gate-exported')})"` prints gate-exported
+    - `node -e "import('./lib/referential.mjs').then(m=>{if(!m.checkIngredientRefs||!m.checkTimelineRefs)process.exit(1);console.log('gate-exported')})"` prints gate-exported
   </acceptance_criteria>
-  <done>A dangling product->ingredient reference fails the build; the reverse indices are available to templates as bracket-accessible global objects sourced from the pure library; prebuild stays green.</done>
+  <done>A dangling product->ingredient reference AND a dangling timeline->product reference each fail the build; the reverse indices are available to templates as bracket-accessible global objects sourced from the pure library; prebuild stays green.</done>
 </task>
 
 </tasks>
@@ -197,6 +200,7 @@ products = factBearing.filter(f => f.entityType === "product").map(f => f.data) 
 | Threat ID | Category | Component | Disposition | Mitigation Plan |
 |-----------|----------|-----------|-------------|-----------------|
 | T-03a-01-01 | Tampering | A product citing a fabricated or mistyped ingredient id that would render a broken cross-link or a false "contained in" relationship | mitigate | checkIngredientRefs fails the build on any dangling product->ingredient reference (referential integrity, mirrors checkReferences); a resolvable id is a precondition for a cross-link |
+| T-03a-01-04 | Repudiation / Tampering | A timeline event with a mistyped productId is silently dropped from the recipe-history join, so a product page asserts "no recipe changes recorded yet" while a sourced change actually exists but is mis-linked (a page stating a falsehood) | mitigate | checkTimelineRefs fails the build on any dangling timeline->product reference, symmetric with checkIngredientRefs; the archive never silently drops a provenance-linked record (the core trust promise) |
 | T-03a-01-02 | Elevation of Privilege | An authority opinion authored as the GB regulatory status, bypassing the TRUST-06 GB-source + checkedOn gate | mitigate | authorityPosition is a separate field, deliberately NOT claimDomain "regulatory", so it is never mistaken for regulatoryStatus; the two blocks stay structurally and visually distinct (D-08/D-14) |
 | T-03a-01-03 | Tampering | Injecting build logic via a non-JSON `_data/*.js` file the validation gate cannot see | mitigate | The reverse index is a pure lib module surfaced through addGlobalData; validate-data.mjs (L187-204) fails the build on any .js/.cjs/.mjs under src/_data |
 | T-03a-01-SC | Tampering | npm/pip/cargo installs | accept | Zero new dependencies this phase (RESEARCH Package Legitimacy Audit); supply-chain delta is zero, so no install checkpoint applies |

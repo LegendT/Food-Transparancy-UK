@@ -104,6 +104,13 @@ test("isBlockedHost refuses every private/loopback/link-local host across all IP
   }
 });
 
+test("L10: isBlockedHost refuses an IPv4-compatible ::a.b.c.d whose embedded IPv4 is blocked", () => {
+  assert.equal(isBlockedHost("[::7f00:1]"), true); // ::127.0.0.1 loopback
+  assert.equal(isBlockedHost("::7f00:1"), true);
+  // An IPv4-compatible address embedding a PUBLIC IPv4 stays allowed.
+  assert.equal(isBlockedHost("::808:808"), false); // ::8.8.8.8
+});
+
 test("isBlockedHost allows a normal public host", () => {
   assert.equal(isBlockedHost("www.food.gov.uk"), false);
   assert.equal(isBlockedHost("api.crossref.org"), false);

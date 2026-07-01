@@ -1,0 +1,19 @@
+{
+  "id": "dangling-timeline-event",
+  "productId": "no-such-product-xyz",
+  "date": "2020-01-01",
+  "changes": [
+    {
+      "documentedChange": {
+        "value": "A recorded formulation change whose productId matches no product record, so it must never silently render as no-changes.",
+        "sources": ["off"],
+        "confidence": "low",
+        "evidence": "low",
+        "updated": "2026-06-30",
+        "claimType": "authoritative"
+      }
+    }
+  ],
+  "verificationStatus": null,
+  "publicationStatus": null
+}

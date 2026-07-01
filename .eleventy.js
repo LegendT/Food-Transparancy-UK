@@ -8,11 +8,12 @@
  *
  * Mirrors the DEBT blueprint conventions, trimmed to the Phase 1 data shape.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
+import { dirname, resolve, join } from "node:path";
 import { factForRenderFromData } from "./lib/render-state.mjs";
+import { productsByIngredient, timelineByProduct } from "./lib/reverse-index.mjs";
 
 // Resolve the gate scripts ABSOLUTELY against this config file's directory, not
 // the current working directory. A cwd-relative path would let an `eleventy`
@@ -50,6 +51,38 @@ export default function (eleventyConfig) {
     }
   })();
   const RENDER_TODAY = new Date().toISOString().slice(0, 10);
+
+  // The reverse indices the entity templates read (D-15). addGlobalData functions
+  // do NOT receive the _data cascade, so read the product and timeline JSON from
+  // disk here exactly as the VERDICTS cache is read above, build filename-keyed
+  // objects, and pass their values through the pure lib functions. Exposed as plain
+  // objects so a template can bracket-access productsByIngredient[ingredient.id] and
+  // timelineByProduct[product.id]. This is a pure lib module surfaced through
+  // addGlobalData, NEVER a _data/*.js file (which validate-data.mjs forbids).
+  const readEntityDir = (rel) => {
+    const dir = resolve(HERE, rel);
+    if (!existsSync(dir)) return {};
+    const records = {};
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.endsWith(".json")) continue;
+      try {
+        records[entry.name.replace(/\.json$/, "")] = JSON.parse(
+          readFileSync(join(dir, entry.name), "utf8")
+        );
+      } catch {
+        // A malformed file is caught by the validate-data build gate; skip it here.
+      }
+    }
+    return records;
+  };
+  eleventyConfig.addGlobalData(
+    "productsByIngredient",
+    productsByIngredient(readEntityDir("src/_data/products"))
+  );
+  eleventyConfig.addGlobalData(
+    "timelineByProduct",
+    timelineByProduct(readEntityDir("src/_data/timeline"))
+  );
 
   // factState: the SANCTIONED render boundary (R-31). Templates derive a fact's
   // publishable projection through this filter and NEVER read fact.value directly;

@@ -7,8 +7,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { execFileSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { compile, validateDataset } from "../lib/validate.mjs";
 import {
@@ -17,6 +17,8 @@ import {
   checkReferences,
   checkRegulatoryJurisdiction,
   checkDateRanges,
+  checkIngredientRefs,
+  checkTimelineRefs,
   listOffDerived
 } from "../lib/referential.mjs";
 
@@ -135,4 +137,55 @@ test("the script exits non-zero on an empty corpus (the non-zero-corpus guard)",
   } finally {
     rmSync(work, { recursive: true, force: true });
   }
+});
+
+// D-15 relationship gates: each dangling reference is rejected by the pure check
+// that owns it, and passes once the id resolves.
+
+test("a dangling product->ingredient reference is rejected by checkIngredientRefs, a resolvable one passes (D-15)", () => {
+  const product = load("fixtures/invalid/product-dangling-ingredient-ref.json");
+  assert.ok(checkIngredientRefs([product], []).errors.length > 0, "no ingredient defines the id");
+  assert.equal(
+    checkIngredientRefs([product], [{ id: "nonexistent-ingredient-xyz" }]).errors.length,
+    0,
+    "the id now resolves"
+  );
+});
+
+test("a dangling timeline->product reference is rejected by checkTimelineRefs, a resolvable one passes (D-15)", () => {
+  const event = load("fixtures/invalid/timeline-dangling-product-ref.json");
+  assert.ok(checkTimelineRefs([event], []).errors.length > 0, "no product defines the productId");
+  assert.equal(
+    checkTimelineRefs([event], [{ id: "no-such-product-xyz" }]).errors.length,
+    0,
+    "the productId now resolves"
+  );
+});
+
+// The gates must fail the BUILD, not just a unit test. Seed a temp corpus carrying
+// each dangling reference plus the real sources registry (so a cited source resolves
+// and the ONLY failure is the dangling relationship), and assert a non-zero exit.
+const rawSources = readFileSync(resolve(dir, "../src/_data/sources.json"));
+function seedAndRun(subdir, fixtureRel) {
+  const work = mkdtempSync(resolve(tmpdir(), "ft-dangling-"));
+  try {
+    mkdirSync(resolve(work, subdir));
+    writeFileSync(resolve(work, subdir, "record.json"), readFileSync(resolve(dir, fixtureRel)));
+    writeFileSync(resolve(work, "sources.json"), rawSources);
+    return spawnSync(process.execPath, [SCRIPT, work], { encoding: "utf8" });
+  } finally {
+    rmSync(work, { recursive: true, force: true });
+  }
+}
+
+test("a dangling product->ingredient reference fails the build over a corpus (checkIngredientRefs)", () => {
+  const result = seedAndRun("products", "fixtures/invalid/product-dangling-ingredient-ref.json");
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /nonexistent-ingredient-xyz/);
+});
+
+test("a dangling timeline->product reference fails the build, so it can never silently render as 'no recipe changes recorded yet'", () => {
+  const result = seedAndRun("timeline", "fixtures/invalid/timeline-dangling-product-ref.json");
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /no-such-product-xyz/);
 });

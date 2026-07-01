@@ -21,6 +21,8 @@ import {
   checkReferences,
   checkRegulatoryJurisdiction,
   checkDateRanges,
+  checkIngredientRefs,
+  checkTimelineRefs,
   listOffDerived,
   findOrphanSources
 } from "../lib/referential.mjs";
@@ -232,11 +234,22 @@ if (facts.length === 0) {
   process.exit(1);
 }
 
-// Gates 2 to 4: referential integrity, TRUST-06 jurisdiction, ranged-date order.
+// Derive the whole-entity records by entityType for the relationship gates (D-15).
+// factBearing carries entityType from the ENTITY_DIRS gather; the single-file path
+// has none, so these filters yield empty arrays and the checks are no-ops there.
+const productData = factBearing.filter((f) => f.entityType === "product").map((f) => f.data);
+const ingredientData = factBearing.filter((f) => f.entityType === "ingredient").map((f) => f.data);
+const timelineData = factBearing.filter((f) => f.entityType === "timeline-event").map((f) => f.data);
+
+// Gates 2 to 6: referential integrity, TRUST-06 jurisdiction, ranged-date order,
+// and the symmetric D-15 relationship gates. A dangling product->ingredient OR a
+// dangling timeline->product reference each fails the build (never silently dropped).
 const errors = [
   ...checkReferences(facts, sourceRecords).errors,
   ...checkRegulatoryJurisdiction(facts, sourceRecords).errors,
-  ...checkDateRanges(ranges).errors
+  ...checkDateRanges(ranges).errors,
+  ...checkIngredientRefs(productData, ingredientData).errors,
+  ...checkTimelineRefs(timelineData, productData).errors
 ];
 if (errors.length > 0) {
   console.error("Referential validation failed:");

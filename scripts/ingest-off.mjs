@@ -182,6 +182,7 @@ async function fetchOffProduct(barcode) {
     });
     const location = res.headers.get("location");
     if (res.status >= 300 && res.status < 400 && location) {
+      await res.body?.cancel(); // discard the redirect-hop body before the next fetch (WR-02)
       current = new URL(location, parsed).toString();
       continue; // re-guard on the next iteration
     }
@@ -190,7 +191,10 @@ async function fetchOffProduct(barcode) {
   if (res.status >= 300 && res.status < 400) {
     throw new Error(`OFF ${barcode}: redirect cap (${MAX_REDIRECTS}) exceeded`);
   }
-  if (res.status === 404) return { found: false };
+  if (res.status === 404) {
+    await res.body?.cancel(); // discard the unread 404 body (WR-02)
+    return { found: false };
+  }
   if (!res.ok) throw new Error(`OFF ${barcode}: HTTP ${res.status}`);
   const body = JSON.parse(await readCapped(res, BYTE_CEILING));
   if (!body || body.status === 0 || !body.product) return { found: false };

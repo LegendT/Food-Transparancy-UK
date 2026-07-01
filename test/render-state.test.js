@@ -57,6 +57,27 @@ test("R-31: a contested fact exposes no scalar value, only its positions", () =>
   assert.equal(d.positions.length, 2);
 });
 
+test("VRFY-11 render half: a contested projection carries each position's OWN sources to the boundary", () => {
+  const fact = {
+    value: null, sources: ["prim-a", "sec-b"], claimType: "corroborable",
+    verification: {
+      passes: [confirmsPass()],
+      adjudication: { outcome: "contested", note: "genuine dispute", date: "2026-06-30" },
+      contested: { positions: [
+        { value: 13, sources: ["prim-a"], note: "pre-reformulation" },
+        { value: 17, sources: ["sec-b"], note: "label figure" },
+      ] },
+    },
+  };
+  const d = factForRenderFromData(fact, SOURCES, VERDICTS, TODAY, "product");
+  assert.equal(d.contested, true);
+  // The rendering half of VRFY-11 (F6): the macro's contested branch resolves each
+  // position's sources via findBy, so the DATA reaching the macro must carry each
+  // side's own source ids. Bare values crossing the boundary are not enough.
+  assert.deepEqual(d.positions.map((p) => p.sources), [["prim-a"], ["sec-b"]]);
+  assert.ok(d.positions.every((p) => Array.isArray(p.sources) && p.sources.length > 0));
+});
+
 test("R-31: a genuinely published fact DOES expose its value", () => {
   const fact = {
     value: "x", sources: ["prim-a", "sec-b"], claimType: "corroborable",

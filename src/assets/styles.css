@@ -189,6 +189,60 @@ main:focus {
   font-style: italic;
 }
 
+/*
+ * State accent treatments (UI-SPEC State Treatment Matrix). The text label always
+ * carries the meaning; the colour here is only ever a SECOND cue (WCAG 1.4.1).
+ * The accent bar uses border-inline-start so it flips correctly under logical
+ * properties. Colours are LOCKED to the UI-SPEC computed-contrast palette; every
+ * non-text cue clears 3:1 on both white and the #f3f2f1 panel.
+ */
+
+/* Withheld: a single prefix selector catches ALL four withheld sub-states
+   (withheld-unverified, -in-review, -open-disagreement, -wrong) so an overlooked
+   sub-state can never fall through to the confirmed treatment (UI-SPEC G5). The
+   dashed border is a colour-independent second cue that the card is a placeholder,
+   not a value. Calm grey #505a5f, never red. */
+.fact[data-state^="withheld"] {
+  border: 2px dashed #b1b4b6;
+  border-inline-start: 4px solid #505a5f;
+}
+
+/* Stale / review-due: an amber #b45309 4px left bar ONLY; the "review due" text
+   stays #0b0c0c black. Amber is deliberately clear of the allergen red so the two
+   are not confusable under deuteranopia (UI-SPEC G3). */
+.fact[data-state="published-stale"] {
+  border-inline-start: 4px solid #b45309;
+}
+
+/* Contested: honest disagreement, not danger. A #1d70b8 4px left bar plus a 2px
+   #1d70b8 border on the #f3f2f1 panel. Never red. */
+.fact[data-state="published-contested"] {
+  border: 2px solid #1d70b8;
+  border-inline-start-width: 4px;
+  background-color: #f3f2f1;
+}
+
+/* Inline cell classes used by the factCell macro (D-06). Text always carries the
+   meaning; these live inside a <td> with no disclosure. */
+.fact__review-due {
+  color: #0b0c0c;
+  font-size: 0.875rem;
+}
+
+.fact__contested,
+.fact__contested-inline {
+  font-weight: 700;
+  color: #1d70b8;
+}
+
+.fact__withheld {
+  color: #505a5f;
+}
+
+.fact__position {
+  margin-block: 0.25rem;
+}
+
 /* From the medium breakpoint up, keep the value and tokens on one comfortable
    line. Mobile-first: the base rules above already stack gracefully on narrow
    screens. */
@@ -228,4 +282,77 @@ main:focus {
 .grade-list__def {
   margin-inline-start: 0;
   margin-block-end: 0.75rem;
+}
+
+/*
+ * Nutrition table (UI-SPEC Nutrition Table Pattern, D-06). A real <table> with a
+ * <caption> and a <thead> using scope attributes. Three short columns of content;
+ * cells wrap by default so the table reflows with NO horizontal scroll at 320px /
+ * 400% zoom (WCAG 1.4.10). Cell wrapping is left at its default so the table grows
+ * tall rather than wide; wrapping is never suppressed on these cells (UI-SPEC G1).
+ */
+.nutrition-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 1rem;
+}
+
+.nutrition-table caption {
+  text-align: start;
+  font-weight: 700;
+  margin-block-end: 0.5rem;
+}
+
+.nutrition-table th,
+.nutrition-table td {
+  text-align: start;
+  padding: 0.5rem;
+  border-block-end: 1px solid #b1b4b6;
+  vertical-align: top;
+}
+
+/* #f3f2f1 header and zebra striping, matching the secondary surface. */
+.nutrition-table thead th {
+  background-color: #f3f2f1;
+}
+
+.nutrition-table tbody tr:nth-child(even) {
+  background-color: #f3f2f1;
+}
+
+/* "Not recorded": a figure the archive never held, muted grey (7.07:1 white,
+   6.33:1 panel). Visibly distinct from "Not yet verified" (a held-but-withheld
+   figure) so the two are never conflated. */
+.nutrition-table__absent {
+  color: #505a5f;
+}
+
+/*
+ * Allergen list (UI-SPEC Allergen Render Rules, D-12, highest-stakes). All row
+ * text is #0b0c0c black; the #d4351c red is a bar/border SECOND cue ONLY, never
+ * the words (red as text is 4.34:1 on the panel and fails 4.5:1). Allergens fail
+ * safe toward warning.
+ */
+.allergen-list {
+  margin-block: 1rem;
+}
+
+.allergen-list__item {
+  margin-block: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-inline-start: 4px solid #505a5f;
+  background-color: #f3f2f1;
+  color: #0b0c0c;
+}
+
+.allergen-list__name {
+  font-weight: 700;
+}
+
+/* A safety-relevant allergen (present, may-contain, or an unverified/absent
+   uncertainty) carries the red bar/border as its second cue. The text stays
+   black. */
+.allergen-list__item--warning {
+  border: 2px solid #d4351c;
+  border-inline-start-width: 4px;
 }

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3a UI-SPEC approved
-last_updated: "2026-07-01T19:13:28.189Z"
-last_activity: 2026-07-01 -- Phase 3a planning complete
+stopped_at: Completed 03a-01-PLAN.md
+last_updated: "2026-07-01T20:23:50.013Z"
+last_activity: 2026-07-01
 progress:
   total_phases: 10
   completed_phases: 2
   total_plans: 23
-  completed_plans: 17
+  completed_plans: 18
   percent: 20
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-30)
 
 **Core value:** Every published fact is traceable to a primary source, independently verified to a standard matched to the claim, and honest about its uncertainty — transparency over persuasion.
-**Current focus:** Phase 02 — Claim-Typed Verification, Per-Fact Publication Gate & Ingestion
+**Current focus:** Phase 03a — Core Entity Pages & Trust Rendering
 
 ## Current Position
 
-Phase: 3a
-Plan: Not started
+Phase: 03a (Core Entity Pages & Trust Rendering) — EXECUTING
+Plan: 2 of 6
 Status: Ready to execute
-Last activity: 2026-07-01 -- Phase 3a planning complete
+Last activity: 2026-07-01
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -65,6 +65,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02 P02-03 | 11 | 2 tasks | 2 files |
 | Phase 02 P02-06 | 12 | 2 tasks | 3 files |
 | Phase 02 P02-07 | 18 | 1 tasks | 4 files |
+| Phase 03a P01 | 20 | 3 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Plan 02-05: split the four-verdict citation checker into pure lib/citation-status.mjs helpers (classifier, SSRF host guard, DOI-slash normaliser, closest-snapshot picker, soft-404) and a standalone scripts/check-citations.mjs; a non-RESOLVES verdict never satisfies the gate (D-11), and the checker is never wired into prebuild
 - [Phase 02]: Plan 02-07: the corroborable standard is demonstrated on live corpus data (Companies House statutory register + Suntory corporate site, distinct null-derivedFrom roots, both resolving) deriving published-confirmed - R-27 satisfied by a real worked example, not a no-pair rationale
 - [Phase 02]: Plan 02-07: the Lucozade pre-2017 sugar figure is the worked published-contested example - singular value withheld (null), two positions carried, human adjudication.outcome contested (VRFY-11)
+- [Phase 03a]: Plan 03a-01: authorityPosition is a bare SourcedValue $ref, deliberately NOT claimDomain regulatory, so the INGR-02 authority opinion never trips checkRegulatoryJurisdiction / the TRUST-06 gate and stays distinct from regulatoryStatus
+- [Phase 03a]: Plan 03a-01: reverse indices (productsByIngredient, timelineByProduct) are pure lib functions returning bracket-accessible plain objects, exposed via addGlobalData read from disk at config load, never a forbidden _data/*.js file; a dangling product->ingredient OR timeline->product reference fails the build via the symmetric checkIngredientRefs/checkTimelineRefs gates
 
 ### Pending Todos
 
@@ -125,6 +128,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-01T18:21:05.258Z
-Stopped at: Phase 3a UI-SPEC approved
-Resume file: .planning/phases/03a-core-entity-pages-trust-rendering/03a-UI-SPEC.md
+Last session: 2026-07-01T20:23:50.009Z
+Stopped at: Completed 03a-01-PLAN.md
+Resume file: None

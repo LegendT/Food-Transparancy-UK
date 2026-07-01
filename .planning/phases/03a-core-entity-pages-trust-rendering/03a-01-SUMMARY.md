@@ -128,7 +128,9 @@ None - no external service configuration required.
 - Downstream template plans (03a-03/04/05) can now build against fixed shapes: `product.ingredients` for cross-links, `ingredient.authorityPosition` for the INGR-02 block, `productsByIngredient[ingredient.id]` for INGR-04, and `timelineByProduct[product.id]` for recipe history.
 - Prerequisite still open for the template plans: `src/_data/ingredients/` does not yet exist and must be created (with >=1 record carrying authorityPosition) before the ingredient pagination target is defined - flagged in RESEARCH Wave 0 gaps, out of scope for this interface-first plan.
 
-## Self-Check: PENDING
+## Self-Check: PASSED
+
+All 6 created files exist on disk and all task commits (284fc46, 512a1a4, 4884928, e81b60c, f9b4df9) plus the summary commit (8fe4605) are present in git history.
 
 ---
 *Phase: 03a-core-entity-pages-trust-rendering*

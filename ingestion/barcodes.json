@@ -1,0 +1,25 @@
+{
+  "note": "OFF v2 ingestion worklist (DATA-06). Each entry maps a product barcode to the target product id a human promotion would fill. Nutella is the research-verified worked entry (02-RESEARCH Pattern 4, verified live 2026-07-01); the three launch spike products have no confirmed GB barcode yet, so each carries a documented placeholder (empty barcode) and is skipped by the ingester until a barcode is confirmed. Ingestion is a STANDALONE job (npm run ingest:off), never wired into prebuild, writing outside src/_data into the isolated lead store (D-19).",
+  "barcodes": [
+    {
+      "barcode": "3017620422003",
+      "productId": "nutella",
+      "note": "Research-verified worked entry (Ferrero Nutella); not a launch spike product, kept as the proven OFF v2 response shape."
+    },
+    {
+      "barcode": "",
+      "productId": "lucozade-energy",
+      "note": "Placeholder: confirm the GB Lucozade Energy barcode before ingesting."
+    },
+    {
+      "barcode": "",
+      "productId": "cadbury-dairy-milk",
+      "note": "Placeholder: confirm the GB Cadbury Dairy Milk barcode before ingesting."
+    },
+    {
+      "barcode": "",
+      "productId": "walls-soft-scoop-vanilla",
+      "note": "Placeholder: confirm the GB Wall's Soft Scoop Vanilla barcode before ingesting."
+    }
+  ]
+}

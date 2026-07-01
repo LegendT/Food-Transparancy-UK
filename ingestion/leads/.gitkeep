@@ -1,0 +1,4 @@
+# The isolated OFF lead store (D-19). Leads live OUTSIDE src/_data, so they are
+# outside the Eleventy data cascade and outside the corpus the validation gate
+# walks. This .gitkeep keeps the directory present in git before any lead is
+# ingested. Ingested leads (npm run ingest:off) are written here as JSON.

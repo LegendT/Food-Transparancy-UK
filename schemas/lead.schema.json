@@ -31,12 +31,16 @@
     "provenance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["dataset", "licence", "url", "retrievedAt"],
+      "required": ["dataset", "sourceRegistryId", "licence", "url", "retrievedAt"],
       "description": "Dataset-level ODbL provenance for the whole lead (DATA-02).",
       "properties": {
         "dataset": {
           "type": "string",
           "description": "The originating dataset, for example open-food-facts."
+        },
+        "sourceRegistryId": {
+          "type": "string",
+          "description": "The source-registry id (for example off) a promotion MUST cite so the ODbL attribution and share-alike link is preserved (R-09). The 02-06 audit surfaces any OFF-derived fact that has lost this link."
         },
         "licence": {
           "type": "string",

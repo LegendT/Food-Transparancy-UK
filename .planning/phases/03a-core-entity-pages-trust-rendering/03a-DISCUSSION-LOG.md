@@ -82,3 +82,16 @@
 - Then-vs-now diff + corpus scale (Phase 4); comparison view (Phase 6); full timeline pages (Phase 8); site shell + crawlability + credibility surface + pa11y-ci route floor (Phase 3b).
 
 No scope-creep requests; discussion stayed within the phase boundary.
+
+## Post-discussion critique (2026-07-01)
+
+The CONTEXT was pressure-tested against the actual schemas before planning. Eight findings folded in (see CONTEXT decisions D-06/08/09/10/11/12/13/14/15 and the Schema-prerequisites block):
+
+- **F1 (blocking):** INGR-04 has no structured product-ingredient link (product carries free-text `ingredientsText` only) -> D-15.
+- **F2 (blocking):** INGR-02 (authority safety opinion) has no schema field and was conflated with INGR-03 -> D-08 split into two blocks, D-14.
+- **F3 (safety):** withheld-allergen rendering was unspecified; a withheld `absent` must never read as "does not contain X" -> D-12 (fail-safe-toward-warning) + standing allergen caveat.
+- **F4:** "nutrition as a table" fights the block-level trust component; most figures absent in real data -> D-06 flags it for ui-phase.
+- **F5:** D-10 blurred "code done" with "phase done"; SC4 remains a fixed exit criterion -> D-10 sharpened.
+- **F6:** the contested macro floor renders no per-position sources (D-02 requires them) -> code_context note.
+- **F7:** the mostly-withheld page is the primary launch case, not an edge case -> D-13.
+- **F8:** the per-ingredient not-dietary-advice note vs the site-wide SITE-09 disclaimer (Phase 3b) -> kept complementary.

@@ -26,12 +26,12 @@
       "description": "Optional fact-bearing: the owning manufacturer or parent company, sourced."
     },
     "verificationStatus": {
-      "type": ["string", "null"],
-      "description": "Reserved for the Phase 2 verification gate (DATA-11); present-and-empty (null) validates."
+      "enum": [null],
+      "description": "Derived-only entity status (D-03/R-06): computed from the entity's facts every build, so any author-set value is rejected by Ajv. Only null validates."
     },
     "publicationStatus": {
-      "type": ["string", "null"],
-      "description": "Reserved for the Phase 2 publication gate (DATA-11); present-and-empty (null) validates."
+      "enum": [null],
+      "description": "Derived-only entity status (D-03/R-06): computed from the entity's facts every build, so any author-set value is rejected by Ajv. Only null validates."
     }
   }
 }

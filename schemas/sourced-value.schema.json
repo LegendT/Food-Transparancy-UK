@@ -46,18 +46,148 @@
     "note": {
       "type": "string"
     },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passes"],
+      "description": "The inline verification record (D-01): a fact's value and the evidence someone checked it live in one git diff. Publication status is DERIVED from this record every build (D-03), never author-set.",
+      "properties": {
+        "passes": {
+          "type": "array",
+          "description": "Verification EVENTS, not sources (D-02). The gate counts passes whose verdict is confirms, never the length of sources[].",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["reviewerKind", "sourcesChecked", "measure", "verdict", "checkedOn"],
+            "properties": {
+              "reviewerKind": {
+                "enum": ["human", "ai", "blinded-reread"],
+                "description": "The reader-independence axis (D-06); a kind, not a reviewer identity."
+              },
+              "sourcesChecked": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" },
+                "description": "Source ids this pass actually checked; each must be a subset of the fact's sources (enforced by the 02-03 gate)."
+              },
+              "measure": { "$ref": "#/$defs/measure" },
+              "checkedValue": {
+                "description": "What THIS pass actually read; any type. Compared across passes for cross-pass value divergence (R-04)."
+              },
+              "verdict": {
+                "enum": ["confirms", "disputes", "inaccessible"],
+                "description": "The outcome of this verification event."
+              },
+              "checkedOn": {
+                "type": "string",
+                "format": "date",
+                "description": "Date this pass was performed; the max confirms checkedOn is the fact's last-verified date."
+              }
+            }
+          }
+        },
+        "adjudication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["outcome", "note", "date"],
+          "description": "Human-only adjudication (D-04); absent until adjudicated. AI never writes a verdict.",
+          "properties": {
+            "outcome": {
+              "enum": ["confirmed", "corrected", "contested"],
+              "description": "The human adjudication verdict."
+            },
+            "note": { "type": "string", "minLength": 1 },
+            "date": { "type": "string", "format": "date" },
+            "correctedValue": {
+              "description": "The human-approved corrected value (R-03/D-04); present when outcome is corrected. Any type, and nullable."
+            }
+          }
+        },
+        "contested": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["positions"],
+          "description": "Present only when adjudication.outcome is contested (D-14). The singular value is withheld while contested; the positions carry the content.",
+          "properties": {
+            "positions": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["value", "sources", "note"],
+                "properties": {
+                  "value": {
+                    "description": "One contested position's value; any type."
+                  },
+                  "sources": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "type": "string" }
+                  },
+                  "note": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "markedWrong": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["note", "date"],
+          "description": "Human-only; forces continuous withdrawal on the next build (D-03/VRFY-04).",
+          "properties": {
+            "note": { "type": "string", "minLength": 1 },
+            "date": { "type": "string", "format": "date" }
+          }
+        },
+        "stalenessClass": {
+          "enum": ["regulatory", "current", "historical"],
+          "description": "Optional override of the derived staleness class (D-16)."
+        }
+      }
+    },
     "verificationStatus": {
-      "type": ["string", "null"],
-      "description": "Reserved for the Phase 2 verification gate (DATA-11); present-and-empty (null) validates."
+      "enum": [null],
+      "description": "Derived-only (D-03): publication status is computed from the verification record every build, so any author-set value is rejected by Ajv. Only null validates."
     },
     "publicationStatus": {
-      "type": ["string", "null"],
-      "description": "Reserved for the Phase 2 publication gate (DATA-11); present-and-empty (null) validates."
+      "enum": [null],
+      "description": "Derived-only (D-03): publication status is computed from the verification record every build, so any author-set value is rejected by Ajv. Only null validates."
     }
   },
   "$defs": {
     "grade": {
       "enum": ["high", "moderate", "low", "very-low"]
+    },
+    "measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "state"],
+      "description": "A pass's STRUCTURED measure (D-13). Comparison is exact-match-or-disagree, so a per-100g and a per-100ml pass auto-raise a disagreement rather than merging.",
+      "properties": {
+        "basis": {
+          "enum": ["per-100g", "per-100ml", "per-serving", "n/a"],
+          "description": "The quantity basis of the measured value."
+        },
+        "state": {
+          "enum": ["as-sold", "as-prepared", "n/a"],
+          "description": "Whether the figure is as-sold or as-prepared."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Optional unit (for example g, mg, ml, kcal, percent) for the cross-pass value-divergence check (R-04)."
+        },
+        "jurisdiction": {
+          "enum": ["GB", "EU", "international"],
+          "description": "Optional jurisdiction the measure speaks for."
+        },
+        "asOf": {
+          "type": "string",
+          "format": "date",
+          "description": "Optional date the measure was in effect."
+        }
+      }
     }
   },
   "allOf": [

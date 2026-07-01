@@ -33,6 +33,40 @@ test("a valid timeline fixture validates with zero Ajv errors", () => {
   assert.equal(errors.length, 0);
 });
 
+// D-14 (INGR-02): an ingredient carrying an optional authorityPosition SourcedValue
+// validates. The field is a bare $ref, deliberately NOT claimDomain regulatory, so
+// it exercises the new property through the schema without any regulatory coupling.
+test("an ingredient with an authorityPosition SourcedValue validates with zero Ajv errors (D-14)", () => {
+  const { ok, errors } = validate("ingredient", load("fixtures/valid/ingredient-authority.json"));
+  assert.equal(ok, true, JSON.stringify(errors, null, 2));
+  assert.equal(errors.length, 0);
+});
+
+// D-15 (INGR-04): the optional product ingredients array is a plain-scalar id list.
+// An item that breaks the id pattern (a space or uppercase) is rejected by Ajv, so a
+// malformed cross-link reference can never enter the corpus.
+test("a product with a badly-formed ingredients id is rejected by Ajv (D-15 pattern)", () => {
+  const product = {
+    id: "bad-ingredients-product",
+    slug: "bad-ingredients-product",
+    name: "Product With A Bad Ingredient Id",
+    ingredients: ["Bad Id"],
+  };
+  const { ok, errors } = validate("product", product);
+  assert.equal(ok, false);
+  assert.ok(errors.length > 0);
+});
+
+// A3 (migration-safe): adding both optional fields must leave every existing record
+// valid. Each shipped spike product carries NO ingredients field and must still pass,
+// guarding the backward-compatibility claim against a future required-by-accident edit.
+test("every existing spike product still validates unchanged after the additive fields (A3)", () => {
+  for (const name of ["spike-01", "spike-02", "spike-03"]) {
+    const { ok, errors } = validate("product", load(`../src/_data/products/${name}.json`));
+    assert.equal(ok, true, `${name}: ${JSON.stringify(errors, null, 2)}`);
+  }
+});
+
 // Each negative fixture below is rejected by the Ajv-level gate that owns its
 // failure mode. The ranged-date ORDER fixture is deliberately absent here: Ajv
 // cannot express to-not-earlier-than-from, so it is asserted against

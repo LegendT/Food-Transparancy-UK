@@ -1,0 +1,35 @@
+{
+  "id": "aspartame",
+  "slug": "aspartame",
+  "name": "Aspartame",
+  "synonyms": ["E951"],
+  "eNumber": "E951",
+  "functionDescription": {
+    "value": "An intense artificial sweetener used in place of sugar to sweeten foods and drinks at a fraction of the quantity.",
+    "sources": ["off"],
+    "confidence": "moderate",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "claimType": "authoritative"
+  },
+  "regulatoryStatus": {
+    "value": "Permitted as sweetener E951 for retail sale in Great Britain under retained food additive law.",
+    "sources": ["fsa-allergen-guidance"],
+    "confidence": "high",
+    "evidence": "high",
+    "updated": "2026-06-30",
+    "checkedOn": "2026-06-30",
+    "claimType": "authoritative",
+    "claimDomain": "regulatory"
+  },
+  "authorityPosition": {
+    "value": "The Food Standards Agency states that aspartame is safe to consume at the established acceptable daily intake; this cites that authority position and does not synthesise primary studies.",
+    "sources": ["fsa-allergen-guidance"],
+    "confidence": "moderate",
+    "evidence": "moderate",
+    "updated": "2026-06-30",
+    "claimType": "authoritative"
+  },
+  "verificationStatus": null,
+  "publicationStatus": null
+}

@@ -1,0 +1,16 @@
+{
+  "id": "dangling-ref-product",
+  "slug": "dangling-ref-product",
+  "name": "Product Citing A Missing Ingredient",
+  "ingredients": ["nonexistent-ingredient-xyz"],
+  "ingredientsText": {
+    "value": "Water, sugar, an ingredient with no record.",
+    "sources": ["off"],
+    "confidence": "low",
+    "evidence": "low",
+    "updated": "2026-06-30",
+    "claimType": "authoritative"
+  },
+  "verificationStatus": null,
+  "publicationStatus": null
+}

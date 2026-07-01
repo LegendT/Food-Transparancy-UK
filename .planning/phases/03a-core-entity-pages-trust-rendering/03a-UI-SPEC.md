@@ -92,7 +92,7 @@ Ratios are (white / `#f3f2f1` panel). A "text" application must clear 4.5:1 on i
 | State cue | Value | White / Panel | Applied as | Never as |
 |-----------|-------|---------------|------------|----------|
 | Withheld (ordinary) | `#505a5f` (GOV.UK secondary grey) | 7.07 / 6.33 | Left accent bar + label text | The only signal; label is mandatory |
-| Stale / review-due | `#d4531e` (darkened orange) | 4.15 / 3.72 | 4px left accent bar ONLY | Text colour; the "review due" text stays `#0b0c0c`. (F2: the original `#f47738` was 2.78/2.49 and failed the 3:1 non-text floor; darkened so the bar, a functional at-a-glance cue like every other bar here, is compliant.) |
+| Stale / review-due | `#b45309` (amber) | 5.02 / 4.49 | 4px left accent bar ONLY | Text colour; the "review due" text stays `#0b0c0c`. (F2/G3: the original `#f47738` was 2.78/2.49 and failed the 3:1 non-text floor. A first fix, `#d4531e`, cleared 3:1 but shared the red channel (212) with the allergen red `#d4351c` and would be confusable under deuteranopia, muddying the "red = danger only" reservation. `#b45309` is a true amber (red channel 180), clearly not-red, and still clears 3:1 on both backgrounds.) |
 | Contested | `#1d70b8` | 5.17 / 4.62 | Left accent bar + "Contested" heading text | Red (contested is honest disagreement, not danger) |
 | Allergen hazard / destructive | `#d4351c` (GOV.UK red) | 4.86 / 4.34 | Left bar / border ONLY | **Warning text** (it is 4.34:1 on the panel, failing 4.5:1) and never reassurance. F1: allergen warning text is always `#0b0c0c` black; red is the second cue, never the words. |
 | Verified (optional affirm) | `#00703c` (GOV.UK green) | 6.21 / 5.55 | Optional small "Verified" affix text | The primary signal (the value and tokens already do that) |
@@ -121,7 +121,7 @@ British English throughout. No em-dashes (the editorial lint fails the build; us
 | Situation | Copy |
 |-----------|------|
 | Withheld, collapsed label | "Not yet verified; withheld." |
-| Withheld, expanded explanation | "This figure has not passed our two-pass verification, so we are not publishing a value. The sources we are checking are listed below." |
+| Withheld, expanded explanation | "We have not yet been able to confirm this against two independent sources, so we are not publishing a value. The sources we are checking are listed below." (G6: plain English for a non-expert; the term "two-pass verification" is linked to Methodology where it is defined, not used raw in reader copy.) |
 | Stale, inline | "Last verified {date}; review due." (existing floor string, kept verbatim) |
 | Contested, heading | "Contested; sources disagree:" (existing floor string) |
 | Contested, per-position | "{value} - {source name}{, note}" (each position carries its OWN source; F6 gap) |
@@ -157,11 +157,13 @@ The `factState` projection collapses the seven Phase 2 states into three render 
 | Projection branch | Underlying states | Left accent bar | Card border | Background | Text label (mandatory) |
 |-------------------|-------------------|-----------------|-------------|------------|------------------------|
 | publishable, not stale | `published-confirmed` | none | `#b1b4b6` 2px (existing) | `#ffffff` | value + confidence/evidence tokens |
-| publishable, stale | `published-stale` | `#d4531e` 4px | `#b1b4b6` 2px | `#ffffff` | value + tokens + "Last verified {date}; review due." (black text) |
+| publishable, stale | `published-stale` | `#b45309` 4px | `#b1b4b6` 2px | `#ffffff` | value + tokens + "Last verified {date}; review due." (black text) |
 | contested | `published-contested` | `#1d70b8` 4px | `#1d70b8` 2px | `#f3f2f1` | "Contested; sources disagree:" + both-sides list |
 | withheld | `withheld-unverified`, `withheld-in-review`, `withheld-open-disagreement`, `withheld-wrong` | `#505a5f` 4px | `#b1b4b6` 2px dashed | `#ffffff` | "Not yet verified; withheld." |
 
 Add the left accent bar with `border-inline-start` so it flips correctly under logical properties. The dashed border on withheld is a colour-independent second cue that the card is a placeholder, not a value. Do not introduce distinct treatments per withheld sub-state; the reader is shown one honest "withheld" surface (the sub-state distinction is internal and lives in the disclosure text only if needed).
+
+**Selector strategy (G5):** all four withheld sub-states (`withheld-unverified`, `withheld-in-review`, `withheld-open-disagreement`, `withheld-wrong`) MUST be caught with a single `[data-state^="withheld"]` rule, not enumerated one by one, so a future or overlooked sub-state can never fall through to the unstyled default treatment and silently render as if confirmed. The three publishable/contested states are matched by their exact `data-state` value.
 
 ---
 
@@ -200,6 +202,8 @@ Structure:
 | Key present, contested | "Contested" | link to the both-sides block in the provenance list |
 
 - Below the table, a "Nutrition sources" region renders the FULL `sourcedValue` macro block for EACH recorded figure, wrapped in an element with `id="nutrition-{key}"` so the table status links resolve to it. Absent figures produce no provenance block.
+- **Focus management (G2, WCAG 2.4.3):** an in-page anchor does NOT move keyboard or screen-reader focus unless the target is focusable. The provenance target MUST carry `tabindex="-1"` (or the `id` sits on a heading), so activating a "see source" status link actually moves focus to the provenance block rather than only scrolling the viewport and leaving focus stranded on the link.
+- **Reflow at 320px (G1, WCAG 1.4.10):** the table must reflow with no horizontal scroll at 320px / 400% zoom. It has only three columns of short content and cells wrap by default, so keep it: do NOT apply `white-space: nowrap`, keep status-link text short ("see source", "sources being checked"), and let the table grow tall rather than wide. This is the one data-dense component on the page, so assert the 320px pass explicitly rather than assume it.
 
 This makes the three conditions unambiguous to a reader: "Not recorded" (we never had this figure) is visibly different from "Not yet verified" (we have it but it has not passed the gate) which is different from a published value. Do not conflate them.
 
@@ -255,7 +259,9 @@ When a product has no sourced change events, the recipe-history section renders 
 - All interactive targets at least 44px (existing `.fact__token`, `summary`, nav already comply); new links and the nutrition status links inherit this.
 - Visible focus is the existing yellow GOV.UK block; never suppressed.
 - Nutrition uses a real `<table>` with `<caption>`, `<thead>`, `scope` attributes; the allergen list uses list semantics; sections use `h2` headings in a logical order under one `h1`.
-- Contrast (computed on BOTH white and the `#f3f2f1` panel): every text-bearing colour clears 4.5:1 on whichever background it renders on; every non-text cue (accent bars, borders) clears 3:1. Two corrections from the first draft: allergen red `#d4351c` is bar/border only because as text it is 4.34:1 on the panel (F1), and the stale bar is `#d4531e` not `#f47738` because the original failed the 3:1 non-text floor (F2). Verify against the palette table's white/panel figures, not "on white" alone.
+- **Heading outline (G4):** exactly one `h1` (entity name). Product `h2`s: Ingredients, Nutrition, Allergens, Manufacturer, Sources, Recipe history. Ingredient `h2`s: the explainer, Current GB regulatory position, the optional authority-safety-opinion block, Products that list this ingredient. Any sub-grouping inside a section (e.g. the "Nutrition sources" provenance region, or a contested fact's positions) uses `h3`; never skip a level (no `h2` to `h4`). The `sourcedValue` macro emits no heading of its own, so it never disturbs the outline.
+- Contrast (computed on BOTH white and the `#f3f2f1` panel): every text-bearing colour clears 4.5:1 on whichever background it renders on; every non-text cue (accent bars, borders) clears 3:1. Two corrections from the first draft: allergen red `#d4351c` is bar/border only because as text it is 4.34:1 on the panel (F1), and the stale bar is amber `#b45309` (not `#f47738`, which failed 3:1; and not the interim `#d4531e`, which shared the red channel with the allergen red and risked deuteranopia confusion, G3). Verify against the palette table's white/panel figures, not "on white" alone.
+- Colour-vision safety (G3): the semantic palette uses five hues (grey / blue / amber / red / green), but colour is never the sole cue, so red-green-orange confusion never hides meaning. The one place proximity matters is the reservation "red = danger only" - the stale amber (`#b45309`) is deliberately kept clear of the allergen red so the two are not confusable at a glance.
 - No-JS baseline: every disclosure is native `<details>`; the table-to-provenance link is a plain in-page anchor. Nothing here requires client JavaScript.
 
 ---
@@ -277,4 +283,6 @@ When a product has no sourced change events, the recipe-history section renders 
 - [x] Dimension 5 Spacing: PASS
 - [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** verified 2026-07-01 by gsd-ui-checker, then hardened by a computed-contrast review that fixed two AA failures the on-white-only check missed (F1 allergen red as text on the panel; F2 stale bar below the 3:1 non-text floor) plus accuracy (F3) and two rendering gaps (F4 cross-links depend on D-15; F5 allergen-absent-from-data). See the phase git history for the review.
+**Approval:** verified 2026-07-01 by gsd-ui-checker, then hardened by two review rounds:
+- Round 1 (computed contrast on white + `#f3f2f1`): F1 allergen red demoted to bar/border only (4.34:1 as text on the panel); F2 stale bar off `#f47738` (failed 3:1 non-text); F3 corrected inaccurate cited ratios; F4 cross-links depend on D-15; F5 allergen-absent-from-data rule.
+- Round 2 (interaction, reflow, colour-vision): G1 nutrition table 320px reflow asserted; G2 focus management on the in-page provenance anchors (`tabindex="-1"`); G3 stale bar moved to amber `#b45309` (the interim `#d4531e` shared the red channel with the allergen red, a deuteranopia risk); G4 explicit heading outline; G5 `[data-state^="withheld"]` selector so no sub-state falls through; G6 plain-English withheld copy. See the phase git history for both reviews.

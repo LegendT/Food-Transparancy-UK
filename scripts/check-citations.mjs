@@ -55,12 +55,15 @@ const REQUEST_GAP_MS = 700; // ~1-2 req/s (D-10)
 
 // Known bot-hostile hosts: bias their refusals straight to ACCESS_BLOCKED +
 // Wayback rather than spending a live retry that will 403 anyway (D-10).
+// web.archive.org is deliberately NOT in this set: a web.archive.org URL is
+// itself an archival snapshot, so short-circuiting it into waybackFallback would
+// ask the CDX server for captures of a Wayback page (a snapshot-of-a-snapshot)
+// and never resolve (BLOCKER-01, D-08/R-19). Such URLs are probed directly.
 const BOT_HOSTILE = new Set([
   "tesco.com",
   "ocado.com",
   "asda.com",
-  "sainsburys.co.uk",
-  "web.archive.org"
+  "sainsburys.co.uk"
 ]);
 
 const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
@@ -81,6 +84,20 @@ function jsonFilesUnder(dir) {
   return out;
 }
 
+// Every source id a fact cites: its top-level sources[] AND every source cited
+// only inside a contested position (verification.contested.positions[].sources).
+// A legitimate position source not duplicated into the fact's own sources[] would
+// otherwise never receive an existence check, permanently blocking
+// published-contested (WARNING-01, D-14).
+function sourceIdsForFact(fact) {
+  const ids = [...fact.sources];
+  const positions = fact.verification?.contested?.positions ?? [];
+  for (const position of positions) {
+    for (const id of position.sources ?? []) ids.push(id);
+  }
+  return ids;
+}
+
 function citedSourceIds() {
   const cited = new Set();
   for (const path of jsonFilesUnder(DATA_DIR)) {
@@ -92,7 +109,7 @@ function citedSourceIds() {
       continue; // malformed JSON is the prebuild gate's job, not this script's
     }
     for (const { fact } of collectFacts(data, path)) {
-      for (const id of fact.sources) cited.add(id);
+      for (const id of sourceIdsForFact(fact)) cited.add(id);
     }
   }
   return cited;
@@ -180,6 +197,7 @@ async function probe(startUrl, method, extraHeaders = {}) {
 
     const location = res.headers.get("location");
     if (res.status >= 300 && res.status < 400 && location) {
+      await res.body?.cancel(); // discard the redirect-hop body before the next fetch (WR-02)
       current = new URL(location, parsed).toString();
       continue; // re-guard on the next iteration
     }
@@ -271,6 +289,15 @@ function waybackTimestamp(source) {
 // snapshotUrl STORED for durable archival (R-19). Wayback's OWN 429/5xx is
 // INDETERMINATE, never DOES_NOT_RESOLVE (Pitfall 2).
 async function waybackFallback(url, source, originVerdict, originStatus) {
+  // A web.archive.org URL is already an archival snapshot: there is no
+  // snapshot-of-a-snapshot to fall back to, so return the direct probe verdict
+  // rather than querying CDX for captures of a Wayback page (BLOCKER-01,
+  // D-08/R-19). The direct probe already scored 200 -> RESOLVES, 404/410 ->
+  // DOES_NOT_RESOLVE, 403/429 -> ACCESS_BLOCKED before reaching here.
+  if (hostOf(url) === "web.archive.org") {
+    return entry(originVerdict, "live", originStatus, null);
+  }
+
   const ts = waybackTimestamp(source);
   const cdx =
     `https://web.archive.org/cdx/search/cdx?url=${encodeURIComponent(url)}` +
@@ -316,7 +343,10 @@ function hostOf(url) {
 
 function isBotHostile(url) {
   const host = hostOf(url);
-  if (!host) return false;
+  // Never divert a web.archive.org URL to itself: it IS the archive, so it is
+  // probed directly rather than routed to a self-referential CDX query
+  // (BLOCKER-01, D-08/R-19).
+  if (!host || host === "web.archive.org") return false;
   return [...BOT_HOSTILE].some((domain) => host === domain || host.endsWith(`.${domain}`));
 }
 
@@ -359,6 +389,8 @@ async function checkCitation(source) {
           verdict = "INDETERMINATE";
           statusCode = 200;
         }
+      } else {
+        await get.res?.body?.cancel(); // a non-200 GET body is never read - discard it (WR-02)
       }
     } else if ([403, 405, 429].includes(head.status)) {
       const retryAfter = Number(head.res.headers.get("retry-after"));
@@ -372,6 +404,8 @@ async function checkCitation(source) {
         if (verdict === "RESOLVES" && get.status === 200) {
           const body = await readCapped(get.res);
           if (isSoftNotFound(200, body)) verdict = "INDETERMINATE";
+        } else {
+          await get.res?.body?.cancel(); // a non-200 GET body is never read - discard it (WR-02)
         }
       } else if (get.errorClass) {
         verdict = classifyStatus(undefined, get.errorClass);
@@ -441,7 +475,17 @@ async function main() {
   // records no verification pass (D-11).
 }
 
-main().catch((err) => {
-  console.error("Citation check crashed:", err);
-  process.exit(1);
-});
+// Pure, offline helpers exported for regression tests (BLOCKER-01, WARNING-01).
+// The network run below only fires when this file is executed directly, so a
+// test may import the classifier/gatherer without reaching Crossref or Wayback.
+export { isBotHostile, sourceIdsForFact };
+
+const invokedDirectly =
+  process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (invokedDirectly) {
+  main().catch((err) => {
+    console.error("Citation check crashed:", err);
+    process.exit(1);
+  });
+}

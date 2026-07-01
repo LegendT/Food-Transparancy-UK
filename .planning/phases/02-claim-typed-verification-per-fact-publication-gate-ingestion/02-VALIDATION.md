@@ -7,7 +7,7 @@ wave_0_complete: false
 created: 2026-07-01
 ---
 
-# Phase 02 — Validation Strategy
+# Phase 02 - Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
 
@@ -18,7 +18,7 @@ created: 2026-07-01
 | Property | Value |
 |----------|-------|
 | **Framework** | node:test (Node 24 built-in runner) |
-| **Config file** | none — tests are `test/*.test.js`, discovered by `node --test` |
+| **Config file** | none - tests are `test/*.test.js`, discovered by `node --test` |
 | **Quick run command** | `node --test` |
 | **Full suite command** | `npm test` (`node --test` + `npm run build` + `npm run a11y:all`) |
 | **Estimated runtime** | ~10 seconds (unit); a11y adds ~30s |
@@ -36,7 +36,7 @@ created: 2026-07-01
 
 ## Per-Plan Verification Map
 
-Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` proving its requirements. All commands are offline (no network — the citation checker and OFF ingestion run out-of-band and the gate reads a committed cache).
+Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` proving its requirements. All commands are offline (no network - the citation checker and OFF ingestion run out-of-band and the gate reads a committed cache).
 
 | Plan | Wave | Requirements | Test Type | Automated Command | Status |
 |------|------|--------------|-----------|-------------------|--------|
@@ -54,10 +54,10 @@ Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` provi
 
 ## Wave 0 Requirements
 
-- [ ] `test/verification-schema.test.js` — schema-validity + status-null-constraint proof (02-01)
-- [ ] `test/fixtures/valid/*` and `test/fixtures/invalid/*` — surgical positive/negative fixtures for each gate failure path (02-01)
+- [ ] `test/verification-schema.test.js` - schema-validity + status-null-constraint proof (02-01)
+- [ ] `test/fixtures/valid/*` and `test/fixtures/invalid/*` - surgical positive/negative fixtures for each gate failure path (02-01)
 
-*node:test is a Node 24 built-in — no framework install task. No shared `conftest`-style fixture module; fixtures are JSON files under `test/fixtures/`.*
+*node:test is a Node 24 built-in - no framework install task. No shared `conftest`-style fixture module; fixtures are JSON files under `test/fixtures/`.*
 
 ---
 
@@ -65,7 +65,7 @@ Task IDs are `{plan}-{NN}`; each plan below ships its own `test/*.test.js` provi
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
-| Human editor authors/approves the real pass verdicts and the Lucozade `adjudication.outcome: contested` note on `src/_data/**` | VRFY-02, VRFY-11 | "AI never adjudicates" (D-04/D-11) — verdicts and adjudication notes are human editorial work; 02-07 Task 2 is a `checkpoint:human-action` blocking gate mirroring the 01-10 precedent | Editor authors the two pass records + the contested positions/note; approves at the checkpoint; the autonomous follow-on transcribes only the approved values, then `npm run prebuild` must stay green |
+| Human editor authors/approves the real pass verdicts and the Lucozade `adjudication.outcome: contested` note on `src/_data/**` | VRFY-02, VRFY-11 | "AI never adjudicates" (D-04/D-11) - verdicts and adjudication notes are human editorial work; 02-07 Task 2 is a `checkpoint:human-action` blocking gate mirroring the 01-10 precedent | Editor authors the two pass records + the contested positions/note; approves at the checkpoint; the autonomous follow-on transcribes only the approved values, then `npm run prebuild` must stay green |
 
 ---
 

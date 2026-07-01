@@ -1,7 +1,7 @@
 ---
 phase: 3a
 slug: core-entity-pages-trust-rendering
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-07-01
@@ -74,24 +74,28 @@ Palette is derived from the GOV.UK Design System colours already present in `sty
 |------|-------|-------|
 | Dominant (60%) | `#ffffff` | Page background, fact-card and table surfaces |
 | Secondary (30%) | `#f3f2f1` | Section panels, disclosure and caveat backgrounds, nutrition-table header/zebra |
-| Accent (10%) | `#1d70b8` | Links, trust-token links, ingredient cross-links (contrast 4.6:1 on white) |
+| Accent (10%) | `#1d70b8` | Links, trust-token links, ingredient cross-links (5.17:1 on white, 4.62:1 on `#f3f2f1`, both pass 4.5:1) |
 | Text | `#0b0c0c` | All body and heading text |
 | Neutral border | `#b1b4b6` | Default fact-card and table borders (existing) |
 | Focus | `#ffdd00` on `#0b0c0c` | Keyboard focus block (existing; never suppress) |
 
+All ratios below are computed on BOTH the white surface and the `#f3f2f1` panel/caveat background (`.caveat`/`.example` are `#f3f2f1`), because coloured text and cues render on both. A "text" colour must clear 4.5:1 on whichever background it sits on; a non-text cue (accent bar, border) must clear 3:1.
+
 Accent reserved for: hyperlinks, the confidence/evidence trust-token links, the "Source and date" disclosure summary, and product-to-ingredient cross-links. Never applied to plain text, section headings, or as a general "make it pop" colour.
 
-Note: the existing link colour in `styles.css` is `#1d4ed8`. Migrate links to `#1d70b8` (GOV.UK) for one consistent accent, or keep `#1d4ed8` (contrast 5.7:1, also compliant) if the executor prefers minimal churn. Pick one and apply site-wide; do not mix.
+Note: the existing link colour in `styles.css` is `#1d4ed8` (6.70:1 white / 5.99:1 panel). `#1d70b8` (GOV.UK) is 5.17:1 white / 4.62:1 panel. Both clear 4.5:1 on both backgrounds, so either is compliant; `#1d4ed8` has more headroom on the panel. Pick one and apply site-wide; do not mix. (Earlier drafts cited 4.6:1/5.7:1 "on white" for these; those figures were inaccurate, hence the correction here.)
 
 ### Semantic state palette (meaning, always with a text label)
 
-| State cue | Value | On white | Applied as | Never as |
-|-----------|-------|----------|------------|----------|
-| Withheld (ordinary) | `#505a5f` (GOV.UK secondary grey) | 7.0:1 | Left accent bar + label text | The only signal; label is mandatory |
-| Stale / review-due | `#f47738` (GOV.UK orange) | 2.9:1 | 4px left accent bar ONLY (decorative) | Text colour (fails 4.5:1); the "review due" text stays `#0b0c0c` |
-| Contested | `#1d70b8` | 4.6:1 | Left accent bar + "Contested" heading text | Red (contested is honest disagreement, not danger) |
-| Allergen hazard / destructive | `#d4351c` (GOV.UK red) | 4.6:1 | Border, left bar, warning label text | Reassurance (allergens fail safe toward warning only) |
-| Verified (optional affirm) | `#00703c` (GOV.UK green) | 4.9:1 | Optional small "Verified" affix text | The primary signal (the value and tokens already do that) |
+Ratios are (white / `#f3f2f1` panel). A "text" application must clear 4.5:1 on its background; a bar/border must clear 3:1.
+
+| State cue | Value | White / Panel | Applied as | Never as |
+|-----------|-------|---------------|------------|----------|
+| Withheld (ordinary) | `#505a5f` (GOV.UK secondary grey) | 7.07 / 6.33 | Left accent bar + label text | The only signal; label is mandatory |
+| Stale / review-due | `#d4531e` (darkened orange) | 4.15 / 3.72 | 4px left accent bar ONLY | Text colour; the "review due" text stays `#0b0c0c`. (F2: the original `#f47738` was 2.78/2.49 and failed the 3:1 non-text floor; darkened so the bar, a functional at-a-glance cue like every other bar here, is compliant.) |
+| Contested | `#1d70b8` | 5.17 / 4.62 | Left accent bar + "Contested" heading text | Red (contested is honest disagreement, not danger) |
+| Allergen hazard / destructive | `#d4351c` (GOV.UK red) | 4.86 / 4.34 | Left bar / border ONLY | **Warning text** (it is 4.34:1 on the panel, failing 4.5:1) and never reassurance. F1: allergen warning text is always `#0b0c0c` black; red is the second cue, never the words. |
+| Verified (optional affirm) | `#00703c` (GOV.UK green) | 6.21 / 5.55 | Optional small "Verified" affix text | The primary signal (the value and tokens already do that) |
 
 **Why ordinary withheld is calm grey, not red (resolves D-01 vs D-13):** withheld is conspicuous through a consistent distinct card treatment and an explicit label, not through alarm colour. At launch most facts are withheld; a page of red would read as broken and would drain the red signal of meaning. Red is reserved strictly for the one genuinely dangerous case, allergen safety.
 
@@ -153,7 +157,7 @@ The `factState` projection collapses the seven Phase 2 states into three render 
 | Projection branch | Underlying states | Left accent bar | Card border | Background | Text label (mandatory) |
 |-------------------|-------------------|-----------------|-------------|------------|------------------------|
 | publishable, not stale | `published-confirmed` | none | `#b1b4b6` 2px (existing) | `#ffffff` | value + confidence/evidence tokens |
-| publishable, stale | `published-stale` | `#f47738` 4px | `#b1b4b6` 2px | `#ffffff` | value + tokens + "Last verified {date}; review due." (black text) |
+| publishable, stale | `published-stale` | `#d4531e` 4px | `#b1b4b6` 2px | `#ffffff` | value + tokens + "Last verified {date}; review due." (black text) |
 | contested | `published-contested` | `#1d70b8` 4px | `#1d70b8` 2px | `#f3f2f1` | "Contested; sources disagree:" + both-sides list |
 | withheld | `withheld-unverified`, `withheld-in-review`, `withheld-open-disagreement`, `withheld-wrong` | `#505a5f` 4px | `#b1b4b6` 2px dashed | `#ffffff` | "Not yet verified; withheld." |
 
@@ -199,6 +203,8 @@ Structure:
 
 This makes the three conditions unambiguous to a reader: "Not recorded" (we never had this figure) is visibly different from "Not yet verified" (we have it but it has not passed the gate) which is different from a published value. Do not conflate them.
 
+Each recorded figure therefore appears twice (a scannable table row and its full provenance block below); this duplication is intentional and only becomes visually heavy on a fully-verified product, which is the secondary case (F6). If the provenance blocks crowd the page, the plan may render them inside a single `<details>` per section rather than open; do not drop the provenance to save space.
+
 ---
 
 ## Allergen Render Rules (D-12, highest-stakes; overrides general treatment)
@@ -207,19 +213,22 @@ Allergens fail safe TOWARD warning, never toward reassurance. This section overr
 
 - The standing allergen-safety caveat (copy above) renders via `caveatBox` at the top of the Allergens section on every page that shows allergens, present or not.
 - One row per declared allergen. Presence AND its provenance state are both shown; presence is derived through `factState` on `allergen.provenance` so no unverified determination leaks as fact (R-31 applies here too).
+- The `#d4351c` red is a **bar/border only**; all row text is `#0b0c0c` black. Red as warning TEXT fails 4.5:1 on the `#f3f2f1` panel (4.34:1) and is never used for the words (F1).
 
-| presence | provenance state | Treatment | Colour cue |
+| presence | provenance state | Treatment (text always black) | Colour cue |
 |----------|------------------|-----------|------------|
 | present | publishable | "Contains {allergen}." + provenance disclosure | `#d4351c` warning bar (a real allergen present is safety-relevant) |
 | may-contain | publishable | "May contain {allergen}." + disclosure | `#d4351c` warning bar |
-| absent | publishable | "Not declared on the sourced label." | neutral `#505a5f`, no reassurance styling |
+| absent | publishable | "Not declared on the sourced label." | neutral `#505a5f` bar, no reassurance styling |
 | present or may-contain | withheld | "Possible {allergen}, not yet verified. Treat as present until confirmed. Check the pack." (NEVER hidden) | `#d4351c` warning bar |
 | absent | withheld | "Not yet verified. We cannot confirm whether this product contains {allergen}. Check the pack." (NEVER "does not contain") | `#d4351c` warning bar (uncertainty about absence is treated as risk) |
+| NOT in the product data at all (F5) | n/a | Silence, mitigated by the standing caveat. **Decision for the plan:** either (a) rely on the caveat only (an allergen with no record is simply not listed), or (b) enumerate all 14 GB allergens with an explicit "No information sourced for {allergen}. Check the pack." row. Do NOT let a missing allergen read as "absent". Recommended: (a) plus the always-present caveat, since enumerating 14 "no information" rows on every product risks implying false completeness; but the plan must choose explicitly. | neutral `#505a5f` if enumerated |
 
 Hard invariants for the checker and executor:
 1. A withheld `absent` claim MUST NOT render any wording that implies the allergen is absent.
 2. A withheld `present` / `may-contain` claim MUST NOT be hidden or collapsed away.
-3. Red is a second cue only; every allergen row states its meaning in text.
+3. Red is a bar/border SECOND cue only; every allergen row states its meaning in `#0b0c0c` black text (never red text; it fails contrast on the panel).
+4. An allergen with NO record MUST NOT be presented as absent; the standing caveat is mandatory precisely because the archive's silence is not a safety guarantee.
 
 ---
 
@@ -229,6 +238,7 @@ Hard invariants for the checker and executor:
 - Both blocks carry the standing not-advice note (copy above). Keep this LOCALISED; the site-wide "not medical or dietary advice" disclaimer is SITE-09 in Phase 3b. Complementary, not duplicated.
 - The authority-position block (INGR-02) renders ONLY if its field is present. D-14 is a blocking schema decision the plan settles first (recommended: a distinct `authorityPosition` fact-bearing field, never folded into `regulatoryStatus`). Until the field exists, the block does not render; the page must not show an empty stub.
 - The products-containing list (INGR-04) depends on D-15 (recommended: a structured `ingredients: [ingredientId]` field on the product schema). If the plan instead resolves to free-text name matching, the best-effort caveat copy above is mandatory.
+- **Cross-linking also depends on D-15 (F4):** the "View this ingredient" cross-links from a product's ingredient list require a structured product-ingredient relationship. `ingredientsText` is a single free-text `SourcedValue` with nothing to linkify per-ingredient, so until D-15 adds structured refs there are NO per-ingredient links from the product page. Do not promise the cross-link affordance in the product template until D-15 resolves; the accent-for-cross-links palette entry is conditional on it.
 - A single study appears only as labelled illustration, never as an evidence statement (the no-synthesis boundary).
 
 ---
@@ -245,7 +255,7 @@ When a product has no sourced change events, the recipe-history section renders 
 - All interactive targets at least 44px (existing `.fact__token`, `summary`, nav already comply); new links and the nutrition status links inherit this.
 - Visible focus is the existing yellow GOV.UK block; never suppressed.
 - Nutrition uses a real `<table>` with `<caption>`, `<thead>`, `scope` attributes; the allergen list uses list semantics; sections use `h2` headings in a logical order under one `h1`.
-- Contrast: all text-bearing colours listed meet 4.5:1 on white; `#f47738` is confined to a decorative border and never carries text.
+- Contrast (computed on BOTH white and the `#f3f2f1` panel): every text-bearing colour clears 4.5:1 on whichever background it renders on; every non-text cue (accent bars, borders) clears 3:1. Two corrections from the first draft: allergen red `#d4351c` is bar/border only because as text it is 4.34:1 on the panel (F1), and the stale bar is `#d4531e` not `#f47738` because the original failed the 3:1 non-text floor (F2). Verify against the palette table's white/panel figures, not "on white" alone.
 - No-JS baseline: every disclosure is native `<details>`; the table-to-provenance link is a plain in-page anchor. Nothing here requires client JavaScript.
 
 ---
@@ -260,11 +270,11 @@ When a product has no sourced change events, the recipe-history section renders 
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Colour: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Colour: PASS (hardened post-review: computed contrast on both white and `#f3f2f1`)
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** verified 2026-07-01 by gsd-ui-checker, then hardened by a computed-contrast review that fixed two AA failures the on-white-only check missed (F1 allergen red as text on the panel; F2 stale bar below the 3:1 non-text floor) plus accuracy (F3) and two rendering gaps (F4 cross-links depend on D-15; F5 allergen-absent-from-data). See the phase git history for the review.

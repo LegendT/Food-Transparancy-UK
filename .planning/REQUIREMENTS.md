@@ -46,7 +46,7 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 
 ### Product Pages
 
-- [ ] **PROD-01**: A user can view a product page showing current ingredients, nutrition, and manufacturer; each fact is rendered through the trust component, and any unverified fact appears as an explicit "not yet verified — withheld" placeholder rather than an asserted value
+- [x] **PROD-01**: A user can view a product page showing current ingredients, nutrition, and manufacturer; each fact is rendered through the trust component, and any unverified fact appears as an explicit "not yet verified — withheld" placeholder rather than an asserted value
 - [ ] **PROD-02**: A product page includes an embedded recipe-history section showing recent sourced change events and linking to the full timeline page where one exists
 - [ ] **PROD-03**: Each change event displays its description, source citation, (possibly ranged) date and confidence level
 - [ ] **PROD-04**: A product page lists the references/sources behind its claims
@@ -207,7 +207,7 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | VRFY-12 | Phase 2 | Complete |
 | DATA-05 | Phase 2 | Complete |
 | DATA-06 | Phase 2 | Complete |
-| PROD-01 | Phase 3a | Pending |
+| PROD-01 | Phase 3a | Complete |
 | PROD-02 | Phase 3a | Pending |
 | PROD-03 | Phase 3a | Pending |
 | PROD-04 | Phase 3a | Pending |

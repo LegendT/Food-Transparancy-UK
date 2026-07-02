@@ -1,87 +1,73 @@
 # Handoff - Food Transparency UK
 
-**Date:** 2026-07-01
-**Status:** **Phase 2 complete, verified, and hardened by five review passes. Ready for `/gsd:secure-phase 2` and/or `/gsd:discuss-phase 3a`.**
+**Date:** 2026-07-02
+**Status:** **Phase 3a mid-execution. Waves 1-2 complete and verified (4/6 plans). Wave 3 (03a-04, allergen safety) and Wave 4 (03a-06, human checkpoint) remain.**
 
 ## What this project is
 
-An evidence-based, citation-first static archive of how UK packaged-food recipes have changed over time. The thesis: many everyday "foods" have quietly become a manipulation of the original (e.g. "ice cream" that is no longer cream but vegetable oil and stabilisers). Built first for the non-expert who has heard of "UPF" but hasn't connected it to specific products. **Core value:** every published fact is traceable to a primary source, independently verified to a standard matched to its claim type, and honest about its uncertainty. Full context: `.planning/PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md` (9 phases; Phases 1 and 2 complete).
+An evidence-based, citation-first static archive of how UK packaged-food recipes have changed over time. Core value: every published fact is traceable to a primary source, independently verified to a standard matched to its claim type, and honest about its uncertainty. Built first for the non-expert shopper. Full context: `.planning/PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md` (9 phases; Phases 1 and 2 complete). Stack: Eleventy 3.1.6 + Nunjucks, flat JSON, CUBE CSS, vanilla JS, node:test, pa11y-ci, Ajv, Node 24. British English, no em-dashes, no emoji, WCAG 2.2 AA, ZERO new dependencies.
 
 ## Current state (verified)
 
-- **Git:** branch `main`, tip `aa5e75e`, working tree clean (only untracked `.history/`, `.vscode/`, and a local `.docx`). **63 commits ahead of origin/main - NOT pushed. Ask before pushing (global rule).** Repo: github.com/LegendT/Food-Transparancy-UK.
-- **Gates:** `node --test` -> **162/162 pass**; `npm run prebuild` -> exit 0 (validate + editorial lint + image gate). WCAG a11y is unchanged from Phase 1 (Phase 2 added no routes/templates - it is a data/logic phase).
-- **Live:** https://food-transparancy-uk.netlify.app - deployed from Phase 1, gated behind HTTP basic auth (returns 401; intentional, pre-launch). Phase 2 did not change deployment.
+- **Git:** branch `main`, tip `d886aaa`, working tree clean (only untracked `.history/`, `.vscode/`, a local `.docx`). **17 commits ahead of origin/main - NOT pushed. Ask before pushing (global rule).**
+- **Gates:** `node --test` -> **196/196 pass**; `npm run prebuild` -> exit 0 (validate + editorial + image + render-safety); `npm run build` green. pa11y WCAG 2.2 AA -> 0 issues on every built page checked so far (product x2, ingredient x1).
+- **Config note for this run:** `workflow.use_worktrees` was set to `false` (sequential-on-main execution) for safety/simplicity on this small flat-file repo. Executors run sequentially and update STATE/ROADMAP themselves. Reset to `true` later if parallel worktree execution is wanted.
 
-## What Phase 2 delivered
+## Where we are in Phase 3a (Core Entity Pages & Trust Rendering)
 
-**"Claim-Typed Verification, Per-Fact Publication Gate & Ingestion"** (VRFY-01..12, DATA-05/06). 7 plans across 4 waves, all executed; verifier passed **14/14 must-haves** against the actual codebase. The gate is the trust layer as a build invariant.
+6 plans, 4 waves. **Sequential-on-main execution, each plan critiqued against REAL code/HTML before advancing (not the executor self-report).**
 
-Modules built (all zero-new-dependency, Node 24 native fetch + node:test + existing Ajv):
-- `lib/verification.mjs` - the pure derivation heart. `deriveVerificationState()` (D-15 seven-state precedence: `wrong > contested > non-resolving-citation > disagreement > insufficient [split into withheld-in-review / withheld-unverified] > stale > confirmed`), `meetsCorroborable` (D-05: >=2 confirms passes / >=2 distinct lineage / >=1 primary), `meetsAuthoritative` (D-06: 1 authority + distinct-`reviewerKind` re-read, kind-based/honour-based), `checkDistinctLineage` (transitive `derivedFrom` root + cycle canonicalisation), `checkMeasureMismatch`, `checkValueDivergence`, `checkConfirmsContradictValue`, `classifyStaleness` (entityType-aware, D-16), `CITATION_TTL_DAYS = 180`. No fs/network/process.exit, so it also runs at render time in Phase 3a.
-- `lib/citation-status.mjs` + `scripts/check-citations.mjs` - the four-verdict citation-existence checker (RESOLVES / DOES_NOT_RESOLVE [404/410/NXDOMAIN only] / ACCESS_BLOCKED [403/429, live-but-refused, auto-mitigated by a Wayback CDX snapshot] / INDETERMINATE). Manual-redirect SSRF guard re-validated on every hop; canonicalised IP/host block-list (incl. name-based loopback); DOI slash kept intact for Crossref + Handle; byte cap on the decompressed stream. Standalone - NEVER in prebuild.
-- `scripts/validate-data.mjs` - the offline per-fact gate (extends the Phase 1 harness). Lineage/measure/value-divergence WITHHOLD (they do not fail the build, R-02); the build fails ONLY on internal-consistency violations (contested-without-adjudication; contested non-null value; contested-without-two-positions; corrected-without-correctedValue; sourcesChecked-not-a-subset; malformed markedWrong; dangling `derivedFrom`). Reads the committed `.cache/citation-verdicts.json` offline (absent/expired = UNCHECKED = withheld). Prints a derived-state status breakdown.
-- `scripts/ingest-off.mjs` + `ingestion/` - OFF v2 barcode ingestion into an isolated `lead` store OUTSIDE `src/_data` (D-19: a lead is not a SourcedValue, has no `sources` key, carries field-level provenance + ODbL licence + the `off` registry link). Manual-redirect host-constrained, byte-capped. Standalone.
-- `scripts/audit-verification.mjs` - a read-only worst-first audit (DEBT `DATA-AUDIT.md` style) writing a dated `docs/DATA-AUDIT-{date}.md` (gitignored, generated on demand). Sections: counts-by-status (in-review vs unverified split), worst-first discrepancies, citations-no-longer-resolving, citations-due-for-recheck (vs the 180-day TTL), future-date warnings, OFF/ODbL attribution, authoritative-classification spot-check. Never writes a fact or verdict (D-17: AI never adjudicates).
-- Schemas: `sourced-value.schema.json` (inline `verification` record: passes-as-events, `measure` with `unit`, `adjudication` with `correctedValue`), `lead.schema.json`, and `verificationStatus`/`publicationStatus` constrained to `{enum:[null]}` at the SourcedValue level AND all five entity schemas (D-03/R-06 - status is derived-only, never author-set).
+| Plan | Wave | Status | What it delivered |
+|------|------|--------|-------------------|
+| 03a-01 | 1 | DONE + verified | D-15 `ingredients` + D-14 `authorityPosition` optional schema fields (migration-safe); `lib/reverse-index.mjs` (productsByIngredient/timelineByProduct, pure); `checkIngredientRefs` + `checkTimelineRefs` build gates (both live-proven to fail on a dangling ref); `.eleventy.js` addGlobalData wiring. |
+| 03a-02 | 1 | DONE + verified | `factCell` macro INSIDE `macros.njk` (R-31 intact, spans-only, valid in `<td>`); contested branch renders per-position sources (F6); locked state CSS (`[data-state^="withheld"]`, amber `#b45309` stale bar, allergen red `#d4351c` border-only, no amber/red as text). |
+| 03a-03 | 2 | DONE + verified | `src/product.njk` - paginated product page (`resolve: values`, A1 proven, 3 pages); D-05 sections (Ingredients, Manufacturer, Sources roll-up, Recipe history); mostly-withheld page renders purposefully (D-13); Lucozade contested both-sides + Walls empty state. **R-31 verified on real HTML: withheld manufacturer + ingredientsText values ABSENT from the built page.** pa11y clean. |
+| 03a-05 | 2 | DONE + verified | `src/ingredient.njk` + first record `src/_data/ingredients/sucralose.json` (renders withheld, correct); D-08 separated regulatory (INGR-03) vs optional authority (INGR-02, absent-no-stub) blocks + not-dietary-advice note; INGR-04 products-containing list. R-31 verified on HTML; pa11y clean. |
+| **03a-04** | **3** | **NOT STARTED** | Nutrition table (D-06/F4) + **allergen fail-safe (D-12, the highest-stakes render)**. Adds these to `src/product.njk` between Ingredients and Manufacturer, plus `lib/allergen-copy.mjs` (pure `allergenLine`) and `.eleventy.js` filter. |
+| **03a-06** | **4** | **NOT STARTED - HUMAN CHECKPOINT** | Proof-set authoring. `autonomous: false`. Task 1 is a `checkpoint:human-action` blocking gate: a human authors the verification passes + the published-stale example + authority-position content. **AI never authors verification passes or adjudications (D-04/D-11).** |
 
-Worked data (the gate exercised on the real corpus): **1 `published-confirmed`, 1 `published-contested`, 18 `withheld-unverified`** (the correct, honest outcome for facts SPIKE-01 could not verify).
+## What Wave 3 (03a-04) must do - the allergen-safety critique target
 
-## The human-editorial checkpoint (02-07) - and a real correction it produced
+This is the highest-stakes plan. When it completes, critique it HARD against real HTML:
+- **Allergen fail-safe (D-12):** a **withheld `absent`** allergen claim MUST NEVER render as "does not contain X"; a **withheld `present`/`may-contain`** MUST NEVER be hidden. Allergens fail safe TOWARD warning. Verify on built HTML that the string "does not contain" appears on NO product page, and that `spike-02`'s withheld allergen provenance (milk/tree-nuts/cereals - genuinely unverified today) renders the safe "cannot confirm... check the pack" wording.
+- Red `#d4351c` is bar/border ONLY, never text (fails 4.5:1 on the `#f3f2f1` panel). The `allergenLine` helper has an exhaustive unit test asserting none of the six (presence x publishable) outputs contains "does not contain".
+- **Nutrition table (D-06/F4):** an accessible `<table>` (caption/thead/scope) of the 9 figures; three cell states distinct - "Not recorded" (absent key) vs "Not yet verified" (withheld) vs a published value; per-figure provenance block below at `id="nutrition-{key}"` with **`tabindex="-1"`** (G2 focus); **320px reflow, no `white-space:nowrap`** (G1). Each figure renders via `factCell`, never raw `.value`.
+- Run pa11y WCAG2AA on a rebuilt product page (the pattern below), and confirm 320px reflow.
 
-Plan 02-07 Task 2 is a **`checkpoint:human-action` blocking gate** (mirroring the Phase 1 `01-10` precedent): a human authored the verification pass verdicts and the contested adjudication; an AI must never write those (D-04/D-11/VRFY-02). During that checkpoint the editor's source-checking turned up a **Companies House record** showing the registered legal entity is still *Lucozade Ribena Suntory Limited* (company 08603549); "Suntory Beverage & Food GB&I" is only a trading name adopted in 2020. That reclassified the `spike-01` manufacturer fact from a weak single-source `authoritative` claim into a genuine **corroborable `published-confirmed`** (Companies House primary + Suntory, distinct lineage). A new primary source `companies-house-lrs-08603549` (Open Government Licence v3.0) was added to the registry. The Lucozade timeline figure published `contested` (value withheld, two positions: ~13 g sugar/100ml Energy Orange per The Grocer vs ~17 g carbohydrate/100ml Original per diabetes.co.uk).
+## The per-plan verification pattern used this session (KEEP DOING THIS)
 
-## Review hardening (five independent passes, all findings fixed)
+Do not trust the executor's self-report. After each plan:
+1. `node --test 'test/**/*.test.js'` and `npm run build` - real green.
+2. **R-31 on real HTML:** extract a known withheld raw value from the JSON and `grep -qF` it is ABSENT from the built page; confirm "Not yet verified; withheld." placeholders present.
+3. **pa11y** on the built route: `npx http-server _site -p 8099 -s -c-1 & sleep 2; node_modules/.bin/pa11y --standard WCAG2AA "http://127.0.0.1:8099/products/<slug>/"` -> expect "No issues found!". Kill the server after.
+4. Verify the plan's specific invariants (allergen fail-safe, contested both-sides, empty states, D-08 separation).
+5. Only refine if a REAL defect is found - do not manufacture nits. Clean plans this session needed no changes.
 
-Phase 2 was reviewed far past the normal gate because the trust/security core is correctness-critical:
-1. **plan-checker** (during planning) - 1 blocker + warnings fixed pre-execution.
-2. **Opus code review** (`02-REVIEW.md`) - found CR-01 (lineage tail-into-cycle faking corroboration) + soft-404-on-HEAD + OFF redirect SSRF; fixed.
-3. **Sonnet code review** (`02-REVIEW-2.md`) - independently confirmed the Opus fixes, then found the web.archive.org archive-of-archive bug (a deliberately-archived Wayback citation could never resolve) + contested-positions referential/existence gap; fixed.
-4. **Three-model deep adversarial pass** (execution-based: trust-model, network/security, mutation-testing) - proved findings by running crafted inputs against the real modules. Found and fixed **2 CRITICAL** (`corrected`-without-`correctedValue` publishing `value: undefined`; `localhost`/`ip6-localhost` SSRF bypass), 1 HIGH (confirms passes whose `checkedValue` contradicts the published value), 3 MEDIUM (future-dated-cache fail-open; soft-404 on a 206; audit rot-scan missing position sources), 1 test-gap (two-confirming-pass count unpinned), 3 LOW.
+## How to run each executor (sequential-on-main)
 
-All fixes carry regression tests (162 total). Both Criticals were re-verified end-to-end through the live gate. The finding taxonomy (R-NN / CR-NN / etc.) is recorded in `02-REVIEW.md`, `02-REVIEW-2.md`, the commit messages, and the `02-CONTEXT.md` amendments.
+Spawn `gsd-executor` (model opus) per plan, one at a time in wave order. Prompt template that worked (adapt the plan number and reminders): sequential_execution block (branch main, no branch switch, hooks on, Write SUMMARY -> commit -> narrate, Co-Authored-By trailer), execution_context @execute-plan.md + summary template + checkpoints, files_to_read (the PLAN, PROJECT.md, STATE.md, CLAUDE.md, the UI-SPEC/RESEARCH, and the plan's own read_first files), plus plan-specific critical_reminders. See the earlier session transcript for the exact prompts.
 
-## Next step
+Wave 3 has one plan (03a-04). Wave 4 (03a-06) is the human checkpoint - do NOT spawn an autonomous executor to author verification passes; drive Task 1 interactively with the human, then the autonomous follow-on (Tasks 2-3) transcribes the approved values, seeds the verdict cache, wires the D-15 cross-link, and adds the pa11y routes.
 
-Two independent, both legitimate:
+## Phase 3a facts that still matter (do not re-derive)
 
-- **`/gsd:secure-phase 2`** (recommended first) - `security_enforcement` is on and Phase 2 introduced the project's first server-side network I/O (the citation checker + OFF ingester). No `02-SECURITY.md` exists yet. The SSRF guard was hardened twice; the formal gate would document the threat model over the current code.
-- **`/gsd:discuss-phase 3a`** - the next content phase ("Core Entity Pages & Trust Rendering"). No `CONTEXT.md` exists for 3a yet, so discuss-phase is the recommended start. This is where the withheld-placeholder / contested-both-sides / review-due states Phase 2 derives finally reach readers.
+- **Render off `factState`/`factForRender`, never `fact.value`.** `check-render-safety.mjs` (in prebuild + the Eleventy hook) fails the build on any raw `.value` outside `macros.njk`. This barrier is verified holding on real HTML. The nutrition figure render is `factCell` INSIDE `macros.njk`, NOT a second render path.
+- **Locked palette (03a-UI-SPEC.md, computed contrast on white AND `#f3f2f1`):** withheld `#505a5f`, stale bar amber `#b45309` (not `#f47738`/`#d4531e`), contested `#1d70b8`, allergen red `#d4351c` (bar/border only), verified `#00703c`. Every cue paired with a TEXT label; red/amber NEVER used as text.
+- **Two schema fields are OPTIONAL/migration-safe.** `product.ingredients` is plain metadata (no value/sources, never trips render-safety). `authorityPosition` is a bare SourcedValue $ref, deliberately NOT `claimDomain: regulatory` (so it derives + gets the trust treatment but is exempt from the TRUST-06 GB-jurisdiction gate). Verified.
+- **The published-stale two-clocks recipe (VERIFIED against lib/verification.mjs):** a fact derives `published-stale` when it MEETS sufficiency AND its citations have a fresh in-TTL RESOLVES (180d) AND its `lastVerified` (max pass `checkedOn`) is older than the class staleness threshold (regulatory 12m / current 24m, exclusive). So passes carry OLD `checkedOn` (e.g. `2023-06-01` for a current fact) while the verdict cache carries a RECENT `checkedAt`. Backdating dates alone renders withheld (the trap). Needed for the 03a-06 proof set (no `published-stale` example exists yet).
+- **sucralose.json known stub:** its `regulatoryStatus` cites `fsa-allergen-guidance` as a placeholder (semantically mismatched but renders withheld); plan 06 replaces it with the real additives-law citation.
+- **Planning artefacts:** `03a-CONTEXT.md` (D-01..D-15, hardened by a schema-grounded critique), `03a-RESEARCH.md`, `03a-UI-SPEC.md` (hardened by two computed-contrast + interaction critiques), `03a-PATTERNS.md`, `03a-VALIDATION.md` (nyquist_compliant). All committed.
 
-## Key context for Phase 3a (the rendering phase)
+## Earlier-phase facts that still matter
 
-- **The derived state is the render signal, NOT the raw `value`.** By design every withheld record still carries its raw `value` in JSON (so promotion/adjudication can work), so Phase 3a is the single point where the whole model can be silently defeated. **Phase 3a MUST assert (test) that a withheld / contested fact's raw value never renders** - render off `deriveVerificationState()`, never `fact.value`. This was flagged by the reviewers (R-31) and is not yet enforced.
-- **ROADMAP Phase 3a now owns the reader-facing half of VRFY-11 and VRFY-12** (added as Phase 3a Success Criterion 5 during Phase 2): render `published-contested` as a both-sides treatment, and `published-stale` as a "last verified {date} - review due" indicator. Phase 2 delivered only the status + date; do not treat these as done.
-- `lib/verification.mjs` is pure and importable at build/render time - reuse it in templates rather than re-deriving.
-- Eleventy renders every `.json` under `src/_data`; the corpus-escape guard in `validate-data.mjs` fails any SourcedValue-shaped stray outside the entity dirs. Do not put leads under `src/_data`.
-
-## Phase 2 facts that still matter (do not re-derive)
-
-- **Locked decisions** live in `02-CONTEXT.md` (19 decisions D-01..D-19 + post-critique amendments). Do not re-litigate. D-15 is now a SEVEN-state table (adds `withheld-in-review`).
-- **Verdict-cache entry shape** (SEAM-pinned): `{ verdict, resolvedVia, checkedAt (ISO-8601), statusCode, snapshotUrl }`, keyed by source id, committed at `.cache/citation-verdicts.json`. `CITATION_TTL_DAYS = 180` is exported once from `lib/verification.mjs`; the gate enforces it, the audit surfaces it, never redefine it.
-- **The network scripts are OFF the build path** and run manually: `npm run check:citations` (writes the cache), `npm run ingest:off`, `npm run audit`. The offline gate reads the committed cache; CI/prebuild never touches the network.
-- **`.cache/citation-verdicts.json` is committed** (provenance-in-diff, offline CI). `docs/DATA-AUDIT-*.md` is gitignored (generated on demand).
-- **OGL v3.0** was added to the source registry's licence vocabulary (for the Companies House record). Entity-level `publicationStatus`/`verificationStatus` are now `{enum:[null]}`.
-
-## Known cosmetic / tracking notes (non-blocking)
-
-- **STATE.md status line is stale** (`status: verifying` / "ready for verification") - `phase complete` could not update two STATE.md fields due to a format mismatch (it warned). **ROADMAP.md is authoritative: Phase 2 is marked `[x]` complete (2026-07-01).**
-- **REQUIREMENTS.md traceability warning:** 5 REQ-IDs present in the body but missing from the Traceability table (`PROC-01/02/03`, `PRICE-01`, `NOTF-01`) - orthogonal to Phase 2, worth adding when convenient.
-
-## Phase 1 facts that still matter
-
-- **Basic-auth edge function is a TEMPORARY pre-launch gate** - remove it (and the `edge_functions` line in `netlify.toml`) at public launch. Credentials are Netlify env vars `BASIC_AUTH_USER`/`BASIC_AUTH_PASS`.
-- **Deferred to public launch (Phase 3b territory):** ODbL/OFF attribution footer (a `{# #}` marker is in `base.njk`; add when the first OFF-derived fact renders - note the Companies House fact is OGL, but OFF leads carry ODbL share-alike), `sitemap.xml` + `robots.txt`, JSON-LD / `dateModified`, Open Graph tags, custom domain (`site.url`).
-- **Locked:** dataset licence ODbL 1.0 (share-alike), code MIT; Node 24; 14 FSA allergens (`soya`, not `soybeans`).
+- **Phase 2 is complete, secured (02-SECURITY.md, 34/34 threats + 2 new from Review 3), validated (Nyquist), and deeply reviewed (02-REVIEW-3.md, 12 findings, 9 fixed incl. an SSRF trailing-dot bypass and the live R-31 render leak).** Do not re-review.
+- **Basic-auth edge function is a TEMPORARY pre-launch gate** (remove at public launch; creds are Netlify env vars). Deferred to launch: ODbL/OFF attribution footer, sitemap/robots, JSON-LD, custom domain (all Phase 3b territory).
+- **Locked:** dataset licence ODbL 1.0, code MIT, Node 24, 14 FSA allergens (`soya` not `soybeans`).
 
 ## CRITICAL tooling note
 
-The `gsd-sdk` binary on PATH is the WRONG binary (it is the milestone runner). The real GSD helper is:
-```
-node ~/.claude/get-shit-done/bin/gsd-tools.cjs <command>
-```
-Dotted verbs become space-separated (`gsd-sdk query roadmap.update-plan-progress` -> `gsd-tools.cjs roadmap update-plan-progress`); `state`/`config`/`commit` subcommands take named flags (`--phase`, `--files`), not positional args. Also in session memory as `gsd-sdk-binary-collision`. Config: Quality model profile (Opus plan / Sonnet check), Interactive mode, research + plan-check + Nyquist + code-review + security on, commit_docs on.
+`gsd-sdk` on PATH is the WRONG binary. Use `node ~/.claude/get-shit-done/bin/gsd-tools.cjs <command>` with the SUBCOMMAND form (e.g. `state advance-plan`, `roadmap update-plan-progress`, `commit "msg" --files ...`), NOT `query state.advance-plan`. In session memory as `gsd-sdk-binary-collision`.
 
 ## Standing rules
 
-British English, conventional commits, WCAG 2.2 AA, minimal deps (Phase 2 added ZERO), **no push without asking**, no emoji, no em-dashes. The blueprint repo `/Users/anthonygeorge/Projects/DEBT` is the live pattern source - read-only, do not modify.
+British English, conventional commits, WCAG 2.2 AA, ZERO new deps, **no push without asking**, no emoji, no em-dashes. `/Users/anthonygeorge/Projects/DEBT` is the read-only blueprint. Config: Quality models (Opus plan / Sonnet check), Interactive, research + plan-check + Nyquist + code-review + security on, commit_docs on.

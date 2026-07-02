@@ -135,12 +135,23 @@ test("check-render-safety fails on a template that renders a raw .value, passes 
       "<p>{{ fact | tojson }}</p>\n",
       "<p>{{ fact | attr(\"value\") }}</p>\n",
       "<script>{{ product | jsonScript }}</script>\n",
+      // Object enumeration: a two-variable for-loop dumps a fact's own fields
+      // (including a withheld `value`) without the literal token ever appearing.
+      "{% for k, v in fact %}<li>{{ k }}: {{ v }}</li>{% endfor %}\n",
+      "{% for k, v in product.manufacturer %}{{ v }}{% endfor %}\n",
     ]) {
       const f = join(dir, "bypass.njk");
       writeFileSync(f, leak);
       const r = spawnSync(process.execPath, [LINT, f], { encoding: "utf8" });
       assert.notEqual(r.status, 0, `render-safety must reject: ${leak.trim()}`);
     }
+
+    // A two-variable loop over the meta.* config maps is safe (no fact values) and
+    // must NOT be flagged - mirrors the real methodology.njk usage.
+    const safeLoop = join(dir, "safe-loop.njk");
+    writeFileSync(safeLoop, "{% for grade, definition in meta.confidenceLevels %}{{ grade }}: {{ definition }}{% endfor %}\n");
+    const rSafe = spawnSync(process.execPath, [LINT, safeLoop], { encoding: "utf8" });
+    assert.equal(rSafe.status, 0, "render-safety must allow two-variable loops over meta.*");
 
     const good = join(dir, "safe.njk");
     writeFileSync(good, "{% from \"components/macros.njk\" import sourcedValue %}\n{{ sourcedValue(fact, sources.sources, \"Label\") }}\n");

@@ -67,12 +67,36 @@ const DANGER = [
   /\|\s*(?:dump|tojson|jsonScript)\b/,
 ];
 
+// A two-variable for-loop enumerates an object's OWN keys and values at runtime, so
+// {% for k, v in fact %}{{ v }} dumps a withheld `value` without the literal token
+// the DANGER denylist looks for ever appearing in the source - the property name is
+// a runtime binding, structurally invisible to a line regex. Object enumeration is
+// therefore denied by DEFAULT; the only safe iterables are the meta.* config maps
+// (the confidence/evidence level definitions), which carry no fact values. A future
+// non-fact map that genuinely needs two-variable iteration must be added to
+// SAFE_ITERABLES here - a small, explicit, auditable exception, consistent with the
+// gate's default-deny stance. (Single-variable loops that then access `.value` are
+// already caught by the denylist above.)
+const OBJECT_ENUMERATION = /\bfor\s+\w+\s*,\s*\w+\s+in\s+([A-Za-z_$][\w.$]*)/;
+const SAFE_ITERABLES = /^meta\./;
+
+// Residual limitation (documented, not a silent gap): a line regex cannot resolve a
+// value aliased through an intermediate binding, nor a bracket access with a computed
+// key. The load-bearing guarantee is that facts render ONLY through the sanctioned
+// macro (lib/render-state.mjs exposes the raw value only when publishable); this lint
+// is the accidental-leak backstop. NOTE: <script> bodies are deliberately NOT exempt -
+// inline JS must be fed a pre-projected safe dataset, never a raw `.value`.
+
 function scan(path) {
   const violations = [];
   if (resolve(path) === SANCTIONED) return violations;
   const lines = stripComments(readFileSync(path, "utf8")).split("\n");
   lines.forEach((line, i) => {
-    if (DANGER.some((re) => re.test(line))) violations.push({ path, line: i + 1, text: line.trim() });
+    const enumMatch = line.match(OBJECT_ENUMERATION);
+    const enumerationLeak = enumMatch && !SAFE_ITERABLES.test(enumMatch[1]);
+    if (enumerationLeak || DANGER.some((re) => re.test(line))) {
+      violations.push({ path, line: i + 1, text: line.trim() });
+    }
   });
   return violations;
 }

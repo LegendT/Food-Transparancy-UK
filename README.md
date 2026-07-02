@@ -5,15 +5,22 @@ changed over time. Every published fact is traceable to a primary source,
 verified to a standard matched to its claim type, and honest about its
 uncertainty.
 
-> **Status:** Phases 1 and 2 are complete and Phase 3a is in progress.
+> **Status:** Phases 1, 2 and 3a are complete; Phase 3b is next.
 > Phase 1 is the trust/schema foundation. Phase 2 added the claim-typed
 > verification model, the per-fact publication gate, a four-verdict citation
 > existence checker, Open Food Facts ingestion and a worst-first audit. Phase 3a
-> (in progress, 4 of 6 plans) ships server-rendered **product and ingredient
-> pages** over a seed corpus: every fact renders through the trust component, and
-> any unverified fact appears as an explicit "not yet verified - withheld"
-> placeholder rather than an asserted value. The live deploy is gated behind HTTP
-> basic auth while pre-launch.
+> ships server-rendered **product and ingredient pages** over a seed corpus:
+> every fact renders through the trust component; any unverified fact appears as
+> an explicit "not yet verified - withheld" placeholder rather than an asserted
+> value; an accessible nutrition table and a fail-safe allergen render carry the
+> highest-stakes data; and the four reader-facing trust states
+> (published-confirmed, published-stale "review due", published-contested
+> both-sides, withheld) are covered by tests and, where the corpus allows,
+> rendered live. Phase 3b adds the site shell, crawlability and the full
+> accessibility floor. The live deploy is gated behind HTTP basic auth while
+> pre-launch. **Not yet met:** the SC4 seed-corpus target (>=20 products /
+> >=40 ingredients) is an editorial deliverable tracked as an acknowledged
+> deferral; the machine renders every state correctly on the current small corpus.
 
 ## Stack
 
@@ -32,7 +39,7 @@ npm install        # installs the pinned dev dependencies (downloads Chromium fo
 npm run build      # runs the three gates, then builds _site/
 npm test           # the schema + gate + fixture suite (node --test)
 npm run a11y:all   # builds, serves _site, runs pa11y-ci over the routes
-npm run dev        # local dev server with live reload (NOTE: dev does not run the gates)
+npm run dev        # local dev server with live reload (the eleventy.before hook still runs all four gates)
 ```
 
 `npm run build` is the gated path: it runs `prebuild` (the four validation
@@ -50,7 +57,7 @@ reader):
 | Data | `scripts/validate-data.mjs` | Ajv structural validation + referential integrity (source-id resolution, GB jurisdiction for regulatory facts, ranged-date order, and dangling product-ingredient / timeline-product references), the per-fact verification/publication derivation, a corpus-escape guard, and a non-zero-fact assertion |
 | Editorial | `scripts/check-editorial.mjs` | British English + neutral framing (Class A everywhere, Class B in analyst prose only; verbatim quotes exempt) across prose and data-JSON analyst fields |
 | Images | `scripts/check-images.mjs` | Image-rights default-deny (`rightsStatus`) |
-| Render safety | `scripts/check-render-safety.mjs` | No template renders a raw fact `.value` outside the sanctioned trust macro (R-31), so a withheld or contested value can never reach a reader |
+| Render safety | `scripts/check-render-safety.mjs` | No template renders **or serialises** a raw fact `.value` outside the sanctioned trust macro (R-31): dot access, bracket access, the `dump`/`tojson`/`jsonScript`/`dictsort` filters, and two-variable object enumeration are all denied, so a withheld or contested value can never reach a reader. The sanctioned macro (exempt from the lint) is backed by a behavioural render test that asserts a withheld value never crosses to HTML |
 
 Every gate's failure path is proven by a negative fixture or test under `test/`.
 

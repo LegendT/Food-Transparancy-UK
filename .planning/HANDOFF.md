@@ -9,7 +9,7 @@ An evidence-based, citation-first static archive of how UK packaged-food recipes
 
 ## Current state (verified)
 
-- **Git:** branch `main`, tip `d886aaa`, working tree clean (only untracked `.history/`, `.vscode/`, a local `.docx`). **17 commits ahead of origin/main - NOT pushed. Ask before pushing (global rule).**
+- **Git:** branch `main`, working tree clean (only untracked `.history/`, `.vscode/`, a local `.docx`). All Phase 3a Waves 1-2 work IS pushed to `origin/main` (run `git rev-parse --short HEAD` for the live tip; `git status` for ahead/behind). `README.md` was refreshed to describe Phases 1-2 complete + Phase 3a in progress (product/ingredient pages, the four gates, the verification model). No push without asking (global rule).
 - **Gates:** `node --test` -> **196/196 pass**; `npm run prebuild` -> exit 0 (validate + editorial + image + render-safety); `npm run build` green. pa11y WCAG 2.2 AA -> 0 issues on every built page checked so far (product x2, ingredient x1).
 - **Config note for this run:** `workflow.use_worktrees` was set to `false` (sequential-on-main execution) for safety/simplicity on this small flat-file repo. Executors run sequentially and update STATE/ROADMAP themselves. Reset to `true` later if parallel worktree execution is wanted.
 

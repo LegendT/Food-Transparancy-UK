@@ -1,7 +1,7 @@
 You're picking up Food Transparency UK (`/Users/anthonygeorge/Projects/Food Transparancy`). Read `.planning/HANDOFF.md` first - it has the full state. Summary:
 
 - Phases 1 and 2 are complete. **Phase 3a (Core Entity Pages & Trust Rendering) is mid-execution: Waves 1-2 done and verified (plans 03a-01/02/03/05), Wave 3 (03a-04) and Wave 4 (03a-06) remain.**
-- Git: branch `main`, tip `d886aaa`, tree clean, **17 commits ahead of origin - NOT pushed (ask first)**. `node --test` 196/196, `npm run build` green, pa11y WCAG2AA clean on every built page (product x2, ingredient x1).
+- Git: branch `main`, tree clean, Waves 1-2 pushed to `origin/main` (run `git rev-parse --short HEAD` / `git status` for the live tip and ahead/behind). `node --test` 196/196, `npm run build` green, pa11y WCAG2AA clean on every built page (product x2, ingredient x1). `README.md` describes the current state (Phases 1-2 complete, Phase 3a in progress).
 - Execution is **sequential-on-main** (`workflow.use_worktrees=false` for this run). Each plan is critiqued against REAL code/HTML before advancing - NOT the executor self-report. Keep doing that.
 
 **Your task: resume Phase 3a execution.**

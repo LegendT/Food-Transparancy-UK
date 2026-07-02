@@ -5,9 +5,14 @@ changed over time. Every published fact is traceable to a primary source,
 verified to a standard matched to its claim type, and honest about its
 uncertainty.
 
-> **Status:** Phase 1 (the trust/schema foundation) is complete. There are no
-> product pages yet; the site currently renders a home page, a Methodology stub,
-> a 404 page and a trust-component demo. The live deploy is gated behind HTTP
+> **Status:** Phases 1 and 2 are complete and Phase 3a is in progress.
+> Phase 1 is the trust/schema foundation. Phase 2 added the claim-typed
+> verification model, the per-fact publication gate, a four-verdict citation
+> existence checker, Open Food Facts ingestion and a worst-first audit. Phase 3a
+> (in progress, 4 of 6 plans) ships server-rendered **product and ingredient
+> pages** over a seed corpus: every fact renders through the trust component, and
+> any unverified fact appears as an explicit "not yet verified - withheld"
+> placeholder rather than an asserted value. The live deploy is gated behind HTTP
 > basic auth while pre-launch.
 
 ## Stack
@@ -30,32 +35,49 @@ npm run a11y:all   # builds, serves _site, runs pa11y-ci over the routes
 npm run dev        # local dev server with live reload (NOTE: dev does not run the gates)
 ```
 
-`npm run build` is the gated path: it runs `prebuild` (the three validation
+`npm run build` is the gated path: it runs `prebuild` (the four validation
 gates below) and an `eleventy.before` hook that re-runs them, so a build fails
-closed if any fact, image or piece of prose breaks a gate.
+closed if any fact, image, piece of prose or template breaks a gate.
 
 ## The trust gates
 
-Three build-failing gates enforce the core value (no fact ships without its
-provenance, verified to its claim type):
+Four build-failing gates enforce the core value (no fact ships without its
+provenance, verified to its claim type, and no unverified value ever reaches a
+reader):
 
 | Gate | Script | Enforces |
 |------|--------|----------|
-| Data | `scripts/validate-data.mjs` | Ajv structural validation + referential integrity (source-id resolution, GB jurisdiction for regulatory facts, ranged-date order), a corpus-escape guard, and a non-zero-fact assertion |
+| Data | `scripts/validate-data.mjs` | Ajv structural validation + referential integrity (source-id resolution, GB jurisdiction for regulatory facts, ranged-date order, and dangling product-ingredient / timeline-product references), the per-fact verification/publication derivation, a corpus-escape guard, and a non-zero-fact assertion |
 | Editorial | `scripts/check-editorial.mjs` | British English + neutral framing (Class A everywhere, Class B in analyst prose only; verbatim quotes exempt) across prose and data-JSON analyst fields |
 | Images | `scripts/check-images.mjs` | Image-rights default-deny (`rightsStatus`) |
+| Render safety | `scripts/check-render-safety.mjs` | No template renders a raw fact `.value` outside the sanctioned trust macro (R-31), so a withheld or contested value can never reach a reader |
 
-Every gate's failure path is proven by a negative fixture under `test/fixtures/`.
+Every gate's failure path is proven by a negative fixture or test under `test/`.
+
+**The verification model (Phase 2).** A fact is published only when it meets the
+standard its claim type demands: a *corroborable* fact needs two confirming
+verifications against two distinct-lineage sources (at least one primary); an
+*authoritative* fact needs one authority plus an independent re-read. The
+derivation is pure (`lib/verification.mjs`) and reused at render time
+(`lib/render-state.mjs`), so templates render the derived state, never the raw
+value. Citation existence is checked out-of-band by `npm run check:citations`
+(four verdicts: RESOLVES / DOES_NOT_RESOLVE / ACCESS_BLOCKED / INDETERMINATE),
+which writes the committed, diffable `.cache/citation-verdicts.json`; the build
+gate reads that cache offline and never touches the network. `npm run ingest:off`
+(Open Food Facts) and `npm run audit` are likewise standalone, never in the build.
 
 ## Repository layout
 
 ```
-src/_data/        canonical JSON: facts (products/, timeline/), the source registry, vocab
-src/_includes/    base layout + the sourcedValue trust macro
-src/*.njk         the rendered pages (index, methodology, 404, components-demo)
-schemas/          JSON Schemas (the SourcedValue envelope + entity schemas)
-lib/              pure gate logic (validate, referential, editorial, image)
-scripts/          the prebuild gate entry points
+src/_data/        canonical JSON: facts (products/, ingredients/, timeline/), the source registry, vocab
+src/_includes/    base layout + the sourcedValue / factCell trust macros
+src/*.njk         the rendered pages (index, methodology, 404, components-demo, product, ingredient)
+schemas/          JSON Schemas (the SourcedValue envelope + entity schemas + the lead schema)
+lib/              pure logic: gates (validate, referential, editorial, image), the verification
+                  derivation + render-state projection, the reverse index, and the citation-status classifier
+scripts/          the four prebuild gate entry points + the standalone network scripts
+                  (check-citations, ingest-off, audit-verification) that never run in the build
+.cache/           the committed, diffable citation-existence verdict cache (read offline by the gate)
 test/             node:test suite + fixtures (valid + invalid)
 docs/             the corpus selection rubric, the sourcing backlog, the SPIKE-01 findings
 .planning/        GSD planning artefacts (roadmap, phase plans, handoff)

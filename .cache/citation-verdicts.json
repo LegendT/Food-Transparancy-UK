@@ -26,5 +26,19 @@
     "checkedAt": "2026-07-01",
     "statusCode": 200,
     "snapshotUrl": null
+  },
+  "fsa-gb-additives-e955": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "direct",
+    "checkedAt": "2026-07-02",
+    "statusCode": 200,
+    "snapshotUrl": null
+  },
+  "efsa-sucralose-2026": {
+    "verdict": "RESOLVES",
+    "resolvedVia": "direct",
+    "checkedAt": "2026-07-02",
+    "statusCode": 200,
+    "snapshotUrl": null
   }
 }

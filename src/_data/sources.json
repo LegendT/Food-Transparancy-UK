@@ -330,6 +330,44 @@
         "shareAlike": false
       },
       "derivedFrom": null
+    },
+    {
+      "id": "fsa-gb-additives-e955",
+      "name": "FSA GB register: E955 (sucralose) food additive authorisation",
+      "publisher": "Food Standards Agency",
+      "url": "https://data.food.gov.uk/regulated-products/food_authorisations/e-955",
+      "covers": "The Great Britain authorisation status of E955 (sucralose) as a food additive, authorised in England, Scotland and Wales from 31 December 2020 under assimilated Regulation (EC) No 1333/2008 Annex II.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-07-02",
+      "sourceType": "primary",
+      "jurisdiction": "GB",
+      "licence": {
+        "id": "OGL-3.0",
+        "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "derivedFrom": null,
+      "driver": null
+    },
+    {
+      "id": "efsa-sucralose-2026",
+      "name": "EFSA: re-evaluation of sucralose (E955) as a food additive - plain-language summary",
+      "publisher": "European Food Safety Authority",
+      "url": "https://www.efsa.europa.eu/en/plain-language-summary/re-evaluation-sucralose-e-955-food-additive",
+      "covers": "EFSA's 2026 re-evaluation of sucralose (E955): safe at the currently authorised uses, with the acceptable daily intake of 15 mg per kg of body weight per day retained. Primary scientific opinion: EFSA Journal 2026;24:e9854, doi:10.2903/j.efsa.2026.9854, published 16 February 2026.",
+      "updateFrequency": "As amended",
+      "retrievedDate": "2026-07-02",
+      "sourceType": "secondary",
+      "jurisdiction": "EU",
+      "licence": {
+        "id": "EFSA-reuse",
+        "url": "https://www.efsa.europa.eu/en/legalnotice",
+        "attributionRequired": true,
+        "shareAlike": false
+      },
+      "derivedFrom": null,
+      "driver": null
     }
   ]
 }

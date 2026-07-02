@@ -11,6 +11,9 @@
     "http://127.0.0.1:8081/",
     "http://127.0.0.1:8081/methodology/",
     "http://127.0.0.1:8081/404.html",
-    "http://127.0.0.1:8081/components-demo/"
+    "http://127.0.0.1:8081/components-demo/",
+    "http://127.0.0.1:8081/products/cadbury-dairy-milk/",
+    "http://127.0.0.1:8081/products/lucozade-energy/",
+    "http://127.0.0.1:8081/ingredients/sucralose/"
   ]
 }

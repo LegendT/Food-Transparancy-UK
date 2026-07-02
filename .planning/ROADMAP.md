@@ -47,7 +47,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike** - The two-axis trust layer, the entity/TimelineEvent schemas, the source/rights registry, the image-rights default-deny gate, the open-data licence, the corpus selection rubric, the British-English + neutral-editorial CI lint, and the Netlify/CI substrate that runs the gates — as build-failing invariants before any content exists — plus the SPIKE-01 spike that re-derives the corpus scope (completed 2026-06-30)
 - [x] **Phase 2: Claim-Typed Verification, Per-Fact Publication Gate & Ingestion** - No fact publishes without the passes its claim type demands; unverified facts render as withheld placeholders; stale facts show a reader-facing review-due indicator; contested facts publish with a both-sides treatment; OFF data enters only as draft leads (completed 2026-07-01)
-- [ ] **Phase 3a: Core Entity Pages & Trust Rendering** - Server-rendered current-state product and ingredient pages over a seed corpus, every claim through the trust component, every unverified fact as an explicit withheld placeholder, ingredient pages descriptive and authoritatively cited
+- [x] **Phase 3a: Core Entity Pages & Trust Rendering** - Server-rendered current-state product and ingredient pages over a seed corpus, every claim through the trust component, every unverified fact as an explicit withheld placeholder, ingredient pages descriptive and authoritatively cited (completed 2026-07-02)
 - [ ] **Phase 3b: Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface** - The site chrome, the pa11y-ci WCAG 2.2 AA floor across every route, crawlability (sitemap/robots/JSON-LD), plain-English UX with inline glossary and chart-to-table fallbacks, and the credibility surface (disclaimer, About/independence, citation+export, RSS, report-an-error)
 - [ ] **Phase 4: Then-vs-Now Flagship Layer & Corpus Scale** - The tiered then-vs-now flagship layer (never fabricated), the curated collection, the motive gate, the coverage figure, and the SPIKE-01-sized corpus — entry gate: the re-derived Tier A threshold met; early GATE-01 legal review and GATE-02 AT check on the diff
 - [ ] **Phase 5: Search, Navigation & Information Architecture** - Find and browse the archive via text-relevance search (indexed solely from published output) and a coherent site IA
@@ -130,7 +130,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 03a-03-PLAN.md — Product page base: pagination, Ingredients, Manufacturer, Sources roll-up, recipe-history + empty state (PROD-01, PROD-02, PROD-03, PROD-04)
 - [x] 03a-04-PLAN.md — Product data-dense: accessible nutrition table + allergen fail-safe with the pure allergenLine invariant (PROD-01, PROD-09)
 - [x] 03a-05-PLAN.md — Ingredient page: explainer, GB regulatory block, optional authority block, products-containing list (INGR-01, INGR-02, INGR-03, INGR-04)
-- [ ] 03a-06-PLAN.md — Proof-set human checkpoint (published-confirmed / published-stale / authorityPosition), verdict-cache seed, D-15 cross-link, representative pa11y routes (VRFY-11, VRFY-12, INGR-01/02/03, PROD-01, PROD-09)
+- [x] 03a-06-PLAN.md — Proof-set human checkpoint (published-confirmed / published-stale / authorityPosition), verdict-cache seed, D-15 cross-link, representative pa11y routes (VRFY-11, VRFY-12, INGR-01/02/03, PROD-01, PROD-09)
 
 **UI hint**: yes
 
@@ -248,7 +248,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 |-------|----------------|--------|-----------|
 | 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 7/7 | Complete    | 2026-07-01 |
-| 3a. Core Entity Pages & Trust Rendering | 5/6 | In Progress|  |
+| 3a. Core Entity Pages & Trust Rendering | 6/6 | Complete   | 2026-07-02 |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |
 | 4. Then-vs-Now Flagship Layer & Corpus Scale | 0/TBD | Not started | - |
 | 5. Search, Navigation & Information Architecture | 0/TBD | Not started | - |

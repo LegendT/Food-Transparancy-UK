@@ -4,6 +4,7 @@
   "name": "Lucozade Energy (Original)",
   "brandId": "lucozade",
   "categoryId": "soft-drinks",
+  "ingredients": ["sucralose"],
   "manufacturer": {
     "value": "Lucozade Ribena Suntory Limited (UK registered company 08603549), trading as Suntory Beverage & Food GB&I.",
     "sources": ["companies-house-lrs-08603549", "sbf-gbi-2020"],

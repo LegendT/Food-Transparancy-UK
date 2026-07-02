@@ -248,7 +248,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 |-------|----------------|--------|-----------|
 | 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 7/7 | Complete    | 2026-07-01 |
-| 3a. Core Entity Pages & Trust Rendering | 6/6 | Complete   | 2026-07-02 |
+| 3a. Core Entity Pages & Trust Rendering | 6/6 | Complete    | 2026-07-02 |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |
 | 4. Then-vs-Now Flagship Layer & Corpus Scale | 0/TBD | Not started | - |
 | 5. Search, Navigation & Information Architecture | 0/TBD | Not started | - |

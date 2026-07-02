@@ -50,21 +50,24 @@ function stripComments(text) {
 // plain member access (fact.value, product.manufacturer.value), the boundary must
 // also deny the sibling forms that reach the same property or dump the whole object:
 // bracket access (fact["value"]), the attr filter (fact | attr("value")), and
-// whole-object serialisation (| dump / | tojson / | jsonScript), which would emit
-// every field including a withheld or contested value while a `.value`-only check
-// stayed green. jsonScript is this project's own <script>-embedding serialiser (see
-// .eleventy.js): piping a raw fact or product object through it to embed a client
-// dataset would leak the same withheld values, so it is denied here too. When a
-// client-side dataset is added, embed a pre-projected SAFE dataset (already-gated
-// values), never raw fact objects. A default-deny control must be as tight as the
-// trust promise it enforces. d.value / p.value inside the sanctioned macro are the
-// derived, already-gated projections and are exempt by the path allowlist
-// (SANCTIONED returns early below).
+// whole-object serialisation / enumeration filters (| dump / | tojson / | jsonScript
+// / | dictsort), which emit every field - or every [key, value] pair - including a
+// withheld or contested value while a `.value`-only check stayed green. dictsort
+// yields [key, value] pairs, so `fact | dictsort` then a `pair[1]` access leaks the
+// value without the literal token appearing; denying the filter catches both the
+// two-variable and the numeric-index forms on the same line. jsonScript is this
+// project's own <script>-embedding serialiser (see .eleventy.js): piping a raw fact
+// or product object through it to embed a client dataset would leak the same values,
+// so it is denied too - when a client dataset is added, embed a pre-projected SAFE
+// dataset (already-gated values), never raw fact objects. A default-deny control
+// must be as tight as the trust promise it enforces. d.value / p.value inside the
+// sanctioned macro are the derived, already-gated projections and are exempt by the
+// path allowlist (SANCTIONED returns early below).
 const DANGER = [
   /\.value\b/,
   /\[\s*['"]value['"]\s*\]/,
   /\|\s*attr\(\s*['"]value['"]/,
-  /\|\s*(?:dump|tojson|jsonScript)\b/,
+  /\|\s*(?:dump|tojson|jsonScript|dictsort)\b/,
 ];
 
 // A two-variable for-loop enumerates an object's OWN keys and values at runtime, so
@@ -81,11 +84,17 @@ const OBJECT_ENUMERATION = /\bfor\s+\w+\s*,\s*\w+\s+in\s+([A-Za-z_$][\w.$]*)/;
 const SAFE_ITERABLES = /^meta\./;
 
 // Residual limitation (documented, not a silent gap): a line regex cannot resolve a
-// value aliased through an intermediate binding, nor a bracket access with a computed
-// key. The load-bearing guarantee is that facts render ONLY through the sanctioned
-// macro (lib/render-state.mjs exposes the raw value only when publishable); this lint
-// is the accidental-leak backstop. NOTE: <script> bodies are deliberately NOT exempt -
-// inline JS must be fed a pre-projected safe dataset, never a raw `.value`.
+// value aliased through an intermediate binding ({% set x = fact %} then a two-line
+// leak), a bracket access with a computed/concatenated key (fact["val" ~ "ue"]), or
+// a future object-enumerating filter beyond those denied here (Nunjucks `list` on an
+// object is undocumented; `groupby` over an attribute). These are NOT the accidental
+// forms this lint targets. The load-bearing guarantee is elsewhere and is tested
+// behaviourally: facts render ONLY through the sanctioned macro, which gets its value
+// from lib/render-state.mjs (raw value exposed only when publishable), and
+// test/render-state.test.js renders that macro with a withheld canary fact and
+// asserts the value never appears. This lint is the fast accidental-leak backstop on
+// the other templates. NOTE: <script> bodies are deliberately NOT exempt - inline JS
+// must be fed a pre-projected safe dataset, never a raw `.value`.
 
 function scan(path) {
   const violations = [];

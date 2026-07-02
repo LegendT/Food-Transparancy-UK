@@ -11,6 +11,7 @@ import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import nunjucks from "nunjucks";
 import { factForRenderFromData } from "../lib/render-state.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -117,6 +118,62 @@ test("a withheld fact carries no lastVerified date at the boundary", () => {
   assert.equal(d.lastVerified, null);
 });
 
+// Behavioural R-31: render the SANCTIONED macro itself. The macro is exempt from the
+// check-render-safety lint (it is the one allowlisted path), so a regression that
+// moved `d.value` outside the `{% if d.publishable %}` branch would be caught by no
+// static check - only by rendering it. These tests render it with a unique canary
+// value and assert the value crosses to HTML ONLY when the fact publishes.
+const CANARY = "CANARY_RAW_VALUE_9f3a7c";
+const INCLUDES = resolve(HERE, "../src/_includes");
+
+function renderMacro(callExpr, context) {
+  const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(INCLUDES), { autoescape: true });
+  env.addFilter("factState", (fact, srcs, entityType) => factForRenderFromData(fact, srcs, VERDICTS, TODAY, entityType));
+  env.addFilter("findBy", (arr, key, value) => (Array.isArray(arr) ? arr.find((i) => i && i[key] === value) : undefined));
+  env.addFilter("readableDate", (v) => v); // not exercised by the non-stale cases below
+  return env.renderString(`{% from "components/macros.njk" import sourcedValue, factCell %}${callExpr}`, context);
+}
+
+test("R-31 behavioural: sourcedValue never renders a withheld fact's raw value", () => {
+  const fact = { value: CANARY, sources: ["prim-a"], confidence: "low", evidence: "low", updated: "2026-07-01", claimType: "authoritative", verification: { passes: [] } };
+  const html = renderMacro(`{{ sourcedValue(fact, sources, "Label", "", "product") }}`, { fact, sources: SOURCES });
+  assert.ok(!html.includes(CANARY), "a withheld value must never reach rendered HTML");
+  assert.match(html, /Not yet verified; withheld\./);
+});
+
+test("R-31 behavioural: factCell never renders a withheld fact's raw value", () => {
+  const fact = { value: CANARY, sources: ["prim-a"], confidence: "low", evidence: "low", updated: "2026-07-01", claimType: "authoritative", verification: { passes: [] } };
+  const html = renderMacro(`{{ factCell(fact, sources, "", "product") }}`, { fact, sources: SOURCES });
+  assert.ok(!html.includes(CANARY), "a withheld value must never reach a table cell");
+  assert.match(html, /Not yet verified/);
+});
+
+test("R-31 behavioural: a published fact DOES render its value (the withheld tests are not vacuous)", () => {
+  const fact = {
+    value: CANARY, sources: ["prim-a", "sec-b"], confidence: "high", evidence: "high", updated: "2026-07-01", claimType: "corroborable",
+    verification: { passes: [
+      confirmsPass({ sourcesChecked: ["prim-a"], checkedValue: CANARY }),
+      confirmsPass({ reviewerKind: "ai", sourcesChecked: ["sec-b"], checkedValue: CANARY }),
+    ] },
+  };
+  const html = renderMacro(`{{ sourcedValue(fact, sources, "Label", "", "product") }}`, { fact, sources: SOURCES });
+  assert.ok(html.includes(CANARY), "a published fact's value MUST render (positive control)");
+});
+
+test("R-31 behavioural: a contested fact renders its positions but never the scalar value", () => {
+  const fact = {
+    value: CANARY, sources: ["prim-a", "sec-b"], confidence: "moderate", evidence: "moderate", updated: "2026-07-01", claimType: "corroborable",
+    verification: {
+      adjudication: { outcome: "contested", note: "genuine dispute", date: "2026-06-30" },
+      contested: { positions: [ { value: "position-alpha", sources: ["prim-a"] }, { value: "position-beta", sources: ["sec-b"] } ] },
+    },
+  };
+  const html = renderMacro(`{{ sourcedValue(fact, sources, "Label", "", "product") }}`, { fact, sources: SOURCES });
+  assert.ok(!html.includes(CANARY), "the contested scalar value must never appear");
+  assert.match(html, /position-alpha/);
+  assert.match(html, /Contested/);
+});
+
 test("check-render-safety fails on a template that renders a raw .value, passes on a clean one", () => {
   const dir = mkdtempSync(join(tmpdir(), "render-"));
   try {
@@ -139,6 +196,10 @@ test("check-render-safety fails on a template that renders a raw .value, passes 
       // (including a withheld `value`) without the literal token ever appearing.
       "{% for k, v in fact %}<li>{{ k }}: {{ v }}</li>{% endfor %}\n",
       "{% for k, v in product.manufacturer %}{{ v }}{% endfor %}\n",
+      // dictsort yields [key, value] pairs, so a numeric-index access leaks the
+      // value with no literal token; the filter itself is denied.
+      "{{ fact | dictsort }}\n",
+      "{% for pair in fact | dictsort %}{{ pair[1] }}{% endfor %}\n",
     ]) {
       const f = join(dir, "bypass.njk");
       writeFileSync(f, leak);

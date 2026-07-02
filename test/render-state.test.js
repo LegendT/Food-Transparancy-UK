@@ -91,6 +91,32 @@ test("R-31: a genuinely published fact DOES expose its value", () => {
   assert.equal(d.value, "x");
 });
 
+test("VRFY-12 render half: a published-stale projection carries lastVerified = max confirms checkedOn (the verify clock, not fact.updated)", () => {
+  // A regulatory fact whose passes are dated past the 12-month staleness threshold
+  // while its citation still resolves fresh -> published-stale (two-clocks recipe).
+  const fact = {
+    value: "authorised", sources: ["prim-a"], claimType: "authoritative",
+    claimDomain: "regulatory", updated: "2026-07-02",
+    verification: { passes: [
+      confirmsPass({ reviewerKind: "human", checkedOn: "2023-06-01", checkedValue: "authorised" }),
+      confirmsPass({ reviewerKind: "blinded-reread", checkedOn: "2023-06-01", checkedValue: "authorised" }),
+    ] },
+  };
+  const d = factForRenderFromData(fact, SOURCES, VERDICTS, TODAY, "ingredient");
+  assert.equal(d.state, "published-stale");
+  assert.equal(d.stale, true);
+  // The review-due label must read the verification date, never the edit date.
+  assert.equal(d.lastVerified, "2023-06-01");
+  assert.notEqual(d.lastVerified, fact.updated);
+});
+
+test("a withheld fact carries no lastVerified date at the boundary", () => {
+  const fact = { value: "x", sources: ["prim-a"], claimType: "authoritative", updated: "2026-07-02", verification: { passes: [] } };
+  const d = factForRenderFromData(fact, SOURCES, VERDICTS, TODAY, "product");
+  assert.equal(d.publishable, false);
+  assert.equal(d.lastVerified, null);
+});
+
 test("check-render-safety fails on a template that renders a raw .value, passes on a clean one", () => {
   const dir = mkdtempSync(join(tmpdir(), "render-"));
   try {

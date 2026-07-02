@@ -69,7 +69,7 @@
       <a class="fact__token" href="/methodology/#evidence">evidence {{ fact.evidence }}<span class="visually-hidden"> (evidence strength)</span></a>
     </span>
     {%- if d.stale %}
-    <span class="fact__review-due">Last verified {{ fact.updated | readableDate }}; review due.</span>
+    <span class="fact__review-due">Last verified {{ d.lastVerified | readableDate }}; review due.</span>
     {%- endif %}
     {%- elif d.contested %}
     <span class="fact__contested">Contested; sources disagree:</span>

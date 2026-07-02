@@ -55,6 +55,8 @@ completed: 2026-07-02
 
 **Transcribed the human-approved published-confirmed and published-stale passes and an EFSA authorityPosition onto the sucralose and Lucozade records, seeded the verdict cache, wired the D-15 cross-link, and verified WCAG 2.2 AA over the representative 3a routes.**
 
+> **Post-audit correction (2026-07-02):** a later adversarial audit walked back two of this plan's demonstrations for integrity (see 03a-VERIFICATION.md "Post-audit integrity corrections"). The published-stale example was a backdated fixture and was re-dated to real time (now published-confirmed); the Lucozade -> sucralose cross-link was removed as unverified (INGR-04 now shows its empty state); the EFSA position was expanded with its fine-bakery-wares caveat. The Accomplishments below describe this plan as originally executed; those two live demonstrations no longer stand.
+
 ## Performance
 
 - **Duration:** ~12 min
@@ -109,7 +111,7 @@ This autonomous follow-on was executed as a single atomic commit on `main` (sequ
 ## Verification Results
 - `npm run prebuild` - exit 0 (Data validation passed; the ingredient-ref gate resolves "sucralose").
 - `npm run build` - exit 0.
-- `grep -rq "review due" _site/ingredients/` - present (published-stale renders "Last verified 1 June 2023; review due." - the verification-clock date, i.e. the max confirms-pass checkedOn, NOT fact.updated; corrected in fix 8687515 after this summary was first written).
+- Published-stale render (VRFY-12): originally demonstrated live via a backdated proof fact; that was later corrected to real dates (see 03a-VERIFICATION.md "Post-audit integrity corrections"), so the sucralose regulatoryStatus now renders published-confirmed and the review-due indicator is covered by unit + behavioural tests rather than a live example.
 - Sucralose page contains "Named authority's safety opinion" (INGR-02 live) and links to /products/lucozade-energy/ (INGR-04).
 - Lucozade manufacturer fact still renders published-confirmed (anchor unchanged).
 - functionDescription still withheld (no passes).

@@ -160,6 +160,24 @@ test("R-31 behavioural: a published fact DOES render its value (the withheld tes
   assert.ok(html.includes(CANARY), "a published fact's value MUST render (positive control)");
 });
 
+test("R-31 behavioural: a published-stale fact renders its value AND the review-due label with the verify-clock date", () => {
+  // VRFY-12 render half. Kept as a behavioural test because the corpus no longer
+  // carries a live published-stale example (the earlier one was a backdated proof
+  // fixture, removed for integrity - a genuine stale fact awaits real elapsed time).
+  const fact = {
+    value: CANARY, sources: ["prim-a"], confidence: "high", evidence: "high", updated: "2026-07-01",
+    claimType: "authoritative", claimDomain: "regulatory",
+    verification: { passes: [
+      confirmsPass({ reviewerKind: "human", sourcesChecked: ["prim-a"], checkedValue: CANARY, checkedOn: "2023-06-01" }),
+      confirmsPass({ reviewerKind: "blinded-reread", sourcesChecked: ["prim-a"], checkedValue: CANARY, checkedOn: "2023-06-01" }),
+    ] },
+  };
+  const html = renderMacro(`{{ sourcedValue(fact, sources, "Label", "", "ingredient") }}`, { fact, sources: SOURCES });
+  assert.ok(html.includes(CANARY), "a published-stale fact still shows its value");
+  assert.match(html, /review due/);
+  assert.match(html, /2023-06-01/); // the verify-clock date (max confirms checkedOn), via readableDate
+});
+
 test("R-31 behavioural: a contested fact renders its positions but never the scalar value", () => {
   const fact = {
     value: CANARY, sources: ["prim-a", "sec-b"], confidence: "moderate", evidence: "moderate", updated: "2026-07-01", claimType: "corroborable",

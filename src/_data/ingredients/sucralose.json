@@ -20,19 +20,19 @@
     "confidence": "high",
     "evidence": "high",
     "updated": "2026-07-02",
-    "checkedOn": "2023-06-01",
+    "checkedOn": "2026-07-02",
     "claimType": "authoritative",
     "claimDomain": "regulatory",
-    "note": "GB regulatory position, verified against the FSA GB register entry for E955 and a distinct-reviewerKind blinded re-read of the same source at the plan 03a-06 human checkpoint. The passes were performed in June 2023 and the class staleness threshold (regulatory, 12 months) has since elapsed, so this fact renders published-stale with a review-due indicator while its citation still resolves (VRFY-12, the two-clocks state).",
+    "note": "GB regulatory position, verified at the plan 03a-06 human checkpoint against the FSA GB register entry for E955 (an authority pass) plus a distinct-reviewerKind blinded re-read of the same source for transcription fidelity, both confirming. Renders published-confirmed. (The earlier draft backdated these passes to 2023 to manufacture a published-stale demonstration; that was corrected to the real verification date - the archive shows real dates only. A genuine published-stale example awaits a fact whose real last-verified date has aged past its class threshold; the review-due render itself is covered by tests.)",
     "verification": {
       "passes": [
-        { "reviewerKind": "human", "sourcesChecked": ["fsa-gb-additives-e955"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "Sucralose (E955) is an authorised sweetener for use in Great Britain, permitted in defined food categories under assimilated food additives law.", "verdict": "confirms", "checkedOn": "2023-06-01" },
-        { "reviewerKind": "blinded-reread", "sourcesChecked": ["fsa-gb-additives-e955"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "Sucralose (E955) is an authorised sweetener for use in Great Britain, permitted in defined food categories under assimilated food additives law.", "verdict": "confirms", "checkedOn": "2023-06-01" }
+        { "reviewerKind": "human", "sourcesChecked": ["fsa-gb-additives-e955"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "Sucralose (E955) is an authorised sweetener for use in Great Britain, permitted in defined food categories under assimilated food additives law.", "verdict": "confirms", "checkedOn": "2026-07-02" },
+        { "reviewerKind": "blinded-reread", "sourcesChecked": ["fsa-gb-additives-e955"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "Sucralose (E955) is an authorised sweetener for use in Great Britain, permitted in defined food categories under assimilated food additives law.", "verdict": "confirms", "checkedOn": "2026-07-02" }
       ]
     }
   },
   "authorityPosition": {
-    "value": "EFSA re-evaluated sucralose (E955) in 2026 and concluded it is safe at the currently authorised uses, retaining the acceptable daily intake of 15 mg per kg of body weight per day.",
+    "value": "EFSA re-evaluated sucralose (E955) in 2026 and concluded it is safe at the currently authorised uses, retaining the acceptable daily intake of 15 mg per kg of body weight per day. EFSA could not confirm the safety of a proposed new use in fine bakery wares, citing uncertainty about the formation of chlorinated compounds when sucralose is heated to high temperatures.",
     "sources": ["efsa-sucralose-2026"],
     "confidence": "high",
     "evidence": "high",
@@ -41,8 +41,8 @@
     "note": "EFSA's published safety position (INGR-02), authored and approved at the plan 03a-06 human checkpoint. It states the named authority's opinion and does not synthesise the underlying studies (EVID-SYNTH-01 deferred). Deliberately not claimDomain regulatory (D-14): an EFSA opinion is not the GB regulatory status.",
     "verification": {
       "passes": [
-        { "reviewerKind": "human", "sourcesChecked": ["efsa-sucralose-2026"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "EFSA re-evaluated sucralose (E955) in 2026 and concluded it is safe at the currently authorised uses, retaining the acceptable daily intake of 15 mg per kg of body weight per day.", "verdict": "confirms", "checkedOn": "2026-07-02" },
-        { "reviewerKind": "blinded-reread", "sourcesChecked": ["efsa-sucralose-2026"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "EFSA re-evaluated sucralose (E955) in 2026 and concluded it is safe at the currently authorised uses, retaining the acceptable daily intake of 15 mg per kg of body weight per day.", "verdict": "confirms", "checkedOn": "2026-07-02" }
+        { "reviewerKind": "human", "sourcesChecked": ["efsa-sucralose-2026"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "EFSA re-evaluated sucralose (E955) in 2026 and concluded it is safe at the currently authorised uses, retaining the acceptable daily intake of 15 mg per kg of body weight per day. EFSA could not confirm the safety of a proposed new use in fine bakery wares, citing uncertainty about the formation of chlorinated compounds when sucralose is heated to high temperatures.", "verdict": "confirms", "checkedOn": "2026-07-02" },
+        { "reviewerKind": "blinded-reread", "sourcesChecked": ["efsa-sucralose-2026"], "measure": { "basis": "n/a", "state": "n/a" }, "checkedValue": "EFSA re-evaluated sucralose (E955) in 2026 and concluded it is safe at the currently authorised uses, retaining the acceptable daily intake of 15 mg per kg of body weight per day. EFSA could not confirm the safety of a proposed new use in fine bakery wares, citing uncertainty about the formation of chlorinated compounds when sucralose is heated to high temperatures.", "verdict": "confirms", "checkedOn": "2026-07-02" }
       ]
     }
   },

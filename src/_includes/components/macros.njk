@@ -60,7 +60,11 @@
 {% macro sourcedValue(fact, sources, label, unit, entityType) %}
 {% set d = fact | factState(sources, entityType) %}
 <div class="fact" data-state="{{ d.state }}">
-  <p class="fact__head">
+  {#- fact__head is a <div>, not a <p>: the contested branch emits a <ul> of
+      positions, which is invalid content for a <p> (the parser would auto-close the
+      <p> at the <ul>, orphaning the group). A block wrapper is valid in every
+      branch (inline spans for publishable/withheld, the list for contested). -#}
+  <div class="fact__head">
     {% if label %}<span class="fact__label">{{ label }}:</span> {% endif %}
     {%- if d.publishable %}
     <span class="fact__value">{{ d.value }}{% if unit %}{{ unit }}{% endif %}</span>
@@ -88,7 +92,7 @@
     {%- else %}
     <span class="fact__withheld">Not yet verified; withheld.</span>
     {%- endif %}
-  </p>
+  </div>
   <details class="fact__detail">
     <summary>Source and date</summary>
     <ul class="fact__sources">

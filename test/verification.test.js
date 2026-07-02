@@ -88,6 +88,24 @@ function corroborableConfirmed(over = {}) {
   };
 }
 
+// --- R-04 optional-checkedValue guard (a confirms pass may omit checkedValue) ---
+
+test("R-04: a confirms pass omitting the optional checkedValue is not a divergence; the fact still publishes", () => {
+  // The canonical D-06 shape: an authority pass records the value it read, and a
+  // distinct-reviewerKind blinded re-read confirms transcription fidelity WITHOUT
+  // re-extracting the scalar (checkedValue omitted - schema-optional). This must
+  // publish, not withhold. Guards against checkValueDivergence treating a
+  // present-vs-absent checkedValue pair as a divergence.
+  const fact = corroborableConfirmed({
+    passes: [
+      confirmsPass({ sourcesChecked: ["prim-a"], checkedValue: "x" }),
+      { reviewerKind: "ai", sourcesChecked: ["sec-b"], measure: { basis: "n/a", state: "n/a" }, verdict: "confirms", checkedOn: "2026-06-30" },
+    ],
+  });
+  assert.equal(checkValueDivergence(fact.verification.passes), false);
+  assert.equal(deriveVerificationState(fact, byId, freshBoth, TODAY, "product").state, "published-confirmed");
+});
+
 // --- markedWrong precedence (VRFY-04, continuous) ---
 
 test("markedWrong forces withheld-wrong even when two confirms passes would otherwise publish", () => {

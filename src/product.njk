@@ -182,7 +182,7 @@ eleventyComputed:
 <section id="sources" aria-labelledby="sources-heading">
   <h2 id="sources-heading">Sources</h2>
   {%- if citedIds.length %}
-  <p>The sources cited by the facts on this page. Each fact above also shows its own source and date behind its "Source and date" disclosure.</p>
+  <p>The sources cited by the current-state facts on this page. Each fact above also shows its own source and date behind its "Source and date" disclosure; the Recipe history section lists its own sources per change.</p>
   <ul class="source-roll">
     {%- for id in citedIds %}
     {%- set s = sources.sources | findBy("id", id) %}

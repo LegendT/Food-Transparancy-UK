@@ -134,6 +134,7 @@ test("check-render-safety fails on a template that renders a raw .value, passes 
       "<p>{{ fact | dump }}</p>\n",
       "<p>{{ fact | tojson }}</p>\n",
       "<p>{{ fact | attr(\"value\") }}</p>\n",
+      "<script>{{ product | jsonScript }}</script>\n",
     ]) {
       const f = join(dir, "bypass.njk");
       writeFileSync(f, leak);

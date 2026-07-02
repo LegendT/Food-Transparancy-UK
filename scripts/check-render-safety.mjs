@@ -50,16 +50,21 @@ function stripComments(text) {
 // plain member access (fact.value, product.manufacturer.value), the boundary must
 // also deny the sibling forms that reach the same property or dump the whole object:
 // bracket access (fact["value"]), the attr filter (fact | attr("value")), and
-// whole-object serialisation (| dump / | tojson), which would emit every field
-// including a withheld or contested value while a `.value`-only check stayed green.
-// A default-deny control must be as tight as the trust promise it enforces. d.value
-// / p.value inside the sanctioned macro are the derived, already-gated projections
-// and are exempt by the path allowlist (SANCTIONED returns early below).
+// whole-object serialisation (| dump / | tojson / | jsonScript), which would emit
+// every field including a withheld or contested value while a `.value`-only check
+// stayed green. jsonScript is this project's own <script>-embedding serialiser (see
+// .eleventy.js): piping a raw fact or product object through it to embed a client
+// dataset would leak the same withheld values, so it is denied here too. When a
+// client-side dataset is added, embed a pre-projected SAFE dataset (already-gated
+// values), never raw fact objects. A default-deny control must be as tight as the
+// trust promise it enforces. d.value / p.value inside the sanctioned macro are the
+// derived, already-gated projections and are exempt by the path allowlist
+// (SANCTIONED returns early below).
 const DANGER = [
   /\.value\b/,
   /\[\s*['"]value['"]\s*\]/,
   /\|\s*attr\(\s*['"]value['"]/,
-  /\|\s*(?:dump|tojson)\b/,
+  /\|\s*(?:dump|tojson|jsonScript)\b/,
 ];
 
 function scan(path) {
@@ -79,7 +84,7 @@ const violations = files.flatMap(scan);
 if (violations.length > 0) {
   for (const v of violations) {
     console.error(
-      `Render-safety failed: ${relative(process.cwd(), v.path)}:${v.line} renders a raw ".value" ` +
+      `Render-safety failed: ${relative(process.cwd(), v.path)}:${v.line} renders or serialises a raw fact value ` +
       `(${v.text}). Render facts through the sourcedValue macro (which gates on factState) so a ` +
       `withheld or contested value can never reach a reader (R-31).`
     );

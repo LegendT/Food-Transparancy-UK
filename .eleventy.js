@@ -4,7 +4,7 @@
  * Data lives in src/_data as JSON and is auto-loaded as global data, so no
  * fact is ever hard-coded into a template. Swapping placeholder data for
  * verified records later means changing only the JSON (or the script that
- * writes it) — templates and components stay untouched.
+ * writes it) - templates and components stay untouched.
  *
  * Mirrors the DEBT blueprint conventions, trimmed to the Phase 1 data shape.
  */
@@ -15,6 +15,7 @@ import { dirname, resolve, join } from "node:path";
 import { factForRenderFromData } from "./lib/render-state.mjs";
 import { productsByIngredient, timelineByProduct } from "./lib/reverse-index.mjs";
 import { allergenLine } from "./lib/allergen-copy.mjs";
+import { citedSourceIds } from "./lib/cited-sources.mjs";
 
 // Resolve the gate scripts ABSOLUTELY against this config file's directory, not
 // the current working directory. A cwd-relative path would let an `eleventy`
@@ -102,7 +103,14 @@ export default function (eleventyConfig) {
     allergenLine(presence, publishable)
   );
 
-  // JSON for embedding inside a <script> tag — escapes "<" so a value can never
+  // citedSourceIds (PROD-04): the distinct source ids cited by every fact on a
+  // product page, in first-seen order, so the page-level "Sources" roll-up gathers
+  // manufacturer, ingredients, nutrition and allergen citations - not just the
+  // first two. Pure and unit-tested (the collection cannot be done in-template
+  // because Nunjucks {% set %} does not persist across a {% for %}).
+  eleventyConfig.addFilter("citedSourceIds", (product) => citedSourceIds(product));
+
+  // JSON for embedding inside a <script> tag - escapes "<" so a value can never
   // break out of the script element (defensive; the data is trusted).
   eleventyConfig.addFilter("jsonScript", (value) =>
     JSON.stringify(value).replace(/</g, "\\u003c")
@@ -136,7 +144,7 @@ export default function (eleventyConfig) {
 
   // Fail-closed gate hook. A direct `eleventy` / `npx @11ty/eleventy` call never
   // fires npm's `prebuild` lifecycle, so this hook re-runs the same gates and
-  // throws on any non-zero exit — neither the npm path nor a direct call can
+  // throws on any non-zero exit - neither the npm path nor a direct call can
   // fail open. Gated to runMode "build" so dev `--watch`/`--serve` rebuilds do
   // not re-spawn the gate processes on every save. On `npm run build` the gates
   // run twice (prebuild lifecycle + this hook): deliberate defence-in-depth over

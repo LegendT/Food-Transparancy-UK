@@ -169,25 +169,22 @@ eleventyComputed:
 {#
   Sources roll-up (PROD-04, D-07): the page-level list of the distinct source
   records cited by this page's facts. The per-fact "Source and date" disclosure
-  still lives on each fact above; this is the consolidated view. Collect the ids
-  cited by the facts this plan renders (manufacturer, ingredientsText); plan 04's
-  Nutrition and Allergens sections extend the collection below when they land.
-  Dedup is stateless: an id renders only at its FIRST occurrence in the list
-  (citedIds.indexOf(id) == loop.index0), because Nunjucks {% set %} inside a for
-  loop does not persist across iterations. Source names and urls are ingested and
-  external, so they are never piped through | safe; external links carry
-  rel="noopener" (threat T-03a-03-02).
+  still lives on each fact above; this is the consolidated view. The ids are
+  collected and de-duplicated (first-seen order) by the pure citedSourceIds filter
+  over ALL fact-bearing fields (manufacturer, ingredientsText, nutrition figures,
+  allergen provenance) - the collection lives in lib/ because Nunjucks {% set %}
+  inside a for loop does not persist across iterations, so it cannot be done
+  correctly in-template. Source names and urls are ingested and external, so they
+  are never piped through | safe; external links carry rel="noopener" (threat
+  T-03a-03-02).
 #}
-{%- set citedIds = [] %}
-{%- if product.manufacturer and product.manufacturer.sources %}{% set citedIds = citedIds.concat(product.manufacturer.sources) %}{% endif %}
-{%- if product.ingredientsText and product.ingredientsText.sources %}{% set citedIds = citedIds.concat(product.ingredientsText.sources) %}{% endif %}
+{%- set citedIds = product | citedSourceIds %}
 <section id="sources" aria-labelledby="sources-heading">
   <h2 id="sources-heading">Sources</h2>
   {%- if citedIds.length %}
   <p>The sources cited by the facts on this page. Each fact above also shows its own source and date behind its "Source and date" disclosure.</p>
   <ul class="source-roll">
     {%- for id in citedIds %}
-    {%- if citedIds.indexOf(id) == loop.index0 %}
     {%- set s = sources.sources | findBy("id", id) %}
     <li>
       {%- if s %}
@@ -196,7 +193,6 @@ eleventyComputed:
       Unresolved source reference: {{ id }}.
       {%- endif %}
     </li>
-    {%- endif %}
     {%- endfor %}
   </ul>
   {%- else %}
@@ -246,4 +242,3 @@ eleventyComputed:
   </div>
   {%- endif %}
 </section>
-</content>

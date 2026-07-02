@@ -126,6 +126,21 @@ test("check-render-safety fails on a template that renders a raw .value, passes 
     assert.notEqual(r1.status, 0);
     assert.match(r1.stderr, /Render-safety failed/);
 
+    // WR-01: the sibling access/serialisation forms that reach the same raw value
+    // must fail too - a default-deny boundary cannot be bypassed by bracket access
+    // or a whole-object dump.
+    for (const leak of [
+      "<p>{{ product.manufacturer[\"value\"] }}</p>\n",
+      "<p>{{ fact | dump }}</p>\n",
+      "<p>{{ fact | tojson }}</p>\n",
+      "<p>{{ fact | attr(\"value\") }}</p>\n",
+    ]) {
+      const f = join(dir, "bypass.njk");
+      writeFileSync(f, leak);
+      const r = spawnSync(process.execPath, [LINT, f], { encoding: "utf8" });
+      assert.notEqual(r.status, 0, `render-safety must reject: ${leak.trim()}`);
+    }
+
     const good = join(dir, "safe.njk");
     writeFileSync(good, "{% from \"components/macros.njk\" import sourcedValue %}\n{{ sourcedValue(fact, sources.sources, \"Label\") }}\n");
     const r2 = spawnSync(process.execPath, [LINT, good], { encoding: "utf8" });

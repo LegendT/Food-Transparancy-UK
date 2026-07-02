@@ -46,18 +46,28 @@ function stripComments(text) {
     .replace(/<!--[\s\S]*?-->/g, (m) => m.replace(/[^\n]/g, " "));
 }
 
-// Any member access ending in `.value` that a template would RENDER is the danger
-// token (fact.value, product.manufacturer.value, ...). d.value / p.value inside
-// the sanctioned macro are the derived, already-gated projections and are exempt
-// by the path allowlist.
-const RAW_VALUE = /\.value\b/;
+// Any construct that would RENDER a raw fact `.value` is a danger token. Beyond
+// plain member access (fact.value, product.manufacturer.value), the boundary must
+// also deny the sibling forms that reach the same property or dump the whole object:
+// bracket access (fact["value"]), the attr filter (fact | attr("value")), and
+// whole-object serialisation (| dump / | tojson), which would emit every field
+// including a withheld or contested value while a `.value`-only check stayed green.
+// A default-deny control must be as tight as the trust promise it enforces. d.value
+// / p.value inside the sanctioned macro are the derived, already-gated projections
+// and are exempt by the path allowlist (SANCTIONED returns early below).
+const DANGER = [
+  /\.value\b/,
+  /\[\s*['"]value['"]\s*\]/,
+  /\|\s*attr\(\s*['"]value['"]/,
+  /\|\s*(?:dump|tojson)\b/,
+];
 
 function scan(path) {
   const violations = [];
   if (resolve(path) === SANCTIONED) return violations;
   const lines = stripComments(readFileSync(path, "utf8")).split("\n");
   lines.forEach((line, i) => {
-    if (RAW_VALUE.test(line)) violations.push({ path, line: i + 1, text: line.trim() });
+    if (DANGER.some((re) => re.test(line))) violations.push({ path, line: i + 1, text: line.trim() });
   });
   return violations;
 }

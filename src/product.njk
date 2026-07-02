@@ -10,7 +10,7 @@ eleventyComputed:
   title: "{{ product.name }}"
   description: "What {{ product.name }} contains now. Every fact is shown with its source, confidence and evidence level; anything not yet verified is withheld rather than asserted."
 ---
-{% from "components/macros.njk" import sourcedValue, sourceNote, caveatBox %}
+{% from "components/macros.njk" import sourcedValue, sourceNote, caveatBox, factCell %}
 
 {#
   One server-rendered page per product. The src/_data/products/* cascade is an
@@ -44,10 +44,118 @@ eleventyComputed:
   {%- endif %}
 </section>
 
-{# PLAN 04 INSERTS HERE, in D-05 order:
-   <section id="nutrition"> ... </section>  (the nutrition table, D-06)
-   <section id="allergens"> ... </section>  (the allergen fail-safe list, D-12)
-   Do not reorder; Manufacturer, Sources and Recipe history must stay after them. #}
+{#
+  Nutrition (PROD-01, D-06 / F4). A real accessible <table> of the nine fixed
+  back-of-pack figures in schema order, distinguishing THREE conditions the
+  reader must never see conflated:
+    - key NOT in nutrition  -> "Not recorded" (a figure the archive never held)
+    - key present, withheld  -> "Not yet verified" (held, but not through the gate)
+    - key present, published  -> the value, via factCell.
+  The absent/present distinction uses an "if key in nutrition" membership test
+  (metadata, NEVER .value); the value/status cell renders only
+  through factCell (the R-31 boundary, inside macros.njk), so no raw fact value
+  can reach a reader. Each recorded figure carries a full provenance block below
+  the table at id="nutrition-{key}" with tabindex="-1", so a "see source" status
+  link moves keyboard/screen-reader focus there (G2, WCAG 2.4.3). The table has
+  three short columns and wraps by default (no white-space:nowrap, short status
+  text), so it reflows with no horizontal scroll at 320px / 400% zoom (G1).
+#}
+{%- set nutrition = product.nutrition or {} %}
+{%- set nutritionRows = [
+  { key: "energyKj", label: "Energy (kJ)", unit: "kJ" },
+  { key: "energyKcal", label: "Energy (kcal)", unit: "kcal" },
+  { key: "fat", label: "Fat", unit: "g" },
+  { key: "saturates", label: "Saturates", unit: "g" },
+  { key: "carbohydrate", label: "Carbohydrate", unit: "g" },
+  { key: "sugars", label: "Sugars", unit: "g" },
+  { key: "fibre", label: "Fibre", unit: "g" },
+  { key: "protein", label: "Protein", unit: "g" },
+  { key: "salt", label: "Salt", unit: "g" }
+] %}
+<section id="nutrition" aria-labelledby="nutrition-heading">
+  <h2 id="nutrition-heading">Nutrition</h2>
+  <p>The back-of-pack nutrition declaration per 100g. Each recorded figure is shown through the trust component. A figure marked "Not recorded" is one we have never sourced; it is not the same as a figure we hold but have not yet verified.</p>
+  <table class="nutrition-table">
+    <caption>Nutrition per 100g</caption>
+    <thead>
+      <tr>
+        <th scope="col">Nutrient</th>
+        <th scope="col">Per 100g</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for row in nutritionRows %}
+      <tr>
+        <th scope="row">{{ row.label }}</th>
+        {%- if row.key in nutrition %}
+        {%- set nd = nutrition[row.key] | factState(sources.sources, "product") %}
+        <td>{{ factCell(nutrition[row.key], sources.sources, row.unit, "product") }}</td>
+        <td>
+          {%- if nd.publishable %}<a href="#nutrition-{{ row.key }}">see source</a>
+          {%- elif nd.contested %}<a href="#nutrition-{{ row.key }}">sources disagree</a>
+          {%- else %}<a href="#nutrition-{{ row.key }}">sources being checked</a>{% endif %}
+        </td>
+        {%- else %}
+        <td class="nutrition-table__absent">Not recorded</td>
+        <td class="nutrition-table__absent">-</td>
+        {%- endif %}
+      </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+  {%- if nutrition | length %}
+  <h3 id="nutrition-sources-heading">Nutrition sources</h3>
+  <p>The source and date for each recorded figure above.</p>
+  {%- for row in nutritionRows %}
+  {%- if row.key in nutrition %}
+  <div id="nutrition-{{ row.key }}" tabindex="-1" class="nutrition-source">
+    {{ sourcedValue(nutrition[row.key], sources.sources, row.label, row.unit, "product") }}
+  </div>
+  {%- endif %}
+  {%- endfor %}
+  {%- endif %}
+</section>
+
+{#
+  Allergens (PROD-09, D-12, highest-stakes). The section fails SAFE toward
+  warning, never toward reassurance. Each row branches on presence AND the
+  DERIVED provenance state (factState), NEVER on provenance.value: the fail-safe
+  wording is chosen by the pure, unit-tested allergenLine helper so "a withheld
+  absent claim never reads as safe" is a build-time invariant, not a hand-checked
+  template branch. The human-readable allergen name is interpolated from
+  allergens.json into the helper's {allergen} placeholder. All row text is
+  #0b0c0c black; the #d4351c red is a bar/border SECOND cue only (it fails 4.5:1
+  as text on the panel), applied to every row EXCEPT a published "absent" one
+  (uncertainty about absence is treated as risk). The standing allergen-safety
+  caveat sits at the top of the section on any page showing allergens. F5 (LOCK
+  option a): an allergen with no record is simply not listed, covered by the
+  standing caveat; a missing allergen must never read as absent.
+#}
+<section id="allergens" aria-labelledby="allergens-heading">
+  <h2 id="allergens-heading">Allergens</h2>
+  {%- if product.allergens and product.allergens.length %}
+  {{ caveatBox("Allergen information can change. Always check the current product packaging. Do not rely on this archive for allergy safety.", "Allergen safety") }}
+  <dl class="allergen-list">
+    {%- for item in product.allergens %}
+    {%- set ap = item.provenance | factState(sources.sources, "product") %}
+    {%- set aName = (allergens.allergens | findBy("id", item.allergen)).name or item.allergen %}
+    {%- set warning = not (item.presence == "absent" and ap.publishable) %}
+    <div class="allergen-list__item{% if warning %} allergen-list__item--warning{% endif %}">
+      <dt class="allergen-list__name">{{ aName }}</dt>
+      <dd>
+        <p>{{ item.presence | allergenLine(ap.publishable) | replace("{allergen}", aName) }}</p>
+        {%- if ap.publishable %}
+        {{ sourcedValue(item.provenance, sources.sources, "Source and date", "", "product") }}
+        {%- endif %}
+      </dd>
+    </div>
+    {%- endfor %}
+  </dl>
+  {%- else %}
+  <p class="example">No allergen information has been sourced for this product yet. Always check the current product packaging.</p>
+  {%- endif %}
+</section>
 
 <section id="manufacturer" aria-labelledby="manufacturer-heading">
   <h2 id="manufacturer-heading">Manufacturer</h2>

@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve, join } from "node:path";
 import { factForRenderFromData } from "./lib/render-state.mjs";
 import { productsByIngredient, timelineByProduct } from "./lib/reverse-index.mjs";
+import { allergenLine } from "./lib/allergen-copy.mjs";
 
 // Resolve the gate scripts ABSOLUTELY against this config file's directory, not
 // the current working directory. A cwd-relative path would let an `eleventy`
@@ -91,6 +92,14 @@ export default function (eleventyConfig) {
   // ONLY when the fact genuinely publishes.
   eleventyConfig.addFilter("factState", (fact, sourcesArray, entityType) =>
     factForRenderFromData(fact, sourcesArray, VERDICTS, RENDER_TODAY, entityType || null)
+  );
+
+  // allergenLine (D-12 / PROD-09): the pure, exhaustively-tested fail-safe copy
+  // helper. The template calls it as a filter so the safety wording is a unit
+  // invariant, never re-derived ad hoc in the template; the {allergen}
+  // placeholder is interpolated from allergens.json in the template.
+  eleventyConfig.addFilter("allergenLine", (presence, publishable) =>
+    allergenLine(presence, publishable)
   );
 
   // JSON for embedding inside a <script> tag — escapes "<" so a value can never

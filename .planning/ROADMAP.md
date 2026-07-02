@@ -128,7 +128,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 03a-01-PLAN.md — Schema fields (D-15 product ingredients array, D-14 ingredient authorityPosition), pure reverse index, checkIngredientRefs gate, Eleventy wiring (INGR-02, INGR-04)
 - [x] 03a-02-PLAN.md — Render primitives: factCell inline macro + contested-branch per-position sources + state accent-bar / nutrition-table / allergen CSS (VRFY-11, VRFY-12, PROD-01)
 - [x] 03a-03-PLAN.md — Product page base: pagination, Ingredients, Manufacturer, Sources roll-up, recipe-history + empty state (PROD-01, PROD-02, PROD-03, PROD-04)
-- [ ] 03a-04-PLAN.md — Product data-dense: accessible nutrition table + allergen fail-safe with the pure allergenLine invariant (PROD-01, PROD-09)
+- [x] 03a-04-PLAN.md — Product data-dense: accessible nutrition table + allergen fail-safe with the pure allergenLine invariant (PROD-01, PROD-09)
 - [x] 03a-05-PLAN.md — Ingredient page: explainer, GB regulatory block, optional authority block, products-containing list (INGR-01, INGR-02, INGR-03, INGR-04)
 - [ ] 03a-06-PLAN.md — Proof-set human checkpoint (published-confirmed / published-stale / authorityPosition), verdict-cache seed, D-15 cross-link, representative pa11y routes (VRFY-11, VRFY-12, INGR-01/02/03, PROD-01, PROD-09)
 
@@ -248,7 +248,7 @@ Phases execute in numeric order: 1 → 2 → 3a → 3b → 4 → 5 → 6 → 7 �
 |-------|----------------|--------|-----------|
 | 1. Foundation — Trust Primitives, Schemas, Rights, CI/Deploy & Sourcing Spike | 10/10 | Complete   | 2026-06-30 |
 | 2. Claim-Typed Verification, Per-Fact Publication Gate & Ingestion | 7/7 | Complete    | 2026-07-01 |
-| 3a. Core Entity Pages & Trust Rendering | 4/6 | In Progress|  |
+| 3a. Core Entity Pages & Trust Rendering | 5/6 | In Progress|  |
 | 3b. Site Shell, Accessibility, Crawlability, Non-Expert UX & Credibility Surface | 0/TBD | Not started | - |
 | 4. Then-vs-Now Flagship Layer & Corpus Scale | 0/TBD | Not started | - |
 | 5. Search, Navigation & Information Architecture | 0/TBD | Not started | - |

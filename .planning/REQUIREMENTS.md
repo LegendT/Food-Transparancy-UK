@@ -54,7 +54,7 @@ Requirements for the MVP release. Each maps to roadmap phases during roadmap cre
 - [ ] **PROD-06**: The traditional-vs-current view conveys additions, removals and substitutions by leading text labels ("Removed:", "Added:", "Replaced X with Y"), never by colour, position or strikethrough alone; a linearised change list is the server-rendered no-JS baseline and the aligned two-column view is progressive enhancement
 - [ ] **PROD-07**: Each ingredient difference in the traditional-vs-current view carries at least one cited source
 - [ ] **PROD-08**: Where the DATA-04 change-record fields are populated, documented change, stated reason and labelled inference are displayed with their labels. A no-imputation-of-motive gate blocks publication of any change narrative that asserts a commercial or cynical motive as fact; a "why" is publishable only as cited regulatory context, an attributed manufacturer statement, or labelled opinion with its basis shown. A driver tagged "mandate" (legally compelled the change) may be stated as cause; a driver tagged "incentive/voluntary" (e.g. the 2018 SDIL, the FSA salt/sugar programmes) may appear only as context or attributed statement
-- [ ] **PROD-09**: A product page displays the GB-regulated major allergens present, via the structured allergen field (DATA-07), not free text
+- [x] **PROD-09**: A product page displays the GB-regulated major allergens present, via the structured allergen field (DATA-07), not free text
 - [ ] **PROD-10**: Each product carries a history-completeness / evidence-tier state — (A) sourced historical formulation; (B) reformulation documented at category level with a driver, but former per-product recipe not individually sourced; (C) current-only — rendered as a deliberate, sourced state (Tier C shows an explicit "no sourced historical formulation recorded for this product"); a former recipe is never inferred or fabricated to satisfy the template
 - [ ] **PROD-11**: A user can browse a curated editorial collection of products illustrating significant, well-documented formulation changes — selected and explained with sources, framed neutrally ("significant, well-documented changes", never "most transformed" / "worst offenders"), and not ordered by any computed transformation metric — as a non-expert entry point
 - [ ] **PROD-12**: The MVP publishes product pages for a curated launch corpus (target ~100 UK packaged food products, re-derived from the Phase 1 sourcing spike — see SPIKE-01), drawn from a recorded list agreed before the content phase
@@ -211,7 +211,7 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | PROD-02 | Phase 3a | Complete |
 | PROD-03 | Phase 3a | Complete |
 | PROD-04 | Phase 3a | Complete |
-| PROD-09 | Phase 3a | Pending |
+| PROD-09 | Phase 3a | Complete |
 | INGR-01 | Phase 3a | Complete |
 | INGR-02 | Phase 3a | Complete |
 | INGR-03 | Phase 3a | Complete |

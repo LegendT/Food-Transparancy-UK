@@ -109,7 +109,7 @@ This autonomous follow-on was executed as a single atomic commit on `main` (sequ
 ## Verification Results
 - `npm run prebuild` - exit 0 (Data validation passed; the ingredient-ref gate resolves "sucralose").
 - `npm run build` - exit 0.
-- `grep -rq "review due" _site/ingredients/` - present (published-stale renders "Last verified 2 July 2026; review due.").
+- `grep -rq "review due" _site/ingredients/` - present (published-stale renders "Last verified 1 June 2023; review due." - the verification-clock date, i.e. the max confirms-pass checkedOn, NOT fact.updated; corrected in fix 8687515 after this summary was first written).
 - Sucralose page contains "Named authority's safety opinion" (INGR-02 live) and links to /products/lucozade-energy/ (INGR-04).
 - Lucozade manufacturer fact still renders published-confirmed (anchor unchanged).
 - functionDescription still withheld (no passes).

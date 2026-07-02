@@ -212,7 +212,7 @@ Phase 3 is split into 3a (core entity pages + trust rendering) and 3b (site shel
 | PROD-03 | Phase 3a | Complete |
 | PROD-04 | Phase 3a | Complete |
 | PROD-09 | Phase 3a | Complete |
-| INGR-01 | Phase 3a | Complete |
+| INGR-01 | Phase 3a | Complete (render); function text withheld pending SC4 corpus (see 03a-VERIFICATION.md W-2) |
 | INGR-02 | Phase 3a | Complete |
 | INGR-03 | Phase 3a | Complete |
 | INGR-04 | Phase 3a | Complete |
